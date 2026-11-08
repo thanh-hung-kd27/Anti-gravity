@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth" id="htmlRoot">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Khóa Học IELTS Chuyên Sâu: Cú Pháp Hình Thức, Triết Học Biện Luận & Exam Library</title>
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+            mono: ['"Roboto Mono"', 'monospace'],
+          },
+          colors: {
+            iot: {
+              navy: '#0B2545',
+              primary: '#0056B3',
+              primaryLight: '#0D6EFD',
+              blueLight: '#EBF3FE',
+              blueLightDark: '#1E293B',
+              orange: '#F58220',
+              orangeHover: '#E06D14',
+              green: '#28A745',
+              dark: '#1F2937',
+              body: '#374151',
+              muted: '#6C757D',
+              border: '#E5E7EB',
+              bgLight: '#F8F9FA',
+            }
+          },
+          boxShadow: {
+            'iot-card': '0 2px 6px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.04)',
+            'iot-hover': '0 10px 20px -3px rgba(0, 86, 179, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03)',
+            'iot-cta': '0 4px 14px rgba(245, 130, 32, 0.35)',
+            'ai-sidebar': '-5px 0 25px rgba(0, 0, 0, 0.08)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Socratic AI Cognitive Self-Learning Engine -->
+  <script src="ai-engine.js"></script>
+
+  <style>
+    body {
+      font-size: 16px;
+      line-height: 1.6;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #F8F9FA;
+    }
+
+    .dark ::-webkit-scrollbar-track {
+      background: #0F172A;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+
+    .dark ::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    .tab-active {
+      border-bottom: 3px solid #0056B3;
+      color: #0056B3;
+      font-weight: 700;
+    }
+
+    .dark .tab-active {
+      border-bottom: 3px solid #60A5FA;
+      color: #60A5FA;
+    }
+
+    /* Pulse badge */
+    @keyframes subtlePulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.88;
+        transform: scale(1.02);
+      }
+    }
+
+    .badge-pulse {
+      animation: subtlePulse 3s infinite ease-in-out;
+    }
+  </style>
+</head>
+
+<body class="antialiased bg-white text-iot-body dark:bg-[#0B132B] dark:text-slate-200">
+
+  <!-- FLOATING QUICK THEME SWITCHER & CLAUDE / SOCRATIC AI FAB BUTTON -->
+  <div class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+
+    <!-- Socratic AI FAB Button -->
+    <button onclick="toggleFloatingHomeChat()"
+      class="flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold shadow-xl transition-all duration-200 bg-gradient-to-r from-amber-600 via-iot-orange to-amber-500 hover:brightness-110 text-white active:scale-95 ring-2 ring-white/20"
+      title="Trò chuyện với Claude / Socratic AI">
+      <span class="w-2 h-2 rounded-full bg-emerald-300 animate-ping"></span>
+      <i data-lucide="sparkles" class="w-4 h-4 text-amber-200"></i>
+      <span class="hidden sm:inline">Trò Chuyện Với AI (Claude)</span>
+      <span class="sm:hidden">Chat AI</span>
+    </button>
+
+    <!-- Theme Switcher Toggle -->
+    <button onclick="toggleTheme()" id="floatingThemeBtn"
+      class="flex items-center gap-2 px-3.5 py-2.5 rounded-full text-xs font-semibold shadow-lg border transition-all duration-200 bg-white border-slate-200 text-iot-dark hover:border-iot-primary hover:text-iot-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:border-blue-400"
+      title="Chuyển chế độ Giao diện Sáng / Tối">
+      <i id="floatingThemeIcon" data-lucide="moon" class="w-4 h-4 text-iot-primary dark:text-amber-400"></i>
+      <span id="floatingThemeLabel" class="hidden sm:inline">Chế độ: Sáng</span>
+    </button>
+  </div>
+
+  <!-- FLOATING CLAUDE / SOCRATIC AI CHAT WINDOW (HOMEPAGE) -->
+  <div id="homeFloatingChatDrawer" class="hidden fixed bottom-20 right-4 sm:right-6 z-50 w-[94vw] sm:w-[420px] max-h-[82vh] h-[580px] bg-white dark:bg-[#0B1528] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden animate-fade-in font-sans">
+    
+    <!-- Header -->
+    <div class="p-3.5 bg-gradient-to-r from-iot-navy via-[#0B2545] to-blue-900 text-white flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 via-iot-orange to-amber-400 text-white flex items-center justify-center font-bold text-sm shadow ring-2 ring-white/10">
+          ✦
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <h3 class="font-bold text-xs text-white">Claude / Socratic AI Tutor</h3>
+            <span class="text-[9px] font-mono bg-blue-500/40 text-blue-200 px-1.5 py-0.2 rounded font-bold">Claude 3.5</span>
+          </div>
+          <p class="text-[10px] text-blue-200 font-mono">
+            Học viên: <strong id="homeChatStudentName">Minh Đức</strong> • Trợ giảng Trực tuyến
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1.5">
+        <a href="exam-room.html?skill=READING&title=Cambridge%2019%20-%20Test%201%3A%20Reading%20Passage%203" class="px-2 py-1 rounded-md bg-white/10 hover:bg-white/20 text-white text-[10px] font-mono transition-all flex items-center gap-1" title="Vào phòng thi chia đôi màn hình">
+          <span>Phòng Thi</span>
+          <i data-lucide="external-link" class="w-3 h-3"></i>
+        </a>
+        <button onclick="toggleFloatingHomeChat()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all text-sm">
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- Message Stream -->
+    <div id="homeAiChatBox" class="flex-1 p-3.5 overflow-y-auto space-y-3 text-xs leading-relaxed">
+      <!-- Default Greeting -->
+      <div class="flex items-start gap-2.5 my-1">
+        <div class="w-6 h-6 rounded-md bg-iot-orange text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+          ✦
+        </div>
+        <div class="flex-1 p-3 rounded-2xl rounded-tl-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 space-y-2">
+          <p class="font-bold text-iot-primary dark:text-blue-300">Chào bạn! Tôi là Socratic AI Tutor.</p>
+          <p>Tôi hoạt động với phong cách tư duy phản biện khúc chiết và trí tuệ ngôn ngữ của <strong>Claude 3.5 Sonnet / ChatGPT</strong>. Bạn có thể hỏi tôi bất kỳ điều gì:</p>
+          <ul class="list-disc list-inside space-y-0.5 text-[11px] text-iot-muted dark:text-slate-400">
+            <li>Phân tích cú pháp câu phức, câu chẻ, mệnh đề đảo ngữ</li>
+            <li>Giải thích logic đề thi Cambridge 19 (TFNG vs FALSE)</li>
+            <li>Xây dựng dàn ý Writing Task 2 theo Biện chứng Hegel</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Chips -->
+    <div class="px-3 py-2 bg-slate-50 dark:bg-slate-900/60 border-t border-slate-100 dark:border-slate-800 flex flex-wrap gap-1 shrink-0 text-[11px]">
+      <button onclick="handleHomeQuickChip('Tại sao câu 34 trong Cambridge 19 là NOT GIVEN chứ không thể là FALSE?')" class="px-2 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:text-iot-primary">
+        ⚖️ NOT GIVEN vs FALSE
+      </button>
+      <button onclick="handleHomeQuickChip('Cho tôi một mở bài Writing Task 2 Band 8.5 về chủ đề AI trong tòa án')" class="px-2 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:text-iot-orange">
+        📝 Mở bài Band 8.5
+      </button>
+      <button onclick="handleHomeQuickChip('Giải thích thuyết Tâm trí mở rộng (Extended Mind) và Epistemic Scaffolding')" class="px-2 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:text-purple-600">
+        💡 Extended Mind
+      </button>
+    </div>
+
+    <!-- Input Form -->
+    <div class="p-3 bg-white dark:bg-[#0B132B] border-t border-slate-200 dark:border-slate-800 shrink-0">
+      <form onsubmit="handleHomeChatSubmit(event)" class="flex items-center gap-2">
+        <input type="text" id="homeUserChatInput" placeholder="Hỏi AI bất kỳ điều gì (như Claude / ChatGPT)..." class="flex-1 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-xs text-iot-dark dark:text-white dark:bg-slate-900 focus:outline-none focus:border-iot-primary" />
+        <button id="homeBtnSend" type="submit" class="p-2 rounded-lg bg-iot-primary hover:bg-iot-primaryHover text-white shadow-sm transition-all active:scale-95">
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+        </button>
+        <button id="homeBtnStop" type="button" onclick="stopHomeGenerating()" class="hidden p-2 rounded-lg bg-red-600 hover:bg-red-700 text-white shadow-sm transition-all active:scale-95">
+          <i data-lucide="square" class="w-3.5 h-3.5"></i>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- TOP BAR: THÔNG BÁO HỌC THUẬT & THANH CÔNG CỤ -->
+  <div class="bg-iot-navy text-white text-xs py-2 border-b border-white/10 dark:bg-[#071326]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-3">
+        <span
+          class="inline-flex items-center gap-1.5 bg-iot-orange text-white px-2 py-0.5 rounded text-[11px] font-bold tracking-wide">
+          COHORT MÙA THU 2026
+        </span>
+        <span class="text-slate-300 hidden sm:inline">
+          Kỳ phỏng vấn tư duy cú pháp &amp; lập luận chuyên sâu: <strong class="text-white">Chỉ còn 4 vị trí</strong>
+        </span>
+      </div>
+
+      <!-- Quick Actions in Top Bar -->
+      <div class="flex items-center gap-4 text-slate-300 text-xs">
+        <a href="library.html"
+          class="hover:text-white transition-colors flex items-center gap-1 text-amber-300 font-semibold">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-iot-orange"></i>
+          <span>Thư Viện Đề Thi (Mới)</span>
+        </a>
+        <span class="text-white/20">|</span>
+        <!-- Theme Toggle Button in Header -->
+        <button onclick="toggleTheme()"
+          class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white transition-colors"
+          title="Đổi giao diện Sáng / Tối">
+          <i id="topThemeIcon" data-lucide="moon" class="w-3.5 h-3.5 text-amber-300"></i>
+          <span id="topThemeLabel">Chế độ tối</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN NAVIGATION -->
+  <header
+    class="sticky top-0 z-40 bg-white border-b border-iot-border shadow-sm dark:bg-[#0D1B3E] dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-18 py-3 flex items-center justify-between gap-4">
+
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div
+          class="w-10 h-10 rounded-lg bg-iot-primary text-white flex items-center justify-center font-bold text-lg shadow-sm dark:bg-blue-600">
+          Φ
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-base tracking-tight text-iot-dark dark:text-white">IELTS</span>
+            <span class="font-bold text-base tracking-tight text-iot-primary dark:text-blue-400">SYNTAX</span>
+            <span
+              class="text-[10px] bg-iot-blueLight text-iot-primary font-bold px-1.5 py-0.5 rounded ml-1 border border-blue-200 dark:bg-slate-800 dark:text-blue-300 dark:border-slate-700">ACADEMIC</span>
+          </div>
+          <span class="text-[11px] text-iot-muted font-medium dark:text-slate-400">Viện Ngôn Ngữ Học Hình Thức &amp;
+            Triết Học Biện Luận</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold text-iot-dark dark:text-slate-200">
+        <a href="#overview" class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors">Tổng Quan</a>
+        <a href="#problem" class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors">Nghịch Lý Band
+          6.0</a>
+        <a href="#modules" class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors">3 Chặng Đào Tạo</a>
+        <a href="library.html"
+          class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors flex items-center gap-1.5 text-iot-primary dark:text-blue-400 font-bold">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          <span>Thư Viện Đề Thi</span>
+          <span class="text-[10px] bg-iot-orange text-white px-1.5 py-0.2 rounded font-mono font-bold">MỚI</span>
+        </a>
+        <a href="#simulator" class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors">Phân Tích Đề</a>
+        <a href="#instructor" class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors">Giảng Viên</a>
+        <a href="#reviews" class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors">Đánh Giá</a>
+      </nav>
+
+      <!-- CTA Button & AI Profile -->
+      <div class="flex items-center gap-2.5">
+        <button onclick="window.socraticAI.openCognitiveProfileModal()" class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-xs font-mono text-iot-primary dark:text-blue-300 border border-blue-200 dark:border-blue-800 transition-all shadow-sm" title="Mở Hồ Sơ Nhận Thức AI">
+          <i data-lucide="brain" class="w-4 h-4 text-iot-orange"></i>
+          <span id="navHomeStudentBadge" class="hidden sm:inline">Minh Đức (Band 8.0)</span>
+          <span class="sm:hidden">AI Profile</span>
+        </button>
+
+        <a href="#enroll"
+          class="inline-flex items-center gap-2 bg-iot-orange hover:bg-iot-orangeHover text-white px-4 sm:px-5 py-2.5 rounded-lg text-sm font-bold shadow-iot-cta transition-all duration-200 active:scale-[0.98]">
+          <i data-lucide="file-signature" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Đăng Ký Xét Tuyển</span>
+          <span class="sm:hidden">Xét Tuyển</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- 1. HERO SECTION (Bố cục EdTech 2 cột + Bộ Mô Phỏng Cú Pháp Động) -->
+  <section id="overview"
+    class="pt-10 pb-16 bg-white border-b border-iot-border dark:bg-[#0B132B] dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+      <!-- Breadcrumb -->
+      <div class="flex items-center gap-2 text-xs text-iot-muted mb-6 dark:text-slate-400">
+        <a href="#" class="hover:text-iot-primary dark:hover:text-blue-400">Trang chủ</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <span class="text-iot-primary font-medium dark:text-blue-400">Khóa Huấn Luyện IELTS Writing &amp; Speaking Nâng
+          Cao</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+
+        <!-- Left Column: Copywriting (7 Cols) -->
+        <div class="lg:col-span-7 space-y-6">
+
+          <!-- Category Tag -->
+          <div
+            class="inline-flex items-center gap-2 px-3 py-1 rounded bg-iot-blueLight border border-blue-200 text-iot-primary text-xs font-bold tracking-wide dark:bg-slate-800 dark:border-slate-700 dark:text-blue-300">
+            <i data-lucide="graduation-cap" class="w-4 h-4 text-iot-primary dark:text-blue-400"></i>
+            <span>CHƯƠNG TRÌNH HUẤN LUYỆN ĐẶC BIỆT • BAND MỤC TIÊU 7.5 – 8.5+</span>
+          </div>
+
+          <!-- Main H1 -->
+          <h1
+            class="text-3xl sm:text-4xl xl:text-45px font-bold text-iot-dark dark:text-white leading-tight tracking-tight">
+            Đừng Học Vẹt Ngôn Ngữ.<br />
+            <span class="text-iot-primary dark:text-blue-400">Giải Mã Tiếng Anh</span> Bằng Cú Pháp Hình Thức &amp; Tư
+            Duy Triết Học.
+          </h1>
+
+          <!-- Body Description -->
+          <p class="text-base sm:text-lg text-iot-body dark:text-slate-300 leading-relaxed">
+            Khóa học tiên phong kết hợp <strong class="text-iot-dark dark:text-white font-semibold">Cú pháp học hình
+              thức (Formal Syntax)</strong>, <strong class="text-iot-dark dark:text-white font-semibold">Logic toán vị
+              từ</strong> và <strong class="text-iot-dark dark:text-white font-semibold">Triết học phương Tây</strong>.
+            Giúp thí sinh IELTS đập tan sự bế tắc ý tưởng, làm chủ cấu trúc câu phức đa tầng và bứt phá điểm số Writing
+            &amp; Speaking bằng năng lực lập luận học thuật nguyên bản.
+          </p>
+
+          <!-- Core Feature Bullets -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-sm font-medium text-iot-dark dark:text-slate-200">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-iot-green shrink-0"></i>
+              <span>Loại bỏ 100% lỗi sai cấu trúc câu phức cốt lõi</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-iot-green shrink-0"></i>
+              <span>Phát triển ý tưởng đa chiều qua Biện chứng pháp Hegel</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-iot-green shrink-0"></i>
+              <span>Tích hợp Thư viện Đề thi &amp; Socratic AI Tutor thông minh</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-iot-green shrink-0"></i>
+              <span>Không học vẹt template sáo rỗng hay mẹo thi ngắn hạn</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <a href="#enroll"
+              class="bg-iot-orange hover:bg-iot-orangeHover text-white px-7 py-3.5 rounded-lg font-bold text-base text-center shadow-iot-cta transition-all duration-200 flex items-center justify-center gap-2">
+              <span>Đăng Ký Phỏng Vấn Đầu Vào</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+
+            <a href="library.html"
+              class="bg-white hover:bg-iot-bgLight text-iot-primary border-2 border-iot-primary px-6 py-3.5 rounded-lg font-bold text-base text-center transition-all duration-200 flex items-center justify-center gap-2 dark:bg-slate-800 dark:border-blue-500 dark:text-blue-300 dark:hover:bg-slate-700">
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+              <span>Khám Phá Thư Viện Đề Thi (Full 4 Kỹ Năng)</span>
+            </a>
+          </div>
+
+          <!-- Trust Badges Bar -->
+          <div
+            class="pt-4 flex items-center gap-3 text-xs text-iot-muted border-t border-iot-border dark:border-slate-800 dark:text-slate-400">
+            <i data-lucide="shield-check" class="w-4 h-4 text-iot-green shrink-0"></i>
+            <span>Được chứng thực bởi các học viên đạt học bổng toàn phần Erasmus Mundus, Chevening và cựu sinh viên
+              FTU, NEU, Bách Khoa.</span>
+          </div>
+
+        </div>
+
+        <!-- Right Column: BỘ MÔ PHỎNG CÚ PHÁP HỌC (Interactive Generative Syntax Tree Canvas) -->
+        <div class="lg:col-span-5" id="syntaxSimulator">
+          <div
+            class="bg-white border border-iot-border rounded-xl shadow-iot-card overflow-hidden dark:bg-[#111C44] dark:border-slate-700 transition-colors">
+
+            <!-- Simulator Header -->
+            <div class="bg-iot-navy p-4 text-white flex items-center justify-between dark:bg-[#071326]">
+              <div class="flex items-center gap-2.5">
+                <span class="w-3 h-3 rounded-full bg-iot-green animate-pulse"></span>
+                <div>
+                  <span class="text-[10px] text-slate-300 uppercase tracking-wider font-mono">BỘ MÔ PHỎNG TƯƠNG
+                    TÁC</span>
+                  <h3 class="font-bold text-sm text-white">Cây Cú Pháp Tạo Sinh &amp; Logic Vị Từ</h3>
+                </div>
+              </div>
+              <span
+                class="text-[11px] bg-blue-600/40 text-blue-200 border border-blue-400/30 px-2 py-0.5 rounded font-mono">
+                X-bar Matrix
+              </span>
+            </div>
+
+            <!-- Canvas Viewport -->
+            <div
+              class="relative w-full h-[320px] bg-slate-50 dark:bg-[#0B132B] overflow-hidden border-b border-iot-border dark:border-slate-800">
+              <canvas id="syntaxCanvas" class="w-full h-full block cursor-crosshair"></canvas>
+
+              <div
+                class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-iot-muted bg-white/90 dark:bg-slate-900/90 dark:text-slate-300 backdrop-blur px-3 py-1 rounded border border-slate-200 dark:border-slate-700 pointer-events-none">
+                <span class="flex items-center gap-1">
+                  <i data-lucide="mouse-pointer" class="w-3 h-3 text-iot-primary dark:text-blue-400"></i>
+                  <span>Rê chuột để kích hoạt quan hệ C-command</span>
+                </span>
+                <span class="text-iot-orange font-semibold">Active Syntax Tree</span>
+              </div>
+            </div>
+
+            <!-- Linguistic Diagnostics Breakdown below canvas -->
+            <div class="p-4 bg-white dark:bg-[#111C44] space-y-2.5 text-xs">
+              <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-2">
+                <span class="font-bold text-iot-dark dark:text-slate-200 flex items-center gap-1.5">
+                  <i data-lucide="binary" class="w-3.5 h-3.5 text-iot-primary dark:text-blue-400"></i>
+                  <span>Hàm mệnh đề logic (Formal Semantics):</span>
+                </span>
+                <span
+                  class="font-mono text-[11px] text-iot-green font-bold bg-green-50 dark:bg-green-950/40 px-2 py-0.5 rounded border border-green-200 dark:border-green-800">
+                  ∀x [P(x) → Q(x)]
+                </span>
+              </div>
+
+              <!-- Color-coded parsed sentence -->
+              <div
+                class="p-2.5 bg-slate-50 dark:bg-slate-800/80 rounded border border-slate-200 dark:border-slate-700 font-mono text-[12px] leading-relaxed text-iot-dark dark:text-slate-200">
+                <span
+                  class="bg-blue-100 text-iot-primary dark:bg-blue-900/50 dark:text-blue-300 px-1 rounded font-semibold">[CP
+                  Thesis]</span> From a Kantian perspective,
+                <span
+                  class="bg-green-100 text-iot-green dark:bg-green-900/50 dark:text-green-300 px-1 rounded font-semibold">[NP
+                  Subject]</span> moral autonomy
+                <span
+                  class="bg-amber-100 text-iot-orange dark:bg-amber-900/50 dark:text-amber-300 px-1 rounded font-semibold">[VP
+                  Predicate]</span> precludes algorithmic sentencing.
+              </div>
+
+              <div class="flex items-center justify-between text-[11px] text-iot-muted dark:text-slate-400 pt-1">
+                <span>✓ Sơ đồ phân nhánh: S → NP + VP</span>
+                <span class="text-iot-green font-bold">✓ Triệt tiêu lỗi sai cú pháp</span>
+              </div>
+            </div>
+
+            <!-- Card Bottom Metrics -->
+            <div
+              class="p-3 bg-iot-bgLight dark:bg-slate-900 border-t border-iot-border dark:border-slate-800 flex items-center justify-around text-center text-xs">
+              <div>
+                <div class="font-bold text-iot-dark dark:text-white">15 Học viên</div>
+                <div class="text-iot-muted dark:text-slate-400 text-[11px]">Quy mô / Cohort</div>
+              </div>
+              <div class="h-6 w-px bg-iot-border dark:bg-slate-800"></div>
+              <div>
+                <div class="font-bold text-iot-green">8.5 IELTS</div>
+                <div class="text-iot-muted dark:text-slate-400 text-[11px]">Giảng Viên Writing/Speaking</div>
+              </div>
+              <div class="h-6 w-px bg-iot-border dark:bg-slate-800"></div>
+              <div>
+                <div class="font-bold text-iot-primary dark:text-blue-400">100% Phản biện</div>
+                <div class="text-iot-muted dark:text-slate-400 text-[11px]">Huấn luyện 1:1</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 2. EXAM LIBRARY TEASER BANNER (CHUYỂN TIẾP TRỰC TIẾP SANG SITE THƯ VIỆN ĐỀ THI) -->
+  <section
+    class="py-14 bg-iot-bgLight border-b border-iot-border dark:bg-[#071326] dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+      <div
+        class="bg-gradient-to-r from-iot-navy via-iot-primary to-[#004085] rounded-2xl p-8 sm:p-12 text-white shadow-lg relative overflow-hidden dark:from-[#050C1A] dark:to-[#0B2545]">
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+          <div class="lg:col-span-8 space-y-4">
+            <span
+              class="inline-flex items-center gap-2 px-3 py-1 rounded bg-white/10 border border-white/20 text-xs font-mono font-bold tracking-wide">
+              <span class="w-2 h-2 rounded-full bg-iot-green animate-pulse"></span>
+              <span>HỆ THỐNG THI THỬ 4 KỸ NĂNG • LIÊN TỤC CẬP NHẬT MỖI TUẦN</span>
+            </span>
+
+            <h2 class="text-2xl sm:text-4xl font-extrabold leading-tight">
+              Thư Viện Đề Thi Thực Chiến - Cập Nhật Hàng Tuần.
+            </h2>
+
+            <p class="text-sm sm:text-base text-blue-100 max-w-2xl leading-relaxed">
+              Không chỉ là nơi giải đề. Đây là <strong class="text-white font-semibold">"phòng thí nghiệm ngôn
+                ngữ"</strong> của bạn, với đủ 4 kỹ năng Nghe - Nói - Đọc - Viết và kho dữ liệu được làm mới mỗi 7 ngày,
+              tích hợp Trợ giảng Socratic AI phản biện logic.
+            </p>
+
+            <div class="pt-2 flex flex-wrap gap-4 text-xs font-mono">
+              <div class="bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-2">
+                <i data-lucide="layers" class="w-4 h-4 text-iot-orange"></i>
+                <span>289+ Đề thi trực tuyến</span>
+              </div>
+              <div class="bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-2">
+                <i data-lucide="calendar" class="w-4 h-4 text-iot-green"></i>
+                <span>+8 Đề mới tuần này</span>
+              </div>
+              <div class="bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-2">
+                <i data-lucide="bot" class="w-4 h-4 text-blue-300"></i>
+                <span>Socratic AI phản biện 1:1</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-4 flex flex-col items-start lg:items-end justify-center gap-4">
+            <a href="library.html"
+              class="w-full sm:w-auto px-8 py-4 rounded-xl bg-iot-orange hover:bg-iot-orangeHover text-white font-bold text-sm uppercase tracking-wider shadow-iot-cta transition-all flex items-center justify-center gap-2 active:scale-95 text-center">
+              <span>TRUY CẬP THƯ VIỆN ĐỀ THI (4 KỸ NĂNG)</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+            <span class="text-xs text-blue-200 font-mono">⚡ Listening • Reading • Writing • Speaking</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. PROBLEM & AGITATION (NGHỊCH LÝ BAND 6.0) -->
+  <section id="problem"
+    class="py-16 bg-white border-b border-iot-border dark:bg-[#0B132B] dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto mb-12 space-y-3">
+        <span
+          class="text-xs font-bold text-iot-primary uppercase tracking-wider bg-iot-blueLight px-3 py-1 rounded border border-blue-200 dark:bg-slate-800 dark:border-slate-700 dark:text-blue-300">
+          PHÂN TÍCH NGUYÊN NHÂN CỐT LÕI
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-iot-dark dark:text-white">
+          Vì Sao 87% Thí Sinh IELTS Bị Kẹt Ở Band 6.0 – 6.5?
+        </h2>
+        <p class="text-iot-body dark:text-slate-300 text-base">
+          Sự thật là bạn không hề thiếu chăm chỉ. Vấn đề nằm ở chỗ: các phương pháp luyện thi đại trà đang dạy bạn học
+          vẹt bề nổi thay vì giải mã cấu trúc sâu của ngôn ngữ.
+        </p>
+      </div>
+
+      <!-- 3 Dilemmas in Clean EdTech Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Card 1 -->
+        <div
+          class="bg-white p-6 rounded-lg border border-iot-border shadow-iot-card hover:shadow-iot-hover transition-all duration-200 flex flex-col justify-between dark:bg-[#111C44] dark:border-slate-700">
+          <div>
+            <div
+              class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center font-bold mb-4 dark:bg-red-950/40 dark:text-red-400">
+              <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+            </div>
+
+            <div class="text-xs font-mono text-red-600 font-bold uppercase tracking-wider mb-1 dark:text-red-400">Nghịch
+              Lý 01</div>
+            <h3 class="text-lg font-bold text-iot-dark dark:text-white mb-3">Nhồi 3,000 Từ Vựng Flashcard Nhưng Câu Vẫn
+              Què Cụt?</h3>
+            <p class="text-sm text-iot-body dark:text-slate-300 leading-relaxed mb-6">
+              Bạn cố nhồi nhét từ vựng C1/C2 vào câu như lắp ghép mô hình mà không hiểu <strong
+                class="text-iot-dark dark:text-white">phân bổ ngữ nghĩa (Semantic Distribution)</strong>, khiến câu văn
+              ngô nghê, gượng gạo và bị trừ điểm Lexical Resource.
+            </p>
+          </div>
+
+          <div
+            class="pt-4 border-t border-iot-border dark:border-slate-700 text-xs text-iot-dark dark:text-slate-200 space-y-1 bg-slate-50 dark:bg-slate-800/60 -mx-6 -mb-6 p-4 rounded-b-lg">
+            <div class="font-bold text-iot-primary dark:text-blue-400 flex items-center gap-1.5">
+              <i data-lucide="check" class="w-4 h-4 text-iot-green"></i>
+              <span>Giải pháp Ngôn ngữ học:</span>
+            </div>
+            <p class="text-iot-muted dark:text-slate-400">Nhìn từ vựng như các toán tử hàm trong Cú pháp tạo sinh
+              (Generative Syntax), đặt từ nào đúng vị trí ngữ nghĩa đó.</p>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div
+          class="bg-white p-6 rounded-lg border border-iot-border shadow-iot-card hover:shadow-iot-hover transition-all duration-200 flex flex-col justify-between dark:bg-[#111C44] dark:border-slate-700">
+          <div>
+            <div
+              class="w-10 h-10 rounded-lg bg-amber-50 text-iot-orange flex items-center justify-center font-bold mb-4 dark:bg-amber-950/40 dark:text-amber-400">
+              <i data-lucide="help-circle" class="w-5 h-5"></i>
+            </div>
+
+            <div class="text-xs font-mono text-iot-orange font-bold uppercase tracking-wider mb-1 dark:text-amber-400">
+              Nghịch Lý 02</div>
+            <h3 class="text-lg font-bold text-iot-dark dark:text-white mb-3">Đứng Hình Khi Gặp Đề IELTS Writing Task 2
+              Lạ &amp; Trừu Tượng?</h3>
+            <p class="text-sm text-iot-body dark:text-slate-300 leading-relaxed mb-6">
+              Bạn phụ thuộc vào các bài mẫu học thuộc lòng. Khi gặp đề thi xoay trục sang các vấn đề xã hội phức tạp
+              (đạo đức AI, tiêu dùng, triết lý tự do), não bạn lập tức trống rỗng vì thiếu bộ khung tư duy nền tảng.
+            </p>
+          </div>
+
+          <div
+            class="pt-4 border-t border-iot-border dark:border-slate-700 text-xs text-iot-dark dark:text-slate-200 space-y-1 bg-slate-50 dark:bg-slate-800/60 -mx-6 -mb-6 p-4 rounded-b-lg">
+            <div class="font-bold text-iot-primary dark:text-blue-400 flex items-center gap-1.5">
+              <i data-lucide="check" class="w-4 h-4 text-iot-green"></i>
+              <span>Giải pháp Triết học:</span>
+            </div>
+            <p class="text-iot-muted dark:text-slate-400">Trang bị Biện chứng pháp Hegel (Thesis – Antithesis –
+              Synthesis) để bẻ gãy mọi câu hỏi hóc búa thành 3 chiều không gian phản biện.</p>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div
+          class="bg-white p-6 rounded-lg border border-iot-border shadow-iot-card hover:shadow-iot-hover transition-all duration-200 flex flex-col justify-between dark:bg-[#111C44] dark:border-slate-700">
+          <div>
+            <div
+              class="w-10 h-10 rounded-lg bg-blue-50 text-iot-primary flex items-center justify-center font-bold mb-4 dark:bg-blue-950/40 dark:text-blue-400">
+              <i data-lucide="git-branch" class="w-5 h-5"></i>
+            </div>
+
+            <div class="text-xs font-mono text-iot-primary font-bold uppercase tracking-wider mb-1 dark:text-blue-400">
+              Nghịch Lý 03</div>
+            <h3 class="text-lg font-bold text-iot-dark dark:text-white mb-3">Học Ngữ Pháp 12 Năm Vẫn Sai Ở Cấu Trúc Câu
+              Phức?</h3>
+            <p class="text-sm text-iot-body dark:text-slate-300 leading-relaxed mb-6">
+              Bạn bị dạy ngữ pháp theo danh sách quy tắc rời rạc và ngoại lệ bất tận. Bạn không nhìn thấy trật tự phân
+              tầng ngầm của ngôn ngữ, dẫn đến lỗi câu què (fragments) và nhập nhằng bổ nghĩa (dangling modifiers).
+            </p>
+          </div>
+
+          <div
+            class="pt-4 border-t border-iot-border dark:border-slate-700 text-xs text-iot-dark dark:text-slate-200 space-y-1 bg-slate-50 dark:bg-slate-800/60 -mx-6 -mb-6 p-4 rounded-b-lg">
+            <div class="font-bold text-iot-primary dark:text-blue-400 flex items-center gap-1.5">
+              <i data-lucide="check" class="w-4 h-4 text-iot-green"></i>
+              <span>Giải pháp Cú pháp hình thức:</span>
+            </div>
+            <p class="text-iot-muted dark:text-slate-400">Giải phẫu cây cú pháp X-bar và quan hệ C-command, giúp bạn
+              viết câu phức 3-4 tầng mà không thể mắc lỗi sai kiến trúc.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4. COURSE MODULES (LỘ TRÌNH 3 CHẶNG ĐÀO TẠO) -->
+  <section id="modules"
+    class="py-16 bg-iot-bgLight border-b border-iot-border dark:bg-[#071326] dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+      <div class="text-center max-w-3xl mx-auto mb-12 space-y-3">
+        <span
+          class="text-xs font-bold text-iot-primary uppercase tracking-wider bg-iot-blueLight px-3 py-1 rounded border border-blue-200 dark:bg-slate-800 dark:border-slate-700 dark:text-blue-300">
+          CHƯƠNG TRÌNH HUẤN LUYỆN 12 TUẦN
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-iot-dark dark:text-white">
+          Lộ Trình Đào Tạo 3 Module Đột Phá
+        </h2>
+        <p class="text-iot-body dark:text-slate-300 text-base">
+          Mỗi module được thiết kế chuẩn mực như một seminar học thuật tại các đại học hàng đầu, bám sát các tiêu chí
+          chấm thi khắt khe nhất của IELTS Academic.
+        </p>
+      </div>
+
+      <!-- Modules Grid (3 Detailed Cards) -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- MODULE 1 -->
+        <div
+          class="bg-white rounded-lg border border-iot-border shadow-iot-card hover:shadow-iot-hover transition-all duration-200 flex flex-col justify-between overflow-hidden dark:bg-[#111C44] dark:border-slate-700">
+          <div>
+            <div class="bg-iot-primary p-4 text-white dark:bg-blue-600">
+              <div class="flex items-center justify-between text-xs mb-1 font-mono">
+                <span class="text-blue-200 font-bold">CHẶNG 01 (TUẦN 1 - 4)</span>
+                <span class="bg-white/20 px-2 py-0.5 rounded text-[11px]">4 SEMINARS</span>
+              </div>
+              <h3 class="text-lg font-bold text-white">Kiến Trúc Ngôn Ngữ &amp; Cú Pháp Hình Thức</h3>
+            </div>
+
+            <div class="p-6 space-y-4">
+              <p class="text-xs font-semibold text-iot-muted dark:text-slate-400 uppercase tracking-wider">
+                Mục tiêu: Grammatical Range &amp; Accuracy 8.5+
+              </p>
+
+              <div class="space-y-3 text-sm text-iot-body dark:text-slate-300">
+                <div
+                  class="p-3 bg-iot-bgLight dark:bg-slate-800/60 rounded border border-iot-border dark:border-slate-700">
+                  <strong class="text-iot-dark dark:text-white block text-xs mb-1 font-semibold">1. Cú pháp Tạo sinh
+                    &amp; Sơ đồ cây X-bar</strong>
+                  <p class="text-xs text-iot-muted dark:text-slate-400">Giải phẫu cách não bộ tổ chức ngữ đoạn. Nắm vững
+                    trật tự Specifier - Head - Complement để triệt tiêu lỗi phân mảnh câu.</p>
+                </div>
+
+                <div
+                  class="p-3 bg-iot-bgLight dark:bg-slate-800/60 rounded border border-iot-border dark:border-slate-700">
+                  <strong class="text-iot-dark dark:text-white block text-xs mb-1 font-semibold">2. Logic Mệnh Đề &amp;
+                    Vị Từ (Predicate Logic)</strong>
+                  <p class="text-xs text-iot-muted dark:text-slate-400">Mô hình hóa câu phức thành các hàm số logic. Làm
+                    chủ hoàn toàn cấu trúc câu đảo ngữ, câu điều kiện phức và rút gọn phân từ.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="p-4 bg-iot-bgLight dark:bg-slate-800/80 border-t border-iot-border dark:border-slate-700 text-xs text-iot-primary dark:text-blue-400 font-semibold flex items-center justify-between">
+            <span>Đầu ra: Viết câu phức 3-4 tầng chuẩn mực</span>
+            <i data-lucide="check" class="w-4 h-4 text-iot-green"></i>
+          </div>
+        </div>
+
+        <!-- MODULE 2 -->
+        <div
+          class="bg-white rounded-lg border border-iot-border shadow-iot-card hover:shadow-iot-hover transition-all duration-200 flex flex-col justify-between overflow-hidden dark:bg-[#111C44] dark:border-slate-700">
+          <div>
+            <div class="bg-iot-navy p-4 text-white dark:bg-slate-900">
+              <div class="flex items-center justify-between text-xs mb-1 font-mono">
+                <span class="text-iot-orange font-bold">CHẶNG 02 (TUẦN 5 - 8)</span>
+                <span class="bg-white/20 px-2 py-0.5 rounded text-[11px]">4 SEMINARS</span>
+              </div>
+              <h3 class="text-lg font-bold text-white">Triết Học &amp; Biện Chứng Lập Luận</h3>
+            </div>
+
+            <div class="p-6 space-y-4">
+              <p class="text-xs font-semibold text-iot-muted dark:text-slate-400 uppercase tracking-wider">
+                Mục tiêu: Task Response &amp; Fluency 8.5+
+              </p>
+
+              <div class="space-y-3 text-sm text-iot-body dark:text-slate-300">
+                <div
+                  class="p-3 bg-iot-bgLight dark:bg-slate-800/60 rounded border border-iot-border dark:border-slate-700">
+                  <strong class="text-iot-dark dark:text-white block text-xs mb-1 font-semibold">1. Biện chứng pháp
+                    Hegel (Thesis - Antithesis)</strong>
+                  <p class="text-xs text-iot-muted dark:text-slate-400">Phương pháp mổ xẻ mâu thuẫn để tổng hợp quan
+                    điểm tối ưu (Synthesis). Biến mọi đề thi xã hội phức tạp thành luận đề đa tầng.</p>
+                </div>
+
+                <div
+                  class="p-3 bg-iot-bgLight dark:bg-slate-800/60 rounded border border-iot-border dark:border-slate-700">
+                  <strong class="text-iot-dark dark:text-white block text-xs mb-1 font-semibold">2. Hiện tượng học &amp;
+                    Đạo đức học kinh điển</strong>
+                  <p class="text-xs text-iot-muted dark:text-slate-400">Ứng dụng tư tưởng Kant (Deontology), J.S. Mill
+                    (Utilitarianism) để giải quyết các đề tài hóc búa trong IELTS Writing Task 2 &amp; Speaking Part 3.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="p-4 bg-iot-bgLight dark:bg-slate-800/80 border-t border-iot-border dark:border-slate-700 text-xs text-iot-primary dark:text-blue-400 font-semibold flex items-center justify-between">
+            <span>Đầu ra: Ý tưởng sâu sắc, không bao giờ bí từ</span>
+            <i data-lucide="check" class="w-4 h-4 text-iot-green"></i>
+          </div>
+        </div>
+
+        <!-- MODULE 3 -->
+        <div
+          class="bg-white rounded-lg border border-iot-border shadow-iot-card hover:shadow-iot-hover transition-all duration-200 flex flex-col justify-between overflow-hidden dark:bg-[#111C44] dark:border-slate-700">
+          <div>
+            <div class="bg-iot-primary p-4 text-white dark:bg-blue-600">
+              <div class="flex items-center justify-between text-xs mb-1 font-mono">
+                <span class="text-blue-200 font-bold">CHẶNG 03 (TUẦN 9 - 12)</span>
+                <span class="bg-white/20 px-2 py-0.5 rounded text-[11px]">4 SEMINARS</span>
+              </div>
+              <h3 class="text-lg font-bold text-white">Ngữ Nghĩa Học &amp; Cấu Trúc Thượng Tầng</h3>
+            </div>
+
+            <div class="p-6 space-y-4">
+              <p class="text-xs font-semibold text-iot-muted dark:text-slate-400 uppercase tracking-wider">
+                Mục tiêu: Lexical Precision &amp; Academic Style
+              </p>
+
+              <div class="space-y-3 text-sm text-iot-body dark:text-slate-300">
+                <div
+                  class="p-3 bg-iot-bgLight dark:bg-slate-800/60 rounded border border-iot-border dark:border-slate-700">
+                  <strong class="text-iot-dark dark:text-white block text-xs mb-1 font-semibold">1. Ngữ nghĩa học hình
+                    thức (Formal Semantics)</strong>
+                  <p class="text-xs text-iot-muted dark:text-slate-400">Làm chủ hàm ngôn (Implicature), tiền giả định
+                    (Presupposition) và kỹ thuật triệt tiêu hoàn toàn sự mơ hồ (Ambiguity) trong câu văn.</p>
+                </div>
+
+                <div
+                  class="p-3 bg-iot-bgLight dark:bg-slate-800/60 rounded border border-iot-border dark:border-slate-700">
+                  <strong class="text-iot-dark dark:text-white block text-xs mb-1 font-semibold">2. Tinh chỉnh Văn phong
+                    Học thuật (Academic Register)</strong>
+                  <p class="text-xs text-iot-muted dark:text-slate-400">Loại bỏ sự lặp ngữ nghĩa (Tautology), tối ưu hóa
+                    tính mạch lạc ngầm (Cohesion), định hình phong cách viết của các tạp chí nghiên cứu quốc tế.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="p-4 bg-iot-bgLight dark:bg-slate-800/80 border-t border-iot-border dark:border-slate-700 text-xs text-iot-primary dark:text-blue-400 font-semibold flex items-center justify-between">
+            <span>Đầu ra: Giọng văn hàn lâm chuẩn mực Oxford/Cambridge</span>
+            <i data-lucide="check" class="w-4 h-4 text-iot-green"></i>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 5. INSTRUCTOR PROFILE -->
+  <section id="instructor"
+    class="py-16 bg-white border-b border-iot-border dark:bg-[#0B132B] dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+      <div
+        class="bg-iot-bgLight dark:bg-[#111C44] rounded-xl border border-iot-border dark:border-slate-700 p-8 lg:p-12">
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+
+          <!-- Instructor Photo -->
+          <div class="lg:col-span-4">
+            <div
+              class="bg-white dark:bg-slate-800 p-3 rounded-lg border border-iot-border dark:border-slate-700 shadow-iot-card">
+              <div class="relative rounded-md overflow-hidden bg-slate-800 h-[380px]">
+                <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80"
+                  alt="Alexandre Vũ - Giảng Viên Khóa Học"
+                  class="w-full h-full object-cover object-top filter grayscale contrast-115" />
+
+                <div
+                  class="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-iot-navy via-iot-navy/80 to-transparent text-white">
+                  <div class="text-[11px] font-mono text-iot-orange font-bold uppercase tracking-wider">HỘI ĐỒNG HỌC
+                    THUẬT</div>
+                  <h4 class="text-lg font-bold">Alexandre Vũ (Vũ Hoàng Long)</h4>
+                  <p class="text-xs text-slate-300">Nhà nghiên cứu Ngôn ngữ học &amp; Triết học Ứng dụng</p>
+                </div>
+              </div>
+
+              <div
+                class="mt-3 pt-2 border-t border-iot-border dark:border-slate-700 flex items-center justify-between text-xs text-iot-muted dark:text-slate-400">
+                <span>Phong cách: Sartorial học thuật</span>
+                <span class="text-iot-green font-semibold flex items-center gap-1">
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i> Giảng viên chính thức
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Academic Background Details -->
+          <div class="lg:col-span-8 space-y-5">
+
+            <div
+              class="inline-flex items-center gap-2 px-3 py-1 rounded bg-blue-100 text-iot-primary text-xs font-bold dark:bg-blue-900/50 dark:text-blue-300">
+              <i data-lucide="award" class="w-4 h-4"></i>
+              <span>NGƯỜI THIẾT KẾ PHƯƠNG PHÁP GIẢI MÃ CÚ PHÁP</span>
+            </div>
+
+            <h3 class="text-2xl sm:text-3xl font-bold text-iot-dark dark:text-white">
+              Alexandre Vũ (Vũ Hoàng Long)
+            </h3>
+
+            <p class="text-base text-iot-body dark:text-slate-300 leading-relaxed">
+              Không xuất thân từ những lò luyện thi công nghiệp, Alexandre Vũ tiếp cận tiếng Anh với tư duy của một nhà
+              khoa học tự nhiên và sự mẫn cảm của một học giả triết học phương Tây. Anh sở hữu nền tảng song hành vững
+              chắc: tư duy toán học logic chặt chẽ kết hợp cùng các công trình nghiên cứu về Cú pháp học tạo sinh
+              (Generative Syntax) và Triết học Ngôn ngữ học.
+            </p>
+
+            <div
+              class="p-4 bg-white dark:bg-slate-800 rounded-lg border-l-4 border-iot-primary border border-iot-border dark:border-slate-700 text-sm text-iot-dark dark:text-slate-200 font-medium italic">
+              "Ngôn ngữ không đơn thuần là công cụ trao đổi thông tin; nó là cấu trúc hình thức của nhận thức. Khi bạn
+              giải phẫu đúng kiến trúc của câu văn, bạn đang giải phóng chính tư duy phản biện của mình."
+            </div>
+
+            <!-- Credentials Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+              <div class="p-3 bg-white dark:bg-slate-800 rounded-lg border border-iot-border dark:border-slate-700">
+                <div class="text-xl font-extrabold text-iot-primary dark:text-blue-400">8.5 IELTS</div>
+                <div class="text-xs text-iot-muted dark:text-slate-400 mt-0.5">Overall (Writing 8.5, Speaking 8.5 - Hoàn
+                  toàn không học vẹt)</div>
+              </div>
+
+              <div class="p-3 bg-white dark:bg-slate-800 rounded-lg border border-iot-border dark:border-slate-700">
+                <div class="text-xl font-extrabold text-iot-dark dark:text-white">Toán &amp; Tự Nhiên</div>
+                <div class="text-xs text-iot-muted dark:text-slate-400 mt-0.5">Ứng dụng đại số mệnh đề &amp; Logic vị từ
+                  vào phân tích câu</div>
+              </div>
+
+              <div class="p-3 bg-white dark:bg-slate-800 rounded-lg border border-iot-border dark:border-slate-700">
+                <div class="text-xl font-extrabold text-iot-green">100% 1-on-1</div>
+                <div class="text-xs text-iot-muted dark:text-slate-400 mt-0.5">Chấm chữa luận văn và phỏng vấn tư duy
+                  từng học viên</div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 6. STUDENT TESTIMONIALS (ĐÁNH GIÁ THỰC TẾ) -->
+  <section id="reviews"
+    class="py-16 bg-iot-bgLight border-b border-iot-border dark:bg-[#071326] dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+      <div class="text-center max-w-3xl mx-auto mb-12 space-y-3">
+        <span
+          class="text-xs font-bold text-iot-primary uppercase tracking-wider bg-iot-blueLight px-3 py-1 rounded border border-blue-200 dark:bg-slate-800 dark:border-slate-700 dark:text-blue-300">
+          CHỨNG THỰC TỪ HỌC VIÊN
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-iot-dark dark:text-white">
+          Đánh Giá Từ Thí Sinh &amp; Học Viên Đã Thi Thật
+        </h2>
+        <p class="text-iot-body dark:text-slate-300 text-base">
+          Những trải nghiệm thực tế về sự chuyển hóa từ ghi nhớ máy móc sang tư duy ngôn ngữ học tự nhiên.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Feedback 1 -->
+        <div
+          class="bg-white p-6 rounded-lg border border-iot-border shadow-iot-card hover:shadow-iot-hover transition-all duration-200 flex flex-col justify-between dark:bg-[#111C44] dark:border-slate-700">
+          <div class="space-y-4">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-11 h-11 rounded-full bg-blue-100 text-iot-primary dark:bg-blue-900/60 dark:text-blue-300 flex items-center justify-center font-bold text-sm">
+                  MK
+                </div>
+                <div>
+                  <h4 class="font-bold text-iot-dark dark:text-white text-sm">Đặng Minh Khoa</h4>
+                  <p class="text-xs text-iot-muted dark:text-slate-400">Kỹ sư Phần mềm • Cựu học viên Cohort 04</p>
+                </div>
+              </div>
+
+              <div class="text-right">
+                <span
+                  class="bg-green-100 text-iot-green text-xs font-bold px-2.5 py-1 rounded border border-green-200 dark:bg-green-950/50 dark:border-green-800">
+                  WRITING 6.0 ➔ 8.0
+                </span>
+                <div class="text-[10px] text-iot-muted dark:text-slate-400 mt-1">Đã xác thực chứng chỉ</div>
+              </div>
+            </div>
+
+            <div class="flex text-amber-400 text-xs">
+              ★★★★★ <span class="text-iot-muted dark:text-slate-400 text-xs ml-2 font-mono text-[11px]">(5/5 Tuyệt
+                đối)</span>
+            </div>
+
+            <p class="text-sm text-iot-body dark:text-slate-300 leading-relaxed">
+              "Tôi là dân kỹ thuật, tôi luôn cảm thấy việc học tiếng Anh theo kiểu 'học thuộc lòng vì người bản xứ quen
+              dùng thế' là một cực hình phi logic. Tôi từng kẹt ở IELTS Writing 6.0 suốt hơn một năm vì không thể nuốt
+              nổi các bài mẫu sáo rỗng trên mạng. Khóa học của anh Alexandre đã thay đổi hoàn toàn cuộc chơi. Khi anh ấy
+              đặt cú pháp tiếng Anh cạnh logic mệnh đề và sơ đồ cây, mọi thứ sáng rõ như mã nguồn của một hệ điều hành.
+              Tôi bước vào phòng thi như đang giải một bài toán đẹp — và đạt Writing 8.0 ngoài sự mong đợi."
+            </p>
+          </div>
+
+          <div
+            class="pt-4 mt-4 border-t border-iot-border dark:border-slate-700 text-xs text-iot-muted dark:text-slate-400 flex items-center justify-between">
+            <span>Khóa học: Formal Syntax &amp; Logic Matrix</span>
+            <span class="text-iot-green font-semibold">Verified Test-Taker</span>
+          </div>
+        </div>
+
+        <!-- Feedback 2 -->
+        <div
+          class="bg-white p-6 rounded-lg border border-iot-border shadow-iot-card hover:shadow-iot-hover transition-all duration-200 flex flex-col justify-between dark:bg-[#111C44] dark:border-slate-700">
+          <div class="space-y-4">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-11 h-11 rounded-full bg-amber-100 text-iot-orange dark:bg-amber-900/60 dark:text-amber-300 flex items-center justify-center font-bold text-sm">
+                  UN
+                </div>
+                <div>
+                  <h4 class="font-bold text-iot-dark dark:text-white text-sm">Hoàng Lê Uyên Nhi</h4>
+                  <p class="text-xs text-iot-muted dark:text-slate-400">Học bổng Thạc sĩ Erasmus Mundus • ĐH Ngoại
+                    Thương</p>
+                </div>
+              </div>
+
+              <div class="text-right">
+                <span
+                  class="bg-green-100 text-iot-green text-xs font-bold px-2.5 py-1 rounded border border-green-200 dark:bg-green-950/50 dark:border-green-800">
+                  IELTS OVERALL 8.5
+                </span>
+                <div class="text-[10px] text-iot-muted dark:text-slate-400 mt-1">Speaking 8.5 • Writing 8.0</div>
+              </div>
+            </div>
+
+            <div class="flex text-amber-400 text-xs">
+              ★★★★★ <span class="text-iot-muted dark:text-slate-400 text-xs ml-2 font-mono text-[11px]">(5/5 Tuyệt
+                đối)</span>
+            </div>
+
+            <p class="text-sm text-iot-body dark:text-slate-300 leading-relaxed">
+              "Học chuyên văn, tôi không thiếu từ nhưng bài viết và phần Speaking Part 3 của tôi luôn bị nhận xét là lan
+              man, thiếu tính logic và phản biện sắc bén. Được tiếp cận Hiện tượng học, Chủ nghĩa Vị lợi và các kỹ thuật
+              loại trừ tính mơ hồ trong ngữ nghĩa học, tôi biết cách xây dựng một luận điểm vững chắc từ tiền đề đến kết
+              luận. Thứ vô giá nhất tôi nhận được là sự tự tin khi phản biện học thuật với các giáo sư nước ngoài trong
+              kỳ phỏng vấn học bổng sau này."
+            </p>
+          </div>
+
+          <div
+            class="pt-4 mt-4 border-t border-iot-border dark:border-slate-700 text-xs text-iot-muted dark:text-slate-400 flex items-center justify-between">
+            <span>Khóa học: Philosophical English &amp; Semantics</span>
+            <span class="text-iot-green font-semibold">Verified Test-Taker</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 7. FAQ ACCORDION -->
+  <section id="faq"
+    class="py-16 bg-white border-b border-iot-border dark:bg-[#0B132B] dark:border-slate-800 transition-colors">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+
+      <div class="text-center mb-12 space-y-3">
+        <span
+          class="text-xs font-bold text-iot-primary uppercase tracking-wider bg-iot-blueLight px-3 py-1 rounded border border-blue-200 dark:bg-slate-800 dark:border-slate-700 dark:text-blue-300">
+          GIẢI MÃ THẮC MẮC ĐẦU VÀO
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-iot-dark dark:text-white">
+          Các Câu Hỏi Thường Gặp (FAQ)
+        </h2>
+      </div>
+
+      <!-- Accordion List -->
+      <div class="space-y-4" id="faqList">
+
+        <!-- FAQ 1 -->
+        <div
+          class="bg-white rounded-lg border border-iot-border overflow-hidden shadow-sm dark:bg-[#111C44] dark:border-slate-700">
+          <button onclick="toggleFaqItem(1)"
+            class="w-full p-5 flex items-center justify-between text-left font-bold text-sm sm:text-base text-iot-dark dark:text-white hover:text-iot-primary dark:hover:text-blue-400 transition-colors">
+            <span>1. Khóa học này có phù hợp cho người mất gốc hoặc trình độ tiếng Anh cơ bản không?</span>
+            <i id="faqIcon-1" data-lucide="plus"
+              class="w-4 h-4 text-iot-primary dark:text-blue-400 transition-transform duration-200"></i>
+          </button>
+          <div id="faqContent-1"
+            class="hidden px-5 pb-5 text-sm text-iot-body dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-700 pt-3">
+            <strong class="text-iot-dark dark:text-white">Thành thật là không.</strong> Khóa học này không được thiết kế
+            để dạy lại các thì ngữ pháp thông thường hay từ vựng giao tiếp căn bản. Để tiếp thu hiệu quả Cú pháp học
+            hình thức và các trường phái Triết học, học viên cần có nền tảng tối thiểu tương đương <strong>IELTS 5.5 -
+              6.0</strong>. Chúng tôi muốn tôn trọng thời gian và ngân sách của bạn nếu mục tiêu hiện tại là học tiếng
+            Anh căn bản. Khóa học dành cho những ai muốn bứt phá từ mức khá lên mức xuất sắc và học thuật tinh tế.
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div
+          class="bg-white rounded-lg border border-iot-border overflow-hidden shadow-sm dark:bg-[#111C44] dark:border-slate-700">
+          <button onclick="toggleFaqItem(2)"
+            class="w-full p-5 flex items-center justify-between text-left font-bold text-sm sm:text-base text-iot-dark dark:text-white hover:text-iot-primary dark:hover:text-blue-400 transition-colors">
+            <span>2. Đưa Triết học vào có làm tiếng Anh trở nên quá trừu tượng và khó áp dụng khi thi IELTS?</span>
+            <i id="faqIcon-2" data-lucide="plus"
+              class="w-4 h-4 text-iot-primary dark:text-blue-400 transition-transform duration-200"></i>
+          </button>
+          <div id="faqContent-2"
+            class="hidden px-5 pb-5 text-sm text-iot-body dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-700 pt-3">
+            <strong>Hoàn toàn ngược lại.</strong> Triết học chính là nghệ thuật của sự tường minh trong tư tưởng. Giám
+            khảo chấm band 7.5 – 9.0 đều là những học giả giàu kinh nghiệm, họ rất trân trọng những bài viết có khung lý
+            thuyết vững chãi. Thay vì làm phức tạp hóa, các khung tư duy triết học giúp bạn tổ chức ý tưởng <em>nhanh
+              hơn gấp 3 lần</em> trong phòng thi vì bạn luôn có sẵn các trục tọa độ để phân tích mọi vấn đề xã hội mà
+            không sợ bị bí ý tưởng.
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div
+          class="bg-white rounded-lg border border-iot-border overflow-hidden shadow-sm dark:bg-[#111C44] dark:border-slate-700">
+          <button onclick="toggleFaqItem(3)"
+            class="w-full p-5 flex items-center justify-between text-left font-bold text-sm sm:text-base text-iot-dark dark:text-white hover:text-iot-primary dark:hover:text-blue-400 transition-colors">
+            <span>3. Tôi là người theo ban Tự nhiên/Kỹ thuật, liệu tôi có học được môn này không?</span>
+            <i id="faqIcon-3" data-lucide="plus"
+              class="w-4 h-4 text-iot-primary dark:text-blue-400 transition-transform duration-200"></i>
+          </button>
+          <div id="faqContent-3"
+            class="hidden px-5 pb-5 text-sm text-iot-body dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-700 pt-3">
+            <strong>Đây chính là môi trường lý tưởng nhất cho bạn.</strong> Cú pháp học hình thức bản chất là lý thuyết
+            đồ thị và đại số mệnh đề áp dụng vào ngôn ngữ học. Chúng tôi không tiếp cận văn học theo kiểu cảm thụ mông
+            lung, mà mổ xẻ nó dưới dạng các phương trình lập luận chặt chẽ. Học viên có tư duy tự nhiên thường là những
+            người tiến bộ nhanh nhất trong khóa học này vì họ nhanh chóng nhận diện được quy luật vận hành của hệ thống
+            ngôn ngữ.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 8. ENROLLMENT & FINAL CTA -->
+  <section id="enroll" class="py-16 bg-iot-bgLight dark:bg-[#071326] transition-colors">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+
+      <div class="border-2 border-iot-primary dark:border-blue-600 rounded-xl overflow-hidden shadow-iot-card">
+
+        <!-- Header Banner -->
+        <div class="bg-iot-primary dark:bg-blue-600 text-white p-6 sm:p-8 text-center">
+          <span
+            class="inline-block bg-iot-orange text-white text-xs font-bold px-3 py-1 rounded uppercase tracking-wider mb-2">
+            ĐỢT TUYỂN CHỌN HỌC VIÊN COHORT MỚI
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white">
+            Đăng Ký Xét Tuyển &amp; Phỏng Vấn Đầu Vào
+          </h2>
+          <p class="text-sm text-blue-100 max-w-lg mx-auto mt-2">
+            Khóa học giới hạn tối đa <strong>15 học viên</strong>. Mỗi thí sinh đều trải qua bài phỏng vấn tư duy cú
+            pháp 1:1 trực tiếp với giảng viên.
+          </p>
+        </div>
+
+        <!-- Form Body -->
+        <div class="p-6 sm:p-10 bg-white dark:bg-[#111C44]">
+
+          <form id="enrollmentForm" onsubmit="submitEnrollment(event)" class="space-y-5">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label
+                  class="block text-xs font-bold text-iot-dark dark:text-slate-200 uppercase tracking-wider mb-1.5">
+                  Họ và tên của bạn <span class="text-red-500">*</span>
+                </label>
+                <input type="text" required placeholder="Ví dụ: Nguyễn Minh Đức"
+                  class="w-full px-4 py-2.5 rounded-lg border border-iot-border dark:border-slate-700 text-sm text-iot-dark dark:text-white dark:bg-slate-800 focus:outline-none focus:border-iot-primary focus:ring-1 focus:ring-iot-primary transition-all" />
+              </div>
+
+              <div>
+                <label
+                  class="block text-xs font-bold text-iot-dark dark:text-slate-200 uppercase tracking-wider mb-1.5">
+                  Số điện thoại / Zalo <span class="text-red-500">*</span>
+                </label>
+                <input type="tel" required placeholder="0912 345 678"
+                  class="w-full px-4 py-2.5 rounded-lg border border-iot-border dark:border-slate-700 text-sm text-iot-dark dark:text-white dark:bg-slate-800 focus:outline-none focus:border-iot-primary focus:ring-1 focus:ring-iot-primary transition-all" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label
+                  class="block text-xs font-bold text-iot-dark dark:text-slate-200 uppercase tracking-wider mb-1.5">
+                  Địa chỉ Email học thuật <span class="text-red-500">*</span>
+                </label>
+                <input type="email" required placeholder="name@domain.edu.vn"
+                  class="w-full px-4 py-2.5 rounded-lg border border-iot-border dark:border-slate-700 text-sm text-iot-dark dark:text-white dark:bg-slate-800 focus:outline-none focus:border-iot-primary focus:ring-1 focus:ring-iot-primary transition-all" />
+              </div>
+
+              <div>
+                <label
+                  class="block text-xs font-bold text-iot-dark dark:text-slate-200 uppercase tracking-wider mb-1.5">
+                  Mục tiêu Band điểm mong muốn <span class="text-red-500">*</span>
+                </label>
+                <select required
+                  class="w-full px-4 py-2.5 rounded-lg border border-iot-border dark:border-slate-700 text-sm text-iot-dark dark:text-white dark:bg-slate-800 focus:outline-none focus:border-iot-primary focus:ring-1 focus:ring-iot-primary transition-all">
+                  <option value="" disabled selected>Chọn band điểm mục tiêu...</option>
+                  <option value="6.0-7.5">IELTS 6.0 ➔ 7.5+ (Trọng tâm Writing &amp; Speaking)</option>
+                  <option value="6.5-8.0">IELTS 6.5 ➔ 8.0+ (Phát triển tư duy phản biện)</option>
+                  <option value="7.0-8.5">IELTS 7.0 ➔ 8.5+ (Xuất bản nghiên cứu &amp; Học bổng)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-iot-dark dark:text-slate-200 uppercase tracking-wider mb-1.5">
+                Khó khăn lớn nhất hiện tại của bạn khi học IELTS Writing/Speaking
+              </label>
+              <textarea rows="3"
+                placeholder="Ví dụ: Thường xuyên bị bí ý tưởng khi gặp đề lạ, cảm thấy câu văn bị ngô nghê dù có từ vựng..."
+                class="w-full px-4 py-2.5 rounded-lg border border-iot-border dark:border-slate-700 text-sm text-iot-dark dark:text-white dark:bg-slate-800 focus:outline-none focus:border-iot-primary focus:ring-1 focus:ring-iot-primary transition-all"></textarea>
+            </div>
+
+            <!-- CTA Button -->
+            <button type="submit"
+              class="w-full py-4 rounded-lg bg-iot-orange hover:bg-iot-orangeHover text-white font-extrabold text-base tracking-wide uppercase shadow-iot-cta transition-all duration-200 flex items-center justify-center gap-2">
+              <span>GỬI HỒ SƠ ĐĂNG KÝ PHỎNG VẤN ĐẦU VÀO</span>
+              <i data-lucide="send" class="w-4 h-4"></i>
+            </button>
+
+            <!-- Privacy Assurance -->
+            <div class="flex items-center justify-center gap-2 text-xs text-iot-muted dark:text-slate-400">
+              <i data-lucide="lock" class="w-3.5 h-3.5 text-iot-green"></i>
+              <span>Thông tin được bảo mật tuyệt đối. Chúng tôi sẽ phản hồi lịch hẹn phỏng vấn qua Email trong 24
+                giờ.</span>
+            </div>
+
+          </form>
+
+          <!-- Form Success Confirmation -->
+          <div id="formSuccessAlert" class="hidden text-center py-8 space-y-3">
+            <div
+              class="w-12 h-12 rounded-full bg-green-100 text-iot-green flex items-center justify-center mx-auto dark:bg-green-950/60">
+              <i data-lucide="check" class="w-6 h-6"></i>
+            </div>
+            <h4 class="text-xl font-bold text-iot-dark dark:text-white">Hồ Sơ Đã Được Ghi Nhận Thành Công!</h4>
+            <p class="text-sm text-iot-body dark:text-slate-300 max-w-md mx-auto">
+              Hội đồng học thuật đã tiếp nhận hồ sơ xét tuyển của bạn. Thư mời phỏng vấn đánh giá tư duy ngôn ngữ 1:1 sẽ
+              được gửi tới hòm thư email của bạn trong ngày làm việc.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+
+  <!-- FOOTER -->
+  <footer class="bg-iot-navy text-slate-300 py-12 border-t border-slate-800 text-xs dark:bg-[#050C1A]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+
+      <div class="space-y-3 md:col-span-2">
+        <div class="flex items-center gap-2">
+          <span
+            class="w-8 h-8 rounded bg-iot-primary text-white font-bold flex items-center justify-center text-sm">Φ</span>
+          <span class="font-bold text-white text-base">IELTS SYNTAX &amp; LOGOS INSTITUTE</span>
+        </div>
+        <p class="text-slate-400 text-xs leading-relaxed max-w-md">
+          Chương trình đào tạo tiếng Anh học thuật dựa trên nền tảng Cú pháp học tạo sinh (Generative Syntax) và Triết
+          học Biện luận phương Tây. Tích hợp Thư viện Đề thi Exam Library và Socratic AI Tutor thông minh.
+        </p>
+        <div class="text-[11px] text-slate-400">
+          © 2026 Institute of Formal Linguistics &amp; Philosophical English. All rights reserved.
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="font-bold text-white uppercase text-xs tracking-wider mb-2">Thư Viện Đề Thi</div>
+        <ul class="space-y-1.5">
+          <li><a href="library.html" class="hover:text-white transition-colors">Cambridge 19 Actual Tests</a></li>
+          <li><a href="library.html?filter=READING" class="hover:text-white transition-colors">Academic Reading Volume
+              4</a></li>
+          <li><a href="library.html?filter=WRITING" class="hover:text-white transition-colors">Writing Task 2 Dialectic
+              Prompts</a></li>
+          <li><a href="library.html?filter=SPEAKING" class="hover:text-white transition-colors">Speaking Part 3 Socrates
+              Sessions</a></li>
+        </ul>
+      </div>
+
+      <div class="space-y-2">
+        <div class="font-bold text-white uppercase text-xs tracking-wider mb-2">Hỗ Trợ Thí Sinh</div>
+        <ul class="space-y-1.5">
+          <li><a href="#faq" class="hover:text-white transition-colors">Tiêu chuẩn đầu vào Band 5.5 - 6.0</a></li>
+          <li><a href="#instructor" class="hover:text-white transition-colors">Hội đồng học thuật</a></li>
+          <li><a href="#reviews" class="hover:text-white transition-colors">Báo cáo kết quả thí sinh</a></li>
+          <li><a href="#enroll" class="hover:text-white transition-colors">Quy trình phỏng vấn 1:1</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    const htmlRoot = document.getElementById('htmlRoot');
+    const floatingThemeIcon = document.getElementById('floatingThemeIcon');
+    const floatingThemeLabel = document.getElementById('floatingThemeLabel');
+    const topThemeIcon = document.getElementById('topThemeIcon');
+    const topThemeLabel = document.getElementById('topThemeLabel');
+
+    const savedTheme = localStorage.getItem('iot-theme') || 'light';
+    applyTheme(savedTheme);
+
+    function toggleTheme() {
+      const isDark = htmlRoot.classList.contains('dark');
+      applyTheme(isDark ? 'light' : 'dark');
+    }
+
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        htmlRoot.classList.add('dark');
+        localStorage.setItem('iot-theme', 'dark');
+
+        if (floatingThemeIcon) floatingThemeIcon.setAttribute('data-lucide', 'sun');
+        if (floatingThemeLabel) floatingThemeLabel.innerText = 'Chế độ: Tối';
+        if (topThemeIcon) topThemeIcon.setAttribute('data-lucide', 'sun');
+        if (topThemeLabel) topThemeLabel.innerText = 'Chế độ sáng';
+      } else {
+        htmlRoot.classList.remove('dark');
+        localStorage.setItem('iot-theme', 'light');
+
+        if (floatingThemeIcon) floatingThemeIcon.setAttribute('data-lucide', 'moon');
+        if (floatingThemeLabel) floatingThemeLabel.innerText = 'Chế độ: Sáng';
+        if (topThemeIcon) topThemeIcon.setAttribute('data-lucide', 'moon');
+        if (topThemeLabel) topThemeLabel.innerText = 'Chế độ tối';
+      }
+      lucide.createIcons();
+    }
+
+    // ===================================================
+    // BỘ MÔ PHỎNG CÚ PHÁP HỌC NGÔN NGỮ HỌC (CANVAS SIMULATION)
+    // ===================================================
+    const canvas = document.getElementById('syntaxCanvas');
+    const ctx = canvas ? canvas.getContext('2d') : null;
+
+    let width, height;
+    function resizeCanvas() {
+      if (!canvas || !canvas.parentElement) return;
+      width = canvas.parentElement.clientWidth;
+      height = canvas.parentElement.clientHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const nodes = [
+      { id: 'S', label: 'S [Mệnh đề gốc]', x: 0.50, y: 0.16, vx: 0.0003, vy: 0.0002 },
+      { id: 'NP1', label: 'NP [Chủ ngữ/Thực thể]', x: 0.28, y: 0.40, vx: -0.0002, vy: 0.0003 },
+      { id: 'VP', label: 'VP [Cụm vị ngữ]', x: 0.72, y: 0.40, vx: 0.0002, vy: -0.0002 },
+      { id: 'V', label: 'V [Toán tử vị từ]', x: 0.58, y: 0.70, vx: -0.0003, vy: 0.0002 },
+      { id: 'CP', label: 'CP [Mệnh đề bổ ngữ]', x: 0.84, y: 0.70, vx: 0.0002, vy: 0.0003 },
+      { id: 'LOGIC', label: '∀x [P(x) → Q(x)]', x: 0.22, y: 0.72, vx: 0.0003, vy: -0.0002 },
+    ];
+
+    let mouse = { x: -1000, y: -1000 };
+    if (canvas) {
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+      });
+      canvas.addEventListener('mouseleave', () => {
+        mouse.x = -1000;
+        mouse.y = -1000;
+      });
+    }
+
+    function drawSyntaxTree() {
+      if (!ctx || !width || !height) return;
+      ctx.clearRect(0, 0, width, height);
+
+      const isDarkMode = htmlRoot.classList.contains('dark');
+      const nodeColor = isDarkMode ? '#38BDF8' : '#0056B3';
+      const nodeHoverColor = '#F58220';
+      const lineColor = isDarkMode ? 'rgba(56, 189, 248, 0.28)' : 'rgba(0, 86, 179, 0.22)';
+      const textColor = isDarkMode ? '#F1F5F9' : '#1F2937';
+      const textBg = isDarkMode ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.9)';
+
+      nodes.forEach(node => {
+        node.x += node.vx;
+        node.y += node.vy;
+        if (node.x < 0.12 || node.x > 0.88) node.vx *= -1;
+        if (node.y < 0.12 || node.y > 0.88) node.vy *= -1;
+      });
+
+      const edges = [
+        [0, 1], [0, 2],
+        [2, 3], [2, 4],
+        [1, 5], [3, 5]
+      ];
+
+      ctx.lineWidth = 1.5;
+      edges.forEach(([from, to]) => {
+        const x1 = nodes[from].x * width;
+        const y1 = nodes[from].y * height;
+        const x2 = nodes[to].x * width;
+        const y2 = nodes[to].y * height;
+
+        ctx.strokeStyle = lineColor;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      });
+
+      nodes.forEach(node => {
+        const nx = node.x * width;
+        const ny = node.y * height;
+
+        const dist = Math.hypot(nx - mouse.x, ny - mouse.y);
+        const isHovered = dist < 65;
+
+        ctx.beginPath();
+        ctx.arc(nx, ny, isHovered ? 8 : 5, 0, Math.PI * 2);
+        ctx.fillStyle = isHovered ? nodeHoverColor : nodeColor;
+        ctx.shadowColor = isHovered ? nodeHoverColor : nodeColor;
+        ctx.shadowBlur = isHovered ? 14 : 4;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.font = '600 11px "Roboto Mono", monospace';
+        const label = node.label;
+        const textMetrics = ctx.measureText(label);
+        const textWidth = textMetrics.width;
+
+        ctx.fillStyle = textBg;
+        ctx.fillRect(nx - textWidth / 2 - 4, ny - 24, textWidth + 8, 16);
+
+        ctx.strokeStyle = isHovered ? nodeHoverColor : lineColor;
+        ctx.strokeRect(nx - textWidth / 2 - 4, ny - 24, textWidth + 8, 16);
+
+        ctx.fillStyle = isHovered ? (isDarkMode ? '#FFFFFF' : '#0B2545') : textColor;
+        ctx.textAlign = 'center';
+        ctx.fillText(label, nx, ny - 12);
+      });
+
+      requestAnimationFrame(drawSyntaxTree);
+    }
+    drawSyntaxTree();
+
+    function toggleFaqItem(id) {
+      const content = document.getElementById(`faqContent-${id}`);
+      const icon = document.getElementById(`faqIcon-${id}`);
+      const isHidden = content.classList.contains('hidden');
+
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById(`faqContent-${i}`).classList.add('hidden');
+        document.getElementById(`faqIcon-${i}`).setAttribute('data-lucide', 'plus');
+        document.getElementById(`faqIcon-${i}`).style.transform = 'rotate(0deg)';
+      }
+
+      if (isHidden) {
+        content.classList.remove('hidden');
+        icon.setAttribute('data-lucide', 'x');
+        icon.style.transform = 'rotate(45deg)';
+      }
+      lucide.createIcons();
+    }
+
+    function submitEnrollment(e) {
+      e.preventDefault();
+      const form = document.getElementById('enrollmentForm');
+      const nameInput = form.querySelector('input[placeholder*="Nguyễn Minh Đức"]');
+      const phoneInput = form.querySelector('input[type="tel"]');
+      const emailInput = form.querySelector('input[type="email"]');
+      const targetSelect = form.querySelector('select');
+
+      const name = nameInput ? nameInput.value.trim() : 'Học viên';
+      const phone = phoneInput ? phoneInput.value.trim() : '';
+      const email = emailInput ? emailInput.value.trim() : '';
+      const selectedOption = targetSelect ? targetSelect.options[targetSelect.selectedIndex]?.value : '6.5-8.0';
+      const targetBand = selectedOption.includes('8.5') ? '8.5' : selectedOption.includes('8.0') ? '8.0' : '7.5';
+
+      if (window.socraticAI) {
+        window.socraticAI.updateStudentInfo(name, targetBand, email, phone);
+      }
+
+      form.classList.add('hidden');
+      const alertEl = document.getElementById('formSuccessAlert');
+      alertEl.classList.remove('hidden');
+      alertEl.innerHTML = `
+        <div class="w-14 h-14 rounded-full bg-green-100 text-iot-green flex items-center justify-center mx-auto dark:bg-green-950/60 shadow-inner">
+          <i data-lucide="check-circle" class="w-7 h-7"></i>
+        </div>
+        <h4 class="text-xl sm:text-2xl font-extrabold text-iot-dark dark:text-white">Khởi Tạo Hồ Sơ Nhận Thức AI Thành Công!</h4>
+        <p class="text-sm text-iot-body dark:text-slate-300 max-w-md mx-auto leading-relaxed">
+          Chào <strong>${name}</strong>, trợ giảng Socratic AI đã đồng bộ mô hình nhận thức cá nhân hóa của bạn với mục tiêu <strong>Band ${targetBand}</strong>.
+        </p>
+        <div class="p-3 bg-blue-50 dark:bg-blue-950/40 rounded-xl border border-blue-200 dark:border-blue-900 max-w-md mx-auto text-xs text-iot-primary dark:text-blue-300 font-mono">
+          🧠 AI đã sẵn sàng ghi nhận các bẫy tư duy và tự động học hỏi theo mỗi bài thi bạn thực hiện.
+        </div>
+        <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+          <button onclick="window.socraticAI.openCognitiveProfileModal()" class="px-4 py-2.5 rounded-lg bg-iot-navy text-white text-xs font-bold font-mono hover:bg-slate-800 transition-all flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="brain" class="w-4 h-4 text-amber-400"></i>
+            <span>Mở Bảng Nhận Thức AI</span>
+          </button>
+          <a href="library.html" class="px-5 py-2.5 rounded-lg bg-iot-orange hover:bg-iot-orangeHover text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-md">
+            <span>Vào Thư Viện Đề Thi Cá Nhân Hóa</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+      `;
+      syncHomeStudentUI();
+      lucide.createIcons();
+    }
+
+    function syncHomeStudentUI() {
+      if (window.socraticAI && window.socraticAI.profile) {
+        const p = window.socraticAI.profile;
+        const navBadge = document.getElementById('navHomeStudentBadge');
+        if (navBadge) {
+          navBadge.innerText = `${p.name} (Band ${p.targetBand})`;
+        }
+        const homeName = document.getElementById('homeChatStudentName');
+        if (homeName) homeName.innerText = p.name;
+      }
+    }
+
+    // ==========================================
+    // FLOATING CLAUDE / SOCRATIC AI CHAT DRAWER
+    // ==========================================
+    let homeMsgCounter = 0;
+
+    function toggleFloatingHomeChat() {
+      const drawer = document.getElementById('homeFloatingChatDrawer');
+      if (!drawer) return;
+      const isHidden = drawer.classList.contains('hidden');
+      if (isHidden) {
+        drawer.classList.remove('hidden');
+        if (window.socraticAI && window.socraticAI.profile) {
+          const nameEl = document.getElementById('homeChatStudentName');
+          if (nameEl) nameEl.innerText = window.socraticAI.profile.name;
+        }
+        document.getElementById('homeUserChatInput')?.focus();
+      } else {
+        drawer.classList.add('hidden');
+      }
+      lucide.createIcons();
+    }
+
+    function handleHomeQuickChip(prompt) {
+      const input = document.getElementById('homeUserChatInput');
+      if (input) input.value = prompt;
+      sendHomeChat(prompt);
+    }
+
+    function handleHomeChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('homeUserChatInput');
+      const val = input.value.trim();
+      if (!val) return;
+      sendHomeChat(val);
+      input.value = '';
+    }
+
+    function sendHomeChat(userText) {
+      const chatBox = document.getElementById('homeAiChatBox');
+      if (!chatBox) return;
+
+      const escapedUser = window.socraticAI ? window.socraticAI.escapeHtml(userText) : userText;
+      chatBox.innerHTML += `
+        <div class="flex justify-end my-2 animate-fade-in">
+          <div class="p-2.5 rounded-2xl rounded-tr-sm bg-iot-primary text-white text-xs max-w-[85%] shadow-sm leading-relaxed">
+            ${escapedUser}
+          </div>
+        </div>
+      `;
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      homeMsgCounter++;
+      const msgId = `home-msg-${homeMsgCounter}`;
+      const assistantEl = document.createElement('div');
+      assistantEl.className = 'flex items-start gap-2.5 my-2 animate-fade-in';
+      assistantEl.innerHTML = `
+        <div class="w-6 h-6 rounded-md bg-gradient-to-tr from-amber-500 via-iot-orange to-amber-400 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 shadow-sm">
+          ✦
+        </div>
+        <div class="flex-1 space-y-1 max-w-[90%]">
+          <div class="flex items-center justify-between text-[10px] font-mono text-iot-muted">
+            <span class="font-bold text-iot-dark dark:text-slate-300">Claude / Socratic AI</span>
+            <span id="${msgId}-status" class="text-iot-orange flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-iot-orange animate-ping"></span>
+              <span>Đang tư duy...</span>
+            </span>
+          </div>
+          <div id="${msgId}" class="p-3 rounded-2xl rounded-tl-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-iot-dark dark:text-slate-100 leading-relaxed space-y-2">
+            <span class="inline-block w-1.5 h-3.5 bg-iot-primary animate-pulse"></span>
+          </div>
+        </div>
+      `;
+      chatBox.appendChild(assistantEl);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      toggleHomeStreaming(true);
+
+      const contentBox = document.getElementById(msgId);
+      const statusBox = document.getElementById(`${msgId}-status`);
+
+      window.socraticAI.processUserMessage(
+        userText,
+        { skill: 'GENERAL' },
+        (accumulated) => {
+          if (contentBox) {
+            contentBox.innerHTML = window.socraticAI.renderMarkdown(accumulated) + '<span class="inline-block w-1.5 h-3.5 bg-iot-primary ml-0.5 animate-pulse">▋</span>';
+            chatBox.scrollTop = chatBox.scrollHeight;
+          }
+        },
+        (final) => {
+          toggleHomeStreaming(false);
+          if (statusBox) statusBox.innerHTML = '<span class="text-emerald-500 font-mono text-[9px]">Hoàn tất</span>';
+          if (contentBox) contentBox.innerHTML = window.socraticAI.renderMarkdown(final);
+          chatBox.scrollTop = chatBox.scrollHeight;
+          lucide.createIcons();
+        }
+      );
+    }
+
+    function toggleHomeStreaming(streaming) {
+      const sendBtn = document.getElementById('homeBtnSend');
+      const stopBtn = document.getElementById('homeBtnStop');
+      if (sendBtn && stopBtn) {
+        if (streaming) {
+          sendBtn.classList.add('hidden');
+          stopBtn.classList.remove('hidden');
+        } else {
+          sendBtn.classList.remove('hidden');
+          stopBtn.classList.add('hidden');
+        }
+      }
+    }
+
+    function stopHomeGenerating() {
+      if (window.socraticAI) window.socraticAI.stopStreaming();
+      toggleHomeStreaming(false);
+    }
+
+    window.addEventListener('DOMContentLoaded', syncHomeStudentUI);
+    setTimeout(syncHomeStudentUI, 100);
+  </script>
+
+</body>
+
+</html>

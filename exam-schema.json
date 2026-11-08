@@ -1,0 +1,289 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "exam_id": "exam_cam19_academic_full_001",
+  "slug": "cambridge-19-academic-test-1",
+  "title": "Cambridge 19 - Academic Full Test 1",
+  "series": "Cambridge IELTS Practice Tests",
+  "edition": 19,
+  "test_number": 1,
+  "difficulty_band": "7.5 - 8.5+",
+  "is_new_this_week": true,
+  "total_attempts": 14290,
+  "created_at": "2026-10-25T08:00:00Z",
+  "updated_at": "2026-11-01T10:00:00Z",
+
+  "modes_config": {
+    "practice_mode": {
+      "ai_tutor_enabled": true,
+      "socratic_dialogue_allowed": true,
+      "syntax_parsing_live": true,
+      "show_instant_hints": true
+    },
+    "exam_mode": {
+      "ai_tutor_enabled": false,
+      "strict_timer": true,
+      "lock_clipboard": true,
+      "unlock_ai_review_after_submit": true
+    }
+  },
+
+  "skills": {
+    "listening": {
+      "skill": "LISTENING",
+      "duration_minutes": 40,
+      "total_questions": 40,
+      "audio_asset": {
+        "url": "https://cdn.ieltssyntax.edu.vn/audio/cam19_test1_listening.mp3",
+        "file_size_bytes": 48291000,
+        "format": "audio/mp3",
+        "audio_duration_seconds": 1820
+      },
+      "sections": [
+        {
+          "section_number": 1,
+          "title": "Part 1: Accommodation Inquiry & Tenancy Agreement",
+          "context_type": "DIALOGUE_SOCIAL",
+          "timestamp_range": { "start_sec": 0, "end_sec": 420 },
+          "instructions": "Write ONE WORD AND/OR A NUMBER for each answer.",
+          "questions": [
+            {
+              "question_number": 1,
+              "question_type": "FILL_IN_BLANK",
+              "prompt_template": "Tenant's preferred move-in date: [BLANK_1] October",
+              "blank_id": "BLANK_1",
+              "acceptable_answers": ["15th", "15", "fifteenth"],
+              "audio_timestamp_marker": 142,
+              "explanation": "Người nói xác nhận: 'We will be signing the contract on the 12th, but I can only move in on the 15th.'",
+              "socratic_ai_metadata": {
+                "distractor_trap": "Thí sinh hay nhầm ngày ký hợp đồng (12th) thay vì ngày dọn vào (15th).",
+                "logical_inquiry": "Xác định sự khác biệt giữa thời điểm phát sinh cam kết pháp lý (sign) và thời điểm chuyển dịch quyền chiếm hữu thực tế (move in)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    "reading": {
+      "skill": "READING",
+      "duration_minutes": 60,
+      "total_questions": 40,
+      "passages": [
+        {
+          "passage_number": 3,
+          "title": "Linguistic Relativity, Cognitive Architecture, and the Limits of Thought",
+          "word_count": 860,
+          "paragraphs": [
+            { "paragraph_id": "A", "focus": "Strong Sapir-Whorf hypothesis and radical linguistic determinism" },
+            { "paragraph_id": "B", "focus": "Dani tribe color perception experiments and empirical falsification" },
+            { "paragraph_id": "C", "focus": "Chomskyan Universal Grammar and the recursive Merge operation" },
+            { "paragraph_id": "D", "focus": "fMRI/MEG neuroimaging and global aphasia logic retention" },
+            { "paragraph_id": "E", "focus": "Weak linguistic relativity, Kuuk Thaayorre spatial orientation, thinking for speaking" },
+            { "paragraph_id": "F", "focus": "Clark and Chalmers' Extended Mind thesis, language as cognitive scaffolding" },
+            { "paragraph_id": "G", "focus": "Dialectic synthesis between autonomous cognition and formal syntax" }
+          ],
+          "question_groups": [
+            {
+              "group_type": "MATCHING_HEADINGS",
+              "instructions": "Choose the correct heading for paragraphs B–F from the list of headings below.",
+              "questions": [
+                {
+                  "question_number": 27,
+                  "target_paragraph": "B",
+                  "correct_heading_roman": "ii",
+                  "heading_text": "Experimental refutation of the hypothesis that vocabulary dictates sensory perception",
+                  "socratic_logic": "Thí nghiệm bộ tộc Dani là thực nghiệm trực tiếp bác bỏ luận điểm từ vựng giới hạn thụ cảm giác quan."
+                },
+                {
+                  "question_number": 28,
+                  "target_paragraph": "C",
+                  "correct_heading_roman": "iv",
+                  "heading_text": "An innate, universal computational syntax underlying all surface languages",
+                  "socratic_logic": "Universal Grammar (UG) và thao tác Merge của Chomsky chứng minh cấu trúc toán học bẩm sinh chung cho nhân loại."
+                },
+                {
+                  "question_number": 29,
+                  "target_paragraph": "D",
+                  "correct_heading_roman": "i",
+                  "heading_text": "Neurological evidence proving that conceptual calculation precedes verbal articulation",
+                  "socratic_logic": "Hình ảnh fMRI và bệnh nhân mất ngôn ngữ toàn thể (global aphasia) chứng minh tư duy phi ngôn ngữ diễn ra trước khi phát âm."
+                },
+                {
+                  "question_number": 30,
+                  "target_paragraph": "E",
+                  "correct_heading_roman": "v",
+                  "heading_text": "Automated attention biases: How grammatical features cultivate cognitive habits",
+                  "socratic_logic": "Hệ tọa độ không gian Kuuk Thaayorre tạo thói quen chú ý phương hướng tự động hóa chứ không phải nhà tù tư duy."
+                },
+                {
+                  "question_number": 31,
+                  "target_paragraph": "F",
+                  "correct_heading_roman": "iii",
+                  "heading_text": "Language as an external epistemic scaffold amplifying finite biological cognition",
+                  "socratic_logic": "Thuyết Extended Mind xem ngôn ngữ học thuật là chiếc giàn giáo nhận thức bù đắp bộ nhớ làm việc hữu hạn của não."
+                }
+              ]
+            },
+            {
+              "group_type": "TRUE_FALSE_NOT_GIVEN",
+              "instructions": "Do the following statements agree with the information given in Reading Passage 3?",
+              "questions": [
+                {
+                  "question_number": 32,
+                  "statement": "Early proponents of radical linguistic determinism claimed that speakers are fundamentally incapable of experiencing concepts absent from their native tongue.",
+                  "correct_answer": "TRUE",
+                  "target_paragraph": "A",
+                  "explanation": "Đoạn A nêu: 'language acts as a perceptual prism... an individual whose language lacks temporal inflectional morphology does not simply describe time differently—they inhabit an entirely disparate metaphysical temporal landscape.'",
+                  "socratic_ai_metadata": { "logic_relation": "TAUTOLOGY (P ≡ Q)" }
+                },
+                {
+                  "question_number": 33,
+                  "statement": "The Dani color perception study proved that having only two color terms impaired their neurological ability to differentiate between adjacent chromatic shades.",
+                  "correct_answer": "FALSE",
+                  "target_paragraph": "B",
+                  "explanation": "Đoạn B khẳng định điều ngược lại: 'Dani subjects distinguished focal chromatic shades with identical perceptual acuity and neurobiological precision to native English speakers.'",
+                  "socratic_ai_metadata": { "logic_relation": "CONTRADICTION (P ∧ ¬P)" }
+                },
+                {
+                  "question_number": 34,
+                  "statement": "Noam Chomsky conducted physical surgical experiments on human brain tissue to locate the physiological biological boundaries of Universal Grammar.",
+                  "correct_answer": "NOT GIVEN",
+                  "target_paragraph": "C",
+                  "explanation": "Đoạn C chỉ nêu Chomsky xây dựng mô hình tính toán hình thức (formal minimalist syntax). Văn bản hoàn toàn không đề cập đến việc ông từng thực hiện phẫu thuật cắt mổ mô não người.",
+                  "socratic_ai_metadata": { "logic_relation": "INDETERMINATE_TRUTH_VALUE" }
+                },
+                {
+                  "question_number": 35,
+                  "statement": "Clinical data from patients suffering from severe global aphasia indicates that the total breakdown of grammar causes an immediate destruction of spatial and mathematical logic.",
+                  "correct_answer": "FALSE",
+                  "target_paragraph": "D",
+                  "explanation": "Đoạn D nêu bệnh nhân global aphasia vẫn giữ nguyên năng lực: 'individuals frequently retain intact capacities for deductive syllogistic reasoning, complex spatial navigation... and mathematical calculations.'",
+                  "socratic_ai_metadata": { "logic_relation": "CONTRADICTION (P ∧ ¬P)" }
+                }
+              ]
+            },
+            {
+              "group_type": "SUMMARY_COMPLETION_BOX",
+              "title": "The Synthesis of Language and Cognition",
+              "instructions": "Complete the summary using the list of phrases, A–H, from the box.",
+              "box_options": {
+                "A": "cognitive scaffolding",
+                "B": "biological ocular receptors",
+                "C": "habitual cognitive attention",
+                "D": "radical linguistic determinism",
+                "E": "global aphasia",
+                "F": "recursive Merge",
+                "G": "superficial typological variances",
+                "H": "absolute cardinal boundaries"
+              },
+              "questions": [
+                { "question_number": 36, "correct_code": "D", "text": "radical linguistic determinism" },
+                { "question_number": 37, "correct_code": "B", "text": "biological ocular receptors" },
+                { "question_number": 38, "correct_code": "F", "text": "recursive Merge" },
+                { "question_number": 39, "correct_code": "C", "text": "habitual cognitive attention" },
+                { "question_number": 40, "correct_code": "A", "text": "cognitive scaffolding" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    "writing": {
+      "skill": "WRITING",
+      "duration_minutes": 60,
+      "tasks": [
+        {
+          "task_number": 2,
+          "task_type": "ESSAY_ACADEMIC",
+          "recommended_minutes": 40,
+          "minimum_words": 250,
+          "topic_category": "ETHICS_ARTIFICIAL_INTELLIGENCE_LAW",
+          "prompt": "Some legal scholars argue that Artificial Intelligence should replace human judges in courtroom sentencing to eliminate racial and cognitive bias. To what extent do you agree or disagree with this statement?",
+          "scoring_rubric_weights": {
+            "task_achievement": 0.25,
+            "coherence_cohesion": 0.25,
+            "lexical_resource": 0.25,
+            "grammatical_range_accuracy": 0.25
+          },
+          "socratic_ai_framework": {
+            "thesis_anthesis_synthesis": {
+              "thesis": "AI loại bỏ sự thiên vị cảm tính ngẫu nhiên (Utilitarian efficiency).",
+              "antithesis": "Tư pháp đòi hỏi sự tự chủ đạo đức (Moral Autonomy) và ý thức chịu trách nhiệm (Kantian Deontology), thứ thuật toán xác suất không có.",
+              "synthesis": "Sử dụng AI như trợ lý đối chiếu dữ liệu tiền lệ, nhưng bảo lưu quyền phán quyết tối hậu cho thẩm phán con người."
+            },
+            "formal_syntax_targets": {
+              "clause_depth": "Tối thiểu 3-tier hierarchical clause subordination (Mệnh đề 3 tầng)",
+              "predicate_constructs": ["Appositive phrases (Cấu trúc chêm xen)", "Kantian modal operators"]
+            },
+            "benchmark_responses": {
+              "band_6_rote": "AI is very modern and cannot have feelings, so human judges are better...",
+              "band_8_5_philosophical": "From a Kantian deontological perspective, judicial sentencing is fundamentally predicated on moral autonomy and intentionality—qualities intrinsically absent in deterministic algorithmic computation."
+            }
+          }
+        }
+      ]
+    },
+
+    "speaking": {
+      "skill": "SPEAKING",
+      "duration_minutes": 14,
+      "parts": [
+        {
+          "part_number": 3,
+          "title": "Part 3: Two-way Philosophical & Social Discussion",
+          "theme": "Consumerism, Identity and Existential Meaning",
+          "questions": [
+            {
+              "question_id": "SPK_P3_Q1",
+              "prompt": "Do you believe that purchasing material goods genuinely elevates human happiness, or is it merely an ephemeral sensation?",
+              "follow_up_depth_level": 3,
+              "socratic_ai_interviewer": {
+                "counter_argument_trigger": "Nếu học viên trả lời đơn giản 'Yes, because people need clothes and phones' hoặc dùng template sáo rỗng.",
+                "socratic_rebuttal": "Nhưng nếu coi tiêu dùng là nguồn gốc của hạnh phúc, bạn giải thích thế nào về Nghịch lý Easterlin (Easterlin Paradox) — khi của cải vật chất tăng nhưng chỉ số thỏa mãn cuộc sống không hề tăng tỷ lệ thuận?",
+                "philosophical_lexicon_to_reward": [
+                  "hyperreality",
+                  "commodity fetishism",
+                  "existential fulfillment",
+                  "ephemeral gratification"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "cognitive_profile_and_adaptive_learning": {
+    "description": "Cấu trúc dữ liệu AI Tự Học & Cá Nhân Hóa (Cognitive Vector & Memory Store) đồng bộ qua localStorage và Backend DB",
+    "schema": {
+      "student_profile": {
+        "student_id": "PHI-8921",
+        "name": "Nguyễn Minh Đức",
+        "target_band": "8.0",
+        "current_estimated_band": "7.0",
+        "learning_style": "Socratic-Dialectic",
+        "total_interactions": 14,
+        "cognitive_dimensions_vector": {
+          "formal_syntax": { "score": 68, "level": "Thành thạo", "description": "Bóc tách cú pháp hình thức Chomsky (X-bar)" },
+          "truth_evaluation": { "score": 52, "level": "Cần rèn luyện", "description": "Định giá chân lý logic mệnh đề (TRUE/FALSE vs NOT GIVEN)" },
+          "hegelian_dialectics": { "score": 74, "level": "Xuất sắc", "description": "Tư duy biện chứng Luận đề - Phản đề - Hợp đề" },
+          "distractor_resistance": { "score": 60, "level": "Khá", "description": "Kháng bẫy ngụy biện & bẫy âm thanh đổi ý phút chót" },
+          "lexical_precision": { "score": 78, "level": "Xuất sắc", "description": "Độ tinh chuẩn thuật ngữ & trường nghĩa học thuật" },
+          "epistemic_caution": { "score": 58, "level": "Cần chú ý", "description": "Thận trọng nhận thức luận, tránh lỗi khái quát hóa võ đoán" }
+        },
+        "learned_blindspots": [
+          {
+            "id": "blindspot-1",
+            "title": "Suy diễn vượt quá dữ kiện văn bản (Epistemic Overreach)",
+            "category": "truth_evaluation",
+            "frequency": 3,
+            "context": "Chọn FALSE thay vì NOT GIVEN khi gặp chủ đề khoa học thần kinh.",
+            "remedy": "Chỉ phủ định khi có mâu thuẫn trực tiếp (P ∧ ¬P). Không có dữ kiện = NOT GIVEN."
+          }
+        ]
+      }
+    }
+  }
+}
+

@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth" id="htmlRoot">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thư Viện Đề Thi IELTS Thực Chiến 4 Kỹ Năng | Cập Nhật Hàng Tuần - IELTS Syntax</title>
+
+  <!-- Google Fonts: Inter & Roboto Mono (EdTech tiêu chuẩn, đọc êm mắt) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+            mono: ['"Roboto Mono"', 'monospace'],
+          },
+          colors: {
+            iot: {
+              navy: '#0B2545',
+              primary: '#0056B3',
+              primaryLight: '#0D6EFD',
+              blueLight: '#EBF3FE',
+              orange: '#F58220',
+              orangeHover: '#E06D14',
+              green: '#28A745',
+              greenLight: '#E8F5E9',
+              dark: '#1F2937',
+              body: '#374151',
+              muted: '#6C757D',
+              border: '#E5E7EB',
+              bgLight: '#F8F9FA',
+            }
+          },
+          boxShadow: {
+            'iot-card': '0 2px 6px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.04)',
+            'iot-hover': '0 12px 24px -4px rgba(0, 86, 179, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.04)',
+            'iot-cta': '0 4px 14px rgba(245, 130, 32, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Socratic AI Cognitive Self-Learning Engine -->
+  <script src="ai-engine.js"></script>
+
+  <style>
+    body {
+      font-size: 15px;
+      line-height: 1.6;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+    ::-webkit-scrollbar {
+      width: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F8F9FA;
+    }
+    .dark ::-webkit-scrollbar-track {
+      background: #0F172A;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
+    .badge-pulse {
+      animation: subtlePulse 2.5s infinite ease-in-out;
+    }
+    @keyframes subtlePulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.03); opacity: 0.9; }
+    }
+  </style>
+</head>
+<body class="antialiased bg-[#F8F9FA] text-iot-body dark:bg-[#071326] dark:text-slate-200">
+
+  <!-- FLOATING QUICK THEME SWITCHER -->
+  <div class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+    <button onclick="toggleTheme()" id="floatingThemeBtn" class="flex items-center gap-2 px-3.5 py-2.5 rounded-full text-xs font-semibold shadow-lg border transition-all duration-200 bg-white border-slate-200 text-iot-dark hover:border-iot-primary hover:text-iot-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:border-blue-400" title="Chuyển chế độ Giao diện Sáng / Tối">
+      <i id="floatingThemeIcon" data-lucide="moon" class="w-4 h-4 text-iot-primary dark:text-amber-400"></i>
+      <span id="floatingThemeLabel" class="hidden sm:inline">Chế độ: Sáng</span>
+    </button>
+  </div>
+
+  <!-- TOP BAR: THÔNG BÁO CẬP NHẬT LIÊN TỤC -->
+  <div class="bg-iot-navy text-white text-xs py-2 border-b border-white/10 dark:bg-[#050C1A]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <span class="inline-flex items-center gap-1.5 bg-iot-green text-white px-2 py-0.5 rounded text-[11px] font-bold">
+          <i data-lucide="check-circle" class="w-3 h-3"></i>
+          <span>AUTO-SYNC WEEKLY</span>
+        </span>
+        <span class="text-slate-300">
+          Đợt cập nhật tuần 44 (Tháng 11/2026): <strong class="text-white">+8 bộ đề thi thật mới</strong> (Listening, Reading, Writing, Speaking)
+        </span>
+      </div>
+
+      <div class="flex items-center gap-4 text-slate-300">
+        <a href="index.html" class="hover:text-white transition-colors flex items-center gap-1">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>Về Trang Giới Thiệu Khóa Học</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER / DASHBOARD NAV -->
+  <header class="sticky top-0 z-40 bg-white border-b border-iot-border shadow-sm dark:bg-[#0D1B3E] dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-18 py-3.5 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-lg bg-iot-primary text-white flex items-center justify-center font-bold text-lg shadow-sm dark:bg-blue-600">
+          Φ
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-base tracking-tight text-iot-dark dark:text-white">IELTS</span>
+            <span class="font-bold text-base tracking-tight text-iot-primary dark:text-blue-400">EXAM LIBRARY</span>
+            <span class="text-[10px] bg-green-100 text-iot-green font-bold px-1.5 py-0.5 rounded border border-green-200 dark:bg-green-950/60 dark:border-green-800">4 SKILLS</span>
+          </div>
+          <span class="text-[11px] text-iot-muted font-medium dark:text-slate-400">Thư Viện Đề Thi Thực Chiến Cập Nhật Hàng Tuần</span>
+        </div>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="hidden md:flex flex-1 max-w-md mx-6">
+        <div class="relative w-full">
+          <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Tìm theo tên đề (VD: Cambridge 19, Reading Vol 4, AI Ethics...)" class="w-full pl-9 pr-4 py-2 rounded-lg border border-iot-border dark:border-slate-700 text-xs text-iot-dark dark:text-white dark:bg-slate-800 focus:outline-none focus:border-iot-primary focus:ring-1 focus:ring-iot-primary transition-all" />
+          <i data-lucide="search" class="w-4 h-4 text-iot-muted absolute left-3 top-2.5"></i>
+        </div>
+      </div>
+
+      <!-- User CTA / Quick Access -->
+      <div class="flex items-center gap-2.5">
+        <!-- AI Profile Pill -->
+        <button onclick="window.socraticAI.openCognitiveProfileModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-xs font-mono text-iot-primary dark:text-blue-300 border border-blue-200 dark:border-blue-800 transition-all shadow-sm" title="Mở Hồ Sơ Nhận Thức AI">
+          <i data-lucide="brain" class="w-3.5 h-3.5 text-iot-orange"></i>
+          <span id="navLibraryStudentBadge">Minh Đức (8.0)</span>
+        </button>
+
+        <button onclick="toggleTheme()" class="p-2 rounded-lg border border-iot-border dark:border-slate-700 text-iot-dark dark:text-white hover:text-iot-primary" title="Đổi sáng tối">
+          <i id="navThemeIcon" data-lucide="moon" class="w-4 h-4"></i>
+        </button>
+
+        <a href="index.html#enroll" class="inline-flex items-center gap-1.5 bg-iot-orange hover:bg-iot-orangeHover text-white px-3.5 py-2 rounded-lg text-xs font-bold shadow-sm transition-all">
+          <i data-lucide="award" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Đăng Ký Khóa Học Tinh Hoa</span>
+          <span class="sm:hidden">Đăng Ký</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- LIBRARY HERO BANNER: THƯ VIỆN ĐỀ THI CẬP NHẬT LIÊN TỤC -->
+  <section class="bg-gradient-to-r from-iot-navy via-iot-primary to-[#004085] text-white py-10 px-4 sm:px-6 relative overflow-hidden dark:from-[#050C1A] dark:to-[#0B2545]">
+    
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+      
+      <div class="lg:col-span-8 space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-white/10 border border-white/20 text-xs font-mono font-bold tracking-wide">
+          <span class="w-2 h-2 rounded-full bg-iot-green animate-pulse"></span>
+          <span>HỆ THỐNG ĐỒNG BỘ ĐỀ THI THẬT • 4 KỸ NĂNG NGHE - NÓI - ĐỌC - VIẾT</span>
+        </div>
+
+        <h1 class="text-2xl sm:text-4xl font-extrabold leading-tight">
+          Thư Viện Đề Thi Thực Chiến - Cập Nhật Hàng Tuần.
+        </h1>
+
+        <p class="text-sm sm:text-base text-blue-100 max-w-2xl leading-relaxed">
+          Không chỉ là nơi giải đề. Đây là <strong class="text-white font-semibold">"phòng thí nghiệm ngôn ngữ"</strong> của bạn, với đủ 4 kỹ năng Nghe - Nói - Đọc - Viết và kho dữ liệu được làm mới mỗi 7 ngày theo xu hướng thi IELTS quốc tế.
+        </p>
+
+        <!-- 3 Quick Ticker Badges -->
+        <div class="pt-2 flex flex-wrap gap-4 text-xs font-mono">
+          <div class="bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-2">
+            <i data-lucide="layers" class="w-4 h-4 text-iot-orange"></i>
+            <span><strong>289+</strong> Đề thi trực tuyến</span>
+          </div>
+          <div class="bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-2">
+            <i data-lucide="calendar" class="w-4 h-4 text-iot-green"></i>
+            <span><strong>+8</strong> Đề mới tuần này</span>
+          </div>
+          <div class="bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-2">
+            <i data-lucide="bot" class="w-4 h-4 text-blue-300"></i>
+            <span><strong>100%</strong> Tích hợp Socratic AI Tutor</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Mock Test Launch Card -->
+      <div class="lg:col-span-4 bg-white/10 backdrop-blur-md p-5 rounded-xl border border-white/20 space-y-3">
+        <span class="text-[10px] uppercase font-mono tracking-wider text-iot-orange font-bold">LUYỆN THI TOÀN DIỆN</span>
+        <h3 class="text-base font-bold text-white">Full Test 4 Kỹ Năng (Marathon Mock)</h3>
+        <p class="text-xs text-blue-100 leading-relaxed">
+          Trải nghiệm thi thử liên tục cả 4 kỹ năng trong 2 giờ 45 phút giống hệt kỳ thi IELTS trên máy tính (Computer-delivered IELTS).
+        </p>
+        <button onclick="startSkillTest('FULL_TEST', 'Cambridge 19 - Full Mock Marathon')" class="w-full py-2.5 rounded-lg bg-iot-orange hover:bg-iot-orangeHover text-white font-bold text-xs uppercase tracking-wider shadow-iot-cta transition-all flex items-center justify-center gap-2">
+          <i data-lucide="play" class="w-3.5 h-3.5"></i>
+          <span>Bắt Đầu Thi Thử 4 Kỹ Năng</span>
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DASHBOARD CONTROL & 4-SKILL TABS -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    
+    <!-- DYNAMIC PERSONALIZED AI RECOMMENDATION BANNER -->
+    <section id="aiPersonalizedBanner" class="p-6 rounded-2xl bg-gradient-to-r from-blue-950 via-[#0B2545] to-slate-900 text-white border border-blue-400/40 shadow-xl space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-iot-orange text-white flex items-center justify-center font-bold text-xl shadow-lg ring-4 ring-white/10">
+            🎯
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="font-bold text-sm sm:text-base text-white">
+                Lộ Trình Đề Thi Đề Xuất Dành Riêng Cho: <span id="libraryStudentName" class="text-amber-300 font-extrabold underline decoration-amber-400">Minh Đức</span>
+              </h2>
+              <span id="libraryTargetBadge" class="text-[10px] font-mono bg-blue-500/30 text-blue-200 border border-blue-400/40 px-2 py-0.5 rounded-full font-bold">
+                Mục tiêu Band 8.0
+              </span>
+            </div>
+            <p id="libraryAiReasoning" class="text-xs text-blue-200 font-mono mt-0.5">
+              Đang phân tích dữ liệu nhận thức...
+            </p>
+          </div>
+        </div>
+
+        <button onclick="window.socraticAI.openCognitiveProfileModal()" class="px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-mono text-xs font-bold border border-white/20 transition-all flex items-center gap-1.5 shadow-sm">
+          <i data-lucide="brain" class="w-4 h-4 text-amber-300"></i>
+          <span>Mở Hồ Sơ Nhận Thức AI</span>
+        </button>
+      </div>
+
+      <!-- Recommended Test Cards Grid based on user cognitive gaps -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+        <div class="p-4 rounded-xl bg-white/10 border border-white/15 hover:border-amber-400/60 transition-all space-y-2.5 flex flex-col justify-between">
+          <div class="space-y-1.5">
+            <span class="text-[10px] font-mono text-amber-300 font-bold bg-amber-500/20 px-2 py-0.5 rounded border border-amber-400/30 inline-block">
+              Ưu Tiên #1: Khắc Phục Điểm Nghẽn TFNG
+            </span>
+            <h4 class="font-bold text-xs text-white">Cambridge 19 - Test 1: Reading Passage 3</h4>
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+              Passage 3 hoàn chỉnh (860 từ) với câu hỏi 34 bẫy NOT GIVEN đặc thù và các câu hỏi Matching Headings trừu tượng.
+            </p>
+          </div>
+          <a href="exam-room.html?skill=READING&title=Cambridge%2019%20-%20Test%201%3A%20Reading%20Passage%203" class="mt-2 text-center py-2.5 rounded-lg bg-iot-orange hover:bg-iot-orangeHover text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md">
+            <i data-lucide="play" class="w-3.5 h-3.5"></i>
+            <span>Vào Luyện Tập Ngay</span>
+          </a>
+        </div>
+
+        <div class="p-4 rounded-xl bg-white/10 border border-white/15 hover:border-amber-400/60 transition-all space-y-2.5 flex flex-col justify-between">
+          <div class="space-y-1.5">
+            <span class="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-400/30 inline-block">
+              Ưu Tiên #2: Kháng Bẫy Âm Thanh
+            </span>
+            <h4 class="font-bold text-xs text-white">Cambridge 19 - Test 1: Listening Section 1</h4>
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+              Rèn luyện khả năng hoãn phán xét (Epoché) trước bẫy người nói thay đổi quyết định số tiền (£750 vs £850) & ngày chuyển nhà.
+            </p>
+          </div>
+          <a href="exam-room.html?skill=LISTENING&title=Cambridge%2019%20-%20Test%201%3A%20Listening%20Section%201" class="mt-2 text-center py-2.5 rounded-lg bg-iot-primary hover:bg-blue-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md">
+            <i data-lucide="headphones" class="w-3.5 h-3.5"></i>
+            <span>Luyện Bẫy Listening</span>
+          </a>
+        </div>
+
+        <div class="p-4 rounded-xl bg-white/10 border border-white/15 hover:border-amber-400/60 transition-all space-y-2.5 flex flex-col justify-between">
+          <div class="space-y-1.5">
+            <span class="text-[10px] font-mono text-blue-300 font-bold bg-blue-500/20 px-2 py-0.5 rounded border border-blue-400/30 inline-block">
+              Ưu Tiên #3: Cú Pháp Phức & Phản Đề
+            </span>
+            <h4 class="font-bold text-xs text-white">Writing Task 2: AI Epistemology & Sentencing</h4>
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+              Vận dụng cây cú pháp tạo sinh Chomsky và phản đề Hegel để bứt phá lên Band 8.0+ ở tiêu chí Task Response và Coherence.
+            </p>
+          </div>
+          <a href="exam-room.html?skill=WRITING&title=Cambridge%2019%20-%20Test%201%3A%20Writing%20Task%202" class="mt-2 text-center py-2.5 rounded-lg bg-white/15 hover:bg-white/25 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md">
+            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+            <span>Luyện Phản Đề Writing</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter Bar: 4 Skills + All + Full Test -->
+    <div class="bg-white dark:bg-[#111C44] p-4 rounded-xl border border-iot-border dark:border-slate-700 shadow-sm space-y-4">
+      
+      <!-- Skill Category Buttons -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap gap-2 text-xs font-bold" id="skillTabs">
+          <button onclick="selectSkill('ALL')" id="tabBtn-ALL" class="skill-tab-btn px-4 py-2.5 rounded-lg bg-iot-primary text-white shadow-sm transition-all flex items-center gap-1.5" data-skill="ALL">
+            <i data-lucide="grid" class="w-3.5 h-3.5"></i>
+            <span>Tất Cả Kỹ Năng</span>
+            <span class="px-1.5 py-0.5 rounded-full bg-white/20 text-[10px] font-mono" id="count-ALL">32</span>
+          </button>
+          
+          <button onclick="selectSkill('LISTENING')" id="tabBtn-LISTENING" class="skill-tab-btn px-4 py-2.5 rounded-lg bg-iot-bgLight dark:bg-slate-800 text-iot-dark dark:text-slate-200 border border-iot-border dark:border-slate-700 hover:border-iot-primary transition-all flex items-center gap-1.5" data-skill="LISTENING">
+            <i data-lucide="headphones" class="w-3.5 h-3.5 text-blue-500"></i>
+            <span>🎧 Listening</span>
+            <span class="px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-[10px] font-mono" id="count-LISTENING">8</span>
+          </button>
+
+          <button onclick="selectSkill('READING')" id="tabBtn-READING" class="skill-tab-btn px-4 py-2.5 rounded-lg bg-iot-bgLight dark:bg-slate-800 text-iot-dark dark:text-slate-200 border border-iot-border dark:border-slate-700 hover:border-iot-primary transition-all flex items-center gap-1.5" data-skill="READING">
+            <i data-lucide="book-open" class="w-3.5 h-3.5 text-green-500"></i>
+            <span>📖 Reading</span>
+            <span class="px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-[10px] font-mono" id="count-READING">8</span>
+          </button>
+
+          <button onclick="selectSkill('WRITING')" id="tabBtn-WRITING" class="skill-tab-btn px-4 py-2.5 rounded-lg bg-iot-bgLight dark:bg-slate-800 text-iot-dark dark:text-slate-200 border border-iot-border dark:border-slate-700 hover:border-iot-primary transition-all flex items-center gap-1.5" data-skill="WRITING">
+            <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-iot-orange"></i>
+            <span>✍️ Writing</span>
+            <span class="px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-[10px] font-mono" id="count-WRITING">8</span>
+          </button>
+
+          <button onclick="selectSkill('SPEAKING')" id="tabBtn-SPEAKING" class="skill-tab-btn px-4 py-2.5 rounded-lg bg-iot-bgLight dark:bg-slate-800 text-iot-dark dark:text-slate-200 border border-iot-border dark:border-slate-700 hover:border-iot-primary transition-all flex items-center gap-1.5" data-skill="SPEAKING">
+            <i data-lucide="mic" class="w-3.5 h-3.5 text-purple-500"></i>
+            <span>🎙️ Speaking</span>
+            <span class="px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-[10px] font-mono" id="count-SPEAKING">5</span>
+          </button>
+
+          <button onclick="selectSkill('FULL_MOCK')" id="tabBtn-FULL_MOCK" class="skill-tab-btn px-4 py-2.5 rounded-lg bg-iot-bgLight dark:bg-slate-800 text-iot-dark dark:text-slate-200 border border-iot-border dark:border-slate-700 hover:border-iot-primary transition-all flex items-center gap-1.5" data-skill="FULL_MOCK">
+            <i data-lucide="trophy" class="w-3.5 h-3.5 text-amber-500"></i>
+            <span>🏆 Full Mock (4 Kỹ Năng)</span>
+            <span class="px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-[10px] font-mono" id="count-FULL_MOCK">3</span>
+          </button>
+        </div>
+
+        <!-- Filter Sub-options -->
+        <div class="flex items-center gap-2 text-xs">
+          <select id="seriesFilter" onchange="filterCards()" class="px-3 py-2 rounded-lg border border-iot-border dark:border-slate-700 bg-white dark:bg-slate-800 text-iot-dark dark:text-white font-medium focus:outline-none focus:border-iot-primary">
+            <option value="ALL">Tất cả bộ đề</option>
+            <option value="CAMBRIDGE">Cambridge 18 - 19</option>
+            <option value="ACTUAL">Actual Tests 2026</option>
+            <option value="PHILOSOPHICAL">Cú Pháp &amp; Triết Học Chuyên Sâu</option>
+            <option value="FORECAST">Đề Dự Đoán Forecast Q4</option>
+          </select>
+
+          <select id="sortFilter" onchange="filterCards()" class="px-3 py-2 rounded-lg border border-iot-border dark:border-slate-700 bg-white dark:bg-slate-800 text-iot-dark dark:text-white font-medium focus:outline-none focus:border-iot-primary">
+            <option value="NEWEST">Mới nhất tuần này</option>
+            <option value="POPULAR">Lượt làm nhiều nhất</option>
+            <option value="HARD">Độ khó cao nhất (Band 8.0+)</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Result Summary Bar -->
+    <div class="flex flex-wrap items-center justify-between text-xs font-mono text-iot-muted dark:text-slate-400 py-1">
+      <div>
+        <span>Hiển thị: </span>
+        <strong id="resultCountDisplay" class="text-iot-primary dark:text-blue-400 font-bold">32</strong>
+        <span> bộ đề thi thực chiến đạt chuẩn quốc tế</span>
+      </div>
+      <div class="flex items-center gap-1.5 text-[11px]">
+        <span class="w-2 h-2 rounded-full bg-iot-green animate-pulse"></span>
+        <span>Tích hợp Socratic AI Tutor &amp; Trình phát âm thanh bản ngữ Cambridge</span>
+      </div>
+    </div>
+
+    <!-- EXAM CARDS GRID CONTAINER -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="examsContainer">
+      <!-- Cards dynamically rendered by JavaScript based on full 4-skill database -->
+    </div>
+
+    <!-- PAGINATION CONTROLS -->
+    <div class="flex flex-wrap items-center justify-center gap-2 pt-8" id="paginationContainer">
+      <!-- Dynamic page buttons rendered by JavaScript -->
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-iot-navy text-slate-300 py-12 border-t border-slate-800 text-xs dark:bg-[#050C1A] mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+      
+      <div class="space-y-3 md:col-span-2">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded bg-iot-primary text-white font-bold flex items-center justify-center text-sm">Φ</span>
+          <span class="font-bold text-white text-base">IELTS SYNTAX &amp; LOGOS INSTITUTE</span>
+        </div>
+        <p class="text-slate-400 text-xs leading-relaxed max-w-md">
+          Thư viện Đề thi Thực chiến Computer-Delivered IELTS cập nhật hàng tuần. Kết hợp cùng Trợ giảng Socratic AI phân tích logic hình thức và cấu trúc cú pháp X-bar.
+        </p>
+        <div class="text-[11px] text-slate-400">
+          © 2026 Institute of Formal Linguistics &amp; Philosophical English. All rights reserved.
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="font-bold text-white uppercase text-xs tracking-wider mb-2">Điều Hướng Hệ Thống</div>
+        <ul class="space-y-1.5">
+          <li><a href="index.html" class="hover:text-white transition-colors text-amber-300 font-semibold flex items-center gap-1"><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Về Trang Chủ Khóa Học</a></li>
+          <li><a href="index.html#syntaxTree" class="hover:text-white transition-colors">Bộ Mô Phỏng Cú Pháp Học</a></li>
+          <li><a href="index.html#modules" class="hover:text-white transition-colors">3 Chặng Đào Tạo Triết Học</a></li>
+          <li><a href="index.html#instructor" class="hover:text-white transition-colors">Hồ Sơ Giảng Viên</a></li>
+        </ul>
+      </div>
+
+      <div class="space-y-2">
+        <div class="font-bold text-white uppercase text-xs tracking-wider mb-2">Kỹ Năng Luyện Thi</div>
+        <ul class="space-y-1.5">
+          <li><a href="javascript:void(0)" onclick="selectSkill('LISTENING')" class="hover:text-white transition-colors">🎧 Listening Actual Cambridge</a></li>
+          <li><a href="javascript:void(0)" onclick="selectSkill('READING')" class="hover:text-white transition-colors">📖 Reading Philosophical Texts</a></li>
+          <li><a href="javascript:void(0)" onclick="selectSkill('WRITING')" class="hover:text-white transition-colors">✍️ Writing Task 2 Hegel Dialectics</a></li>
+          <li><a href="javascript:void(0)" onclick="selectSkill('SPEAKING')" class="hover:text-white transition-colors">🎙️ Speaking Part 3 Socratic Voice</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT LOGIC & 4-SKILL DATABASE -->
+  <script>
+    lucide.createIcons();
+
+    // ==========================================
+    // THEME ENGINE
+    // ==========================================
+    const htmlRoot = document.getElementById('htmlRoot');
+    const floatingThemeIcon = document.getElementById('floatingThemeIcon');
+    const floatingThemeLabel = document.getElementById('floatingThemeLabel');
+    const navThemeIcon = document.getElementById('navThemeIcon');
+
+    const savedTheme = localStorage.getItem('iot-theme') || 'light';
+    applyTheme(savedTheme);
+
+    function toggleTheme() {
+      const isDark = htmlRoot.classList.contains('dark');
+      applyTheme(isDark ? 'light' : 'dark');
+    }
+
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        htmlRoot.classList.add('dark');
+        localStorage.setItem('iot-theme', 'dark');
+        if (floatingThemeIcon) floatingThemeIcon.setAttribute('data-lucide', 'sun');
+        if (floatingThemeLabel) floatingThemeLabel.innerText = 'Chế độ: Tối';
+        if (navThemeIcon) navThemeIcon.setAttribute('data-lucide', 'sun');
+      } else {
+        htmlRoot.classList.remove('dark');
+        localStorage.setItem('iot-theme', 'light');
+        if (floatingThemeIcon) floatingThemeIcon.setAttribute('data-lucide', 'moon');
+        if (floatingThemeLabel) floatingThemeLabel.innerText = 'Chế độ: Sáng';
+        if (navThemeIcon) navThemeIcon.setAttribute('data-lucide', 'moon');
+      }
+      lucide.createIcons();
+    }
+
+    // ========================================================
+    // ========================================================
+    // 4-SKILL EXAM DATABASE (LIÊN TỤC CẬP NHẬT HÀNG TUẦN - 32 BỘ ĐỀ)
+    // ========================================================
+    const examDatabase = [
+      // ==========================================
+      // 1. LISTENING (8 BỘ ĐỀ CHUẨN CAMBRIDGE & ACTUAL)
+      // ==========================================
+      {
+        id: "lis-cam19-t1",
+        skill: "LISTENING",
+        title: "Cambridge 19 - Test 1: Academic Accommodation & Microclimate",
+        series: "CAMBRIDGE",
+        duration: "40 Phút",
+        band: "Band 7.5 - 8.5",
+        attempts: "14,820",
+        isNew: true,
+        badgeColor: "orange",
+        desc: "Section 1-4: Hội thoại đăng ký nhà ở London, dự án bảo tồn chim ven biển và bài giảng vi khí hậu đô thị với bẫy thời gian hóc búa."
+      },
+      {
+        id: "lis-cam19-t2",
+        skill: "LISTENING",
+        title: "Cambridge 19 - Test 2: Library Research & Coastal Conservation",
+        series: "CAMBRIDGE",
+        duration: "40 Phút",
+        band: "Band 7.0 - 8.5",
+        attempts: "12,190",
+        isNew: true,
+        badgeColor: "green",
+        desc: "Luyện nghe dạng bản đồ quy hoạch thư viện điện tử và bài nói về chiến lược giảm thiểu xói mòn bờ biển bằng rạn san hô nhân tạo."
+      },
+      {
+        id: "lis-cam19-t3",
+        skill: "LISTENING",
+        title: "Cambridge 19 - Test 3: University Orientation & Archaeological Digs",
+        series: "CAMBRIDGE",
+        duration: "40 Phút",
+        band: "Band 7.5 - 8.5+",
+        attempts: "10,840",
+        isNew: true,
+        badgeColor: "orange",
+        desc: "Hội thoại cố vấn học tập sau đại học và bài giảng khảo cổ học về văn minh đồ đồng. Luyện bắt từ khóa đa âm tiết."
+      },
+      {
+        id: "lis-cam19-t4",
+        skill: "LISTENING",
+        title: "Cambridge 19 - Test 4: Sustainable Architecture & Sound Ecology",
+        series: "CAMBRIDGE",
+        duration: "40 Phút",
+        band: "Band 8.0 - 9.0",
+        attempts: "13,670",
+        isNew: true,
+        badgeColor: "green",
+        desc: "Phân tích âm học kiến trúc và ô nhiễm tiếng ồn đô thị. Dạng câu hỏi Multiple Choice Section 3 với nhiều phương án gây nhiễu."
+      },
+      {
+        id: "lis-cam18-t1",
+        skill: "LISTENING",
+        title: "Cambridge 18 - Test 1: Renewable Energy Subsidies & Community Grants",
+        series: "CAMBRIDGE",
+        duration: "40 Phút",
+        band: "Band 7.0 - 8.0",
+        attempts: "24,530",
+        isNew: false,
+        badgeColor: "green",
+        desc: "Section 1 đăng ký trợ cấp lắp pin mặt trời hộ gia đình và Section 4 nghiên cứu sự suy giảm đa dạng sinh học trong rừng nhiệt đới."
+      },
+      {
+        id: "lis-cam18-t2",
+        skill: "LISTENING",
+        title: "Cambridge 18 - Test 2: Marine Biology Fieldwork & Bio-acoustics",
+        series: "CAMBRIDGE",
+        duration: "40 Phút",
+        band: "Band 7.5 - 8.5",
+        attempts: "18,910",
+        isNew: false,
+        badgeColor: "green",
+        desc: "Chuyến thực địa sinh học biển và đo đạc giao tiếp siêu âm của cá voi. Dạng câu hỏi Table Completion tốc độ nhanh."
+      },
+      {
+        id: "lis-actual-vol4",
+        skill: "LISTENING",
+        title: "Actual Test 2026 - Section 4: Neuro-linguistics & Syntax Acquisition",
+        series: "ACTUAL",
+        duration: "35 Phút",
+        band: "Band 8.0 - 9.0",
+        attempts: "9,640",
+        isNew: true,
+        badgeColor: "orange",
+        desc: "Bài giảng học thuật đại học về cách não bộ xử lý cấu trúc câu phức và sự hình thành ngữ pháp tạo sinh ở trẻ em."
+      },
+      {
+        id: "lis-actual-vol5",
+        skill: "LISTENING",
+        title: "Actual Test 2026 - Section 3: Socratic Dialogue on Algorithmic Bias",
+        series: "ACTUAL",
+        duration: "38 Phút",
+        band: "Band 8.0 - 8.5",
+        attempts: "8,420",
+        isNew: true,
+        badgeColor: "green",
+        desc: "Thảo luận giữa hai nghiên cứu sinh về định kiến trong mô hình học máy và cách xử lý dữ liệu huấn luyện. Luyện bắt luận điểm phản đề."
+      },
+
+      // ==========================================
+      // 2. READING (8 BỘ ĐỀ HỌC THUẬT & TRIẾT HỌC)
+      // ==========================================
+      {
+        id: "read-cam19-t1",
+        skill: "READING",
+        title: "Cambridge 19 - Test 1: Deep Sea Mining & The Common Heritage",
+        series: "CAMBRIDGE",
+        duration: "60 Phút",
+        band: "Band 7.5 - 8.5",
+        attempts: "23,150",
+        isNew: true,
+        badgeColor: "orange",
+        desc: "Khai thác khoáng sản đáy biển sâu và nghịch lý pháp lý quốc tế. Rèn luyện kỹ năng giải quyết dạng bài Matching Information."
+      },
+      {
+        id: "read-cam19-t2",
+        skill: "READING",
+        title: "Cambridge 19 - Test 2: Linguistic Determinism & Sapir-Whorf",
+        series: "CAMBRIDGE",
+        duration: "60 Phút",
+        band: "Band 7.5 - 8.5+",
+        attempts: "21,430",
+        isNew: true,
+        badgeColor: "orange",
+        desc: "3 Passages chuyên sâu về tính tương đối ngôn ngữ và cấu trúc ngữ nghĩa phổ quát của Noam Chomsky. Dạng Matching Headings hóc búa."
+      },
+      {
+        id: "read-cam19-t3",
+        skill: "READING",
+        title: "Cambridge 19 - Test 3: The Psychology of Deception & Micro-expressions",
+        series: "CAMBRIDGE",
+        duration: "60 Phút",
+        band: "Band 7.0 - 8.5",
+        attempts: "17,620",
+        isNew: true,
+        badgeColor: "green",
+        desc: "Tâm lý học nhận thức và phát hiện lời nói dối qua biểu cảm vi mô. Đòi hỏi khả năng phân biệt sự thật khách quan và suy luận chủ quan."
+      },
+      {
+        id: "read-cam19-t4",
+        skill: "READING",
+        title: "Cambridge 19 - Test 4: Quantum Computing & The Philosophy of Information",
+        series: "CAMBRIDGE",
+        duration: "60 Phút",
+        band: "Band 8.0 - 9.0",
+        attempts: "15,890",
+        isNew: true,
+        badgeColor: "green",
+        desc: "Bản chất của thông tin lượng tử và sự thay đổi trong mô hình tri thức luận hiện đại. Luyện dạng True / False / Not Given học thuật."
+      },
+      {
+        id: "read-cam18-t1",
+        skill: "READING",
+        title: "Cambridge 18 - Test 1: The Evolution of Cognition & Fire Cooking",
+        series: "CAMBRIDGE",
+        duration: "60 Phút",
+        band: "Band 7.0 - 8.0",
+        attempts: "31,420",
+        isNew: false,
+        badgeColor: "green",
+        desc: "Thuyết nấu chín thức ăn của Richard Wrangham và bước nhảy vọt trong sự phát triển thể tích não bộ người tiền sử."
+      },
+      {
+        id: "read-cam18-t2",
+        skill: "READING",
+        title: "Cambridge 18 - Test 2: Urbanization & The Dynamics of Urban Heat Islands",
+        series: "CAMBRIDGE",
+        duration: "60 Phút",
+        band: "Band 7.5 - 8.0",
+        attempts: "28,750",
+        isNew: false,
+        badgeColor: "green",
+        desc: "Cơ chế bức xạ nhiệt trong bê tông hóa và các giải pháp hạ tầng xanh. Luyện dạng bài Summary Completion có từ vựng đồng nghĩa."
+      },
+      {
+        id: "read-actual-vol3",
+        skill: "READING",
+        title: "Actual Reading 2026: AI & Computational Jurisprudence",
+        series: "ACTUAL",
+        duration: "60 Phút",
+        band: "Band 8.0 - 8.5",
+        attempts: "16,120",
+        isNew: false,
+        badgeColor: "green",
+        desc: "Ứng dụng xác suất toán học và mạng nơ-ron trong thẩm định chứng cứ tòa án. Dạng bài Phân tích quan điểm tác giả Yes/No/Not Given."
+      },
+      {
+        id: "read-philo-witt",
+        skill: "READING",
+        title: "Philosophical Reading: Wittgenstein's Language Games & Digital Semiotics",
+        series: "PHILOSOPHICAL",
+        duration: "60 Phút",
+        band: "Band 8.5 - 9.0",
+        attempts: "11,830",
+        isNew: true,
+        badgeColor: "orange",
+        desc: "Trò chơi ngôn ngữ trong giao tiếp mạng xã hội và lý thuyết Ký hiệu học của Barthes. Nâng cấp vốn từ vựng học thuật đỉnh cao."
+      },
+
+      // ==========================================
+      // 3. WRITING (8 BỘ ĐỀ TASK 1 & TASK 2 BIỆN LUẬN)
+      // ==========================================
+      {
+        id: "wri-cam19-t1",
+        skill: "WRITING",
+        title: "Cambridge 19 - Test 1: AI Sentencing & Moral Autonomy",
+        series: "CAMBRIDGE",
+        duration: "40 Phút",
+        band: "Band 7.5 - 8.5+",
+        attempts: "18,920",
+        isNew: true,
+        badgeColor: "orange",
+        desc: "Task 2: Tranh luận thẩm quyền phán quyết của AI trong tư pháp. Rèn luyện lập luận Thuyết nghĩa vụ Kant và Cú pháp phân tầng X-bar."
+      },
+      {
+        id: "wri-cam19-t2",
+        skill: "WRITING",
+        title: "Cambridge 19 - Test 2: Space Exploration vs Terrestrial Poverty",
+        series: "CAMBRIDGE",
+        duration: "40 Phút",
+        band: "Band 7.0 - 8.5",
+        attempts: "15,480",
+        isNew: true,
+        badgeColor: "green",
+        desc: "Task 2: Tranh biện chi ngân sách cho nghiên cứu vũ trụ đối chiếu với xóa đói giảm nghèo theo Nguyên lý Công bằng của John Rawls."
+      },
+      {
+        id: "wri-cam19-t3",
+        skill: "WRITING",
+        title: "Cambridge 19 - Test 3: Remote Work & Social Alienation",
+        series: "CAMBRIDGE",
+        duration: "40 Phút",
+        band: "Band 7.5 - 8.5",
+        attempts: "14,320",
+        isNew: true,
+        badgeColor: "orange",
+        desc: "Task 2: Làm việc từ xa và hiện tượng tha hóa xã hội (Alienation) theo góc nhìn xã hội học Durkheim. Huấn luyện câu phức có mệnh đề nhượng bộ."
+      },
+      {
+        id: "wri-cam19-t4",
+        skill: "WRITING",
+        title: "Cambridge 19 - Test 4: Universal Basic Income & Human Agency",
+        series: "CAMBRIDGE",
+        duration: "40 Phút",
+        band: "Band 8.0 - 9.0",
+        attempts: "12,940",
+        isNew: true,
+        badgeColor: "green",
+        desc: "Task 2: Thu nhập cơ bản phổ quát (UBI) và bản chất của lao động trong kỷ nguyên tự động hóa. Áp dụng tam đoạn luận Aristotle."
+      },
+      {
+        id: "wri-philo-spec",
+        skill: "WRITING",
+        title: "Writing Task 2: Baudrillard & Modern Consumerism",
+        series: "PHILOSOPHICAL",
+        duration: "40 Phút",
+        band: "Band 8.0 - 9.0",
+        attempts: "11,350",
+        isNew: true,
+        badgeColor: "orange",
+        desc: "Task 2: Hàng hóa biểu tượng và ảo giác hạnh phúc trong xã hội tiêu thụ. Huấn luyện cấu trúc câu tương phản cao cấp và hợp đề biện chứng."
+      },
+      {
+        id: "wri-philo-fouca",
+        skill: "WRITING",
+        title: "Writing Task 2: Foucault & The Digital Panopticon",
+        series: "PHILOSOPHICAL",
+        duration: "40 Phút",
+        band: "Band 8.0 - 9.0",
+        attempts: "10,210",
+        isNew: true,
+        badgeColor: "green",
+        desc: "Task 2: Dữ liệu lớn, camera giám sát công cộng và quyền riêng tư cá nhân theo mô hình Giám sát toàn cảnh (Panopticon) của Michel Foucault."
+      },
+      {
+        id: "wri-task1-dyn",
+        skill: "WRITING",
+        title: "Writing Task 1 Academic: Comparative Dynamics of Renewable Energy",
+        series: "ACTUAL",
+        duration: "20 Phút",
+        band: "Band 7.5 - 8.5",
+        attempts: "17,630",
+        isNew: false,
+        badgeColor: "green",
+        desc: "Task 1: Biểu đồ đường kép phân tích tỷ trọng chuyển dịch năng lượng hóa thạch sang năng lượng tái tạo tại 5 khối kinh tế giai đoạn 2010-2025."
+      },
+      {
+        id: "wri-task1-proc",
+        skill: "WRITING",
+        title: "Writing Task 1 Process: Synthesis of Biodegradable Polymers",
+        series: "ACTUAL",
+        duration: "20 Phút",
+        band: "Band 7.5 - 8.5+",
+        attempts: "13,890",
+        isNew: true,
+        badgeColor: "green",
+        desc: "Task 1: Quy trình sinh học tổng hợp polyme tự phân hủy từ tảo biển. Rèn luyện cấu trúc bị động học thuật và liên từ chỉ trình tự logic."
+      },
+
+      // ==========================================
+      // 4. SPEAKING (5 BỘ ĐỀ PHỎNG VẤN SOCRATES)
+      // ==========================================
+      {
+        id: "spk-cam19-t1",
+        skill: "SPEAKING",
+        title: "Cambridge 19 - Test 1: Architecture, Urban Aesthetics & Human Well-being",
+        series: "CAMBRIDGE",
+        duration: "14 Phút",
+        band: "Band 7.0 - 8.5",
+        attempts: "19,840",
+        isNew: true,
+        badgeColor: "orange",
+        desc: "Part 1 Nhà ở hiện đại, Part 2 Miêu tả tòa nhà gây ấn tượng, Part 3 Thảo luận triết lý quy hoạch đô thị và tâm lý con người với AI Tutor."
+      },
+      {
+        id: "spk-cam19-t2",
+        skill: "SPEAKING",
+        title: "Cambridge 19 - Test 2: Digital Memory & Human Cognitive Offloading",
+        series: "CAMBRIDGE",
+        duration: "14 Phút",
+        band: "Band 7.5 - 8.5",
+        attempts: "16,420",
+        isNew: true,
+        badgeColor: "green",
+        desc: "Part 1-3 về thói quen ghi nhớ thời đại số. Phân tích hiện tượng suy giảm trí nhớ do phụ thuộc vào công cụ tìm kiếm và đám mây dữ liệu."
+      },
+      {
+        id: "spk-forecast-q4",
+        skill: "SPEAKING",
+        title: "Forecast Q4 - Part 3: Freedom of Speech & J.S. Mill's Harm Principle",
+        series: "FORECAST",
+        duration: "15 Phút",
+        band: "Band 7.5 - 9.0",
+        attempts: "13,290",
+        isNew: true,
+        badgeColor: "orange",
+        desc: "Phỏng vấn hai chiều với Socratic AI về ranh giới tự do ngôn luận và Nguyên lý gây hại (Harm Principle) của Mill trong quản trị mạng xã hội."
+      },
+      {
+        id: "spk-forecast-ai",
+        skill: "SPEAKING",
+        title: "Forecast Q4 - Part 3: Epistemology & Fact-Checking in the Generative Era",
+        series: "FORECAST",
+        duration: "15 Phút",
+        band: "Band 8.0 - 9.0",
+        attempts: "11,540",
+        isNew: true,
+        badgeColor: "green",
+        desc: "Phỏng vấn về sự xói mòn lòng tin vào truyền thông trong thời đại Deepfake. Luyện tập lập luận đa góc nhìn và giải pháp tri thức luận."
+      },
+      {
+        id: "spk-philo-tao",
+        skill: "SPEAKING",
+        title: "Speaking Special: Taoist Wu-Wei & Modern Environmental Philosophy",
+        series: "PHILOSOPHICAL",
+        duration: "15 Phút",
+        band: "Band 8.0 - 9.0",
+        attempts: "9,820",
+        isNew: true,
+        badgeColor: "orange",
+        desc: "Part 3 đối thoại triết học Đông - Tây: Ứng dụng tư tưởng 'Vô vi' của Lão Tử vào phát triển kinh tế bền vững và hòa hợp tự nhiên."
+      },
+
+      // ==========================================
+      // 5. FULL MOCK MARATHON (3 BỘ ĐỀ TRỌN VẸN 4 KỸ NĂNG)
+      // ==========================================
+      {
+        id: "mock-cam19-full",
+        skill: "FULL_MOCK",
+        title: "IELTS Full Mock Marathon - Cambridge 19 Standard Suite",
+        series: "CAMBRIDGE",
+        duration: "165 Phút",
+        band: "Band 6.5 - 9.0",
+        attempts: "14,350",
+        isNew: true,
+        badgeColor: "orange",
+        desc: "Mô phỏng trọn vẹn 100% Computer-Delivered IELTS: Listening (40p) + Reading (60p) + Writing (60p) + Speaking (15p) với trợ giảng AI phân tích toàn diện."
+      },
+      {
+        id: "mock-cam18-full",
+        skill: "FULL_MOCK",
+        title: "IELTS Full Mock Marathon - Cambridge 18 Academic Suite",
+        series: "CAMBRIDGE",
+        duration: "165 Phút",
+        band: "Band 6.5 - 8.5",
+        attempts: "22,890",
+        isNew: false,
+        badgeColor: "green",
+        desc: "Bộ đề thi thử 4 kỹ năng kinh điển từ Đại học Cambridge, bấm giờ chuẩn phòng thi quốc tế và xuất báo cáo phân tích chi tiết sau khi nộp bài."
+      },
+      {
+        id: "mock-philo-master",
+        skill: "FULL_MOCK",
+        title: "IELTS 2026 Master Marathon: Formal Linguistics & Philosophy",
+        series: "PHILOSOPHICAL",
+        duration: "170 Phút",
+        band: "Band 8.0 - 9.0",
+        attempts: "7,640",
+        isNew: true,
+        badgeColor: "orange",
+        desc: "Bộ đề thử thách đỉnh cao dành riêng cho học viên mục tiêu Band 8.5+: Toàn bộ chủ đề xoay quanh Cú pháp học, Tri thức luận và Đạo đức học."
+      }
+    ];
+
+    let currentSkillFilter = 'ALL';
+    let currentPage = 1;
+    const pageSize = 9;
+
+    function updateTabCounts() {
+      const counts = {
+        ALL: examDatabase.length,
+        LISTENING: examDatabase.filter(x => x.skill === 'LISTENING').length,
+        READING: examDatabase.filter(x => x.skill === 'READING').length,
+        WRITING: examDatabase.filter(x => x.skill === 'WRITING').length,
+        SPEAKING: examDatabase.filter(x => x.skill === 'SPEAKING').length,
+        FULL_MOCK: examDatabase.filter(x => x.skill === 'FULL_MOCK').length
+      };
+
+      for (const [key, val] of Object.entries(counts)) {
+        const el = document.getElementById(`count-${key}`);
+        if (el) el.innerText = val;
+      }
+    }
+
+    function selectSkill(skill) {
+      currentSkillFilter = skill;
+      const btns = document.querySelectorAll('.skill-tab-btn');
+      btns.forEach(btn => {
+        if (btn.getAttribute('data-skill') === skill) {
+          btn.classList.add('bg-iot-primary', 'text-white');
+          btn.classList.remove('bg-iot-bgLight', 'text-iot-dark', 'dark:bg-slate-800', 'dark:text-slate-200');
+        } else {
+          btn.classList.remove('bg-iot-primary', 'text-white');
+          btn.classList.add('bg-iot-bgLight', 'text-iot-dark', 'dark:bg-slate-800', 'dark:text-slate-200');
+        }
+      });
+      filterCards(true);
+    }
+
+    function filterCards(resetPage = true) {
+      if (resetPage) currentPage = 1;
+
+      const searchVal = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase().trim() : '';
+      const seriesVal = document.getElementById('seriesFilter') ? document.getElementById('seriesFilter').value : 'ALL';
+      const sortVal = document.getElementById('sortFilter') ? document.getElementById('sortFilter').value : 'NEWEST';
+
+      let filtered = examDatabase.filter(item => {
+        const matchSkill = (currentSkillFilter === 'ALL') || (item.skill === currentSkillFilter);
+        const matchSearch = item.title.toLowerCase().includes(searchVal) || item.desc.toLowerCase().includes(searchVal);
+        const matchSeries = (seriesVal === 'ALL') || (item.series === seriesVal);
+        return matchSkill && matchSearch && matchSeries;
+      });
+
+      // Sorting
+      if (sortVal === 'NEWEST') {
+        filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+      } else if (sortVal === 'POPULAR') {
+        filtered.sort((a, b) => {
+          const aCount = parseInt(a.attempts.replace(/,/g, '')) || 0;
+          const bCount = parseInt(b.attempts.replace(/,/g, '')) || 0;
+          return bCount - aCount;
+        });
+      } else if (sortVal === 'HARD') {
+        filtered.sort((a, b) => b.band.localeCompare(a.band));
+      }
+
+      // Update count display
+      const countEl = document.getElementById('resultCountDisplay');
+      if (countEl) countEl.innerText = filtered.length;
+
+      // Slice for pagination
+      const totalPages = Math.ceil(filtered.length / pageSize) || 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      const startIndex = (currentPage - 1) * pageSize;
+      const paginatedList = filtered.slice(startIndex, startIndex + pageSize);
+
+      renderCards(paginatedList);
+      renderPagination(totalPages, filtered.length);
+    }
+
+    function renderPagination(totalPages, totalItems) {
+      const pagContainer = document.getElementById('paginationContainer');
+      if (!pagContainer) return;
+
+      if (totalPages <= 1) {
+        pagContainer.innerHTML = '';
+        return;
+      }
+
+      let html = `<div class="flex items-center gap-1.5 font-mono text-xs">`;
+      // Previous button
+      if (currentPage > 1) {
+        html += `<button onclick="goToPage(${currentPage - 1})" class="px-3 py-2 rounded-lg border border-iot-border dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-iot-primary font-bold transition-all">← Trước</button>`;
+      }
+
+      for (let p = 1; p <= totalPages; p++) {
+        const isActive = p === currentPage;
+        html += `<button onclick="goToPage(${p})" class="w-9 h-9 rounded-lg font-bold transition-all ${isActive ? 'bg-iot-primary text-white shadow-sm' : 'border border-iot-border dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-iot-primary text-iot-dark dark:text-slate-200'}">${p}</button>`;
+      }
+
+      // Next button
+      if (currentPage < totalPages) {
+        html += `<button onclick="goToPage(${currentPage + 1})" class="px-3 py-2 rounded-lg border border-iot-border dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-iot-primary font-bold transition-all">Sau →</button>`;
+      }
+      html += `</div>`;
+      pagContainer.innerHTML = html;
+    }
+
+    function goToPage(page) {
+      currentPage = page;
+      filterCards(false);
+      document.getElementById('examsContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function handleSearch() {
+      filterCards(true);
+    }
+
+    function renderCards(list) {
+      const container = document.getElementById('examsContainer');
+      container.innerHTML = '';
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center text-iot-muted dark:text-slate-400">
+            <i data-lucide="inbox" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
+            <p class="font-semibold">Không tìm thấy bài thi phù hợp với bộ lọc hiện tại.</p>
+            <p class="text-xs">Vui lòng chọn kỹ năng khác hoặc xóa từ khóa tìm kiếm.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      list.forEach(item => {
+        const skillColorClass = {
+          LISTENING: 'bg-blue-100 text-iot-primary dark:bg-blue-900/50 dark:text-blue-300',
+          READING: 'bg-green-100 text-iot-green dark:bg-green-950/50 dark:text-green-300',
+          WRITING: 'bg-amber-100 text-iot-orange dark:bg-amber-950/50 dark:text-amber-300',
+          SPEAKING: 'bg-purple-100 text-purple-600 dark:bg-purple-950/50 dark:text-purple-300',
+          FULL_MOCK: 'bg-red-100 text-red-600 dark:bg-red-950/50 dark:text-red-300'
+        }[item.skill] || 'bg-slate-100 text-slate-700';
+
+        const card = document.createElement('div');
+        card.className = "bg-white dark:bg-[#111C44] rounded-xl border border-iot-border dark:border-slate-700 shadow-iot-card hover:shadow-iot-hover transition-all duration-200 overflow-hidden flex flex-col justify-between relative";
+
+        card.innerHTML = `
+          ${item.isNew ? `
+            <div class="absolute top-3 right-3 z-10">
+              <span class="bg-iot-${item.badgeColor} text-white text-[10px] font-extrabold uppercase px-2 py-0.5 rounded shadow-sm flex items-center gap-1 badge-pulse">
+                <i data-lucide="zap" class="w-3 h-3"></i>
+                <span>Mới cập nhật tuần này</span>
+              </span>
+            </div>
+          ` : ''}
+
+          <div class="p-6">
+            <div class="flex items-center gap-2 text-xs font-mono font-bold mb-2.5">
+              <span class="px-2 py-0.5 rounded ${skillColorClass}">${item.skill}</span>
+              <span class="text-iot-muted dark:text-slate-400">• ${item.series}</span>
+            </div>
+
+            <h3 class="font-bold text-base text-iot-dark dark:text-white mb-2 leading-snug">
+              ${item.title}
+            </h3>
+            
+            <p class="text-xs text-iot-muted dark:text-slate-400 leading-relaxed mb-4">
+              ${item.desc}
+            </p>
+
+            <div class="grid grid-cols-2 gap-2 text-xs text-iot-dark dark:text-slate-300 font-mono py-2.5 border-y border-slate-100 dark:border-slate-700 mb-2">
+              <div class="flex items-center gap-1.5">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-iot-muted"></i>
+                <span>${item.duration}</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-iot-primary dark:text-blue-400"></i>
+                <span class="font-bold text-iot-primary dark:text-blue-400">${item.band}</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-iot-muted">
+                <i data-lucide="users" class="w-3.5 h-3.5"></i>
+                <span>${item.attempts} lượt</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-iot-green font-semibold">
+                <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+                <span>Socratic AI sẵn sàng</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-4 bg-iot-bgLight dark:bg-slate-900 border-t border-iot-border dark:border-slate-800 flex items-center justify-between">
+            <span class="text-xs text-iot-muted dark:text-slate-400 font-mono">Exam + Socratic AI</span>
+            <a href="exam-room.html?skill=${encodeURIComponent(item.skill)}&title=${encodeURIComponent(item.title)}" class="bg-iot-orange hover:bg-iot-orangeHover text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm transition-all flex items-center gap-1.5 active:scale-95">
+              <span>Bắt đầu luyện tập</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    // Initial render & URL Query Parameter Handling
+    updateTabCounts();
+    const urlParams = new URLSearchParams(window.location.search);
+    const filterFromUrl = urlParams.get('filter');
+    if (filterFromUrl) {
+      selectSkill(filterFromUrl.toUpperCase());
+    } else {
+      filterCards();
+    }
+
+    // Dynamic Socratic AI Personalization Sync
+    function syncLibraryPersonalization() {
+      if (!window.socraticAI) return;
+      const p = window.socraticAI.profile;
+      const nameEl = document.getElementById('libraryStudentName');
+      const targetEl = document.getElementById('libraryTargetBadge');
+      const reasonEl = document.getElementById('libraryAiReasoning');
+      const navBadge = document.getElementById('navLibraryStudentBadge');
+
+      if (nameEl) nameEl.innerText = p.name;
+      if (targetEl) targetEl.innerText = `Mục tiêu Band ${p.targetBand}`;
+      if (navBadge) navBadge.innerText = `${p.name} (${p.targetBand})`;
+
+      const weakest = window.socraticAI.getWeakestDimension();
+      if (reasonEl && weakest) {
+        reasonEl.innerHTML = `Dựa trên phân tích <strong>${p.totalInteractions} lượt tương tác</strong>: Năng lực <strong>"${weakest.name}"</strong> của bạn hiện đạt <strong>${weakest.score}% (${weakest.level})</strong>. Hệ thống cá nhân hóa đề xuất 3 bài luyện tập dưới đây để khắc phục:`;
+      }
+    }
+
+    syncLibraryPersonalization();
+    window.addEventListener('focus', syncLibraryPersonalization);
+  </script>
+
+</body>
+</html>
+
