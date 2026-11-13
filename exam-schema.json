@@ -259,7 +259,7 @@
     "schema": {
       "student_profile": {
         "student_id": "PHI-8921",
-        "name": "Nguyễn Minh Đức",
+        "name": "Học viên",
         "target_band": "8.0",
         "current_estimated_band": "7.0",
         "learning_style": "Socratic-Dialectic",

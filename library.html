@@ -194,9 +194,9 @@
 
         <button onclick="window.socraticAI.openCognitiveProfileModal()"
           class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-xs font-mono text-iot-primary dark:text-blue-300 border border-blue-200 dark:border-blue-800 transition-all shadow-sm"
-          title="Mở Hồ Sơ Nhận Thức AI">
+          title="Mở Hồ Sơ & Đổi Tên Học Viên">
           <i data-lucide="brain" class="w-3.5 h-3.5 text-iot-orange"></i>
-          <span id="navLibraryStudentBadge">Minh Đức (8.0)</span>
+          <span id="navLibraryStudentBadge">Học viên (8.0)</span>
         </button>
 
         <button onclick="toggleTheme()"
@@ -291,7 +291,7 @@
             <div class="flex items-center gap-2">
               <h2 class="font-bold text-sm sm:text-base text-white">
                 Lộ Trình Đề Thi Đề Xuất Dành Riêng Cho: <span id="libraryStudentName"
-                  class="text-amber-300 font-extrabold underline decoration-amber-400">Minh Đức</span>
+                  class="text-amber-300 font-extrabold underline decoration-amber-400">Học viên</span>
               </h2>
               <span id="libraryTargetBadge"
                 class="text-[10px] font-mono bg-blue-500/30 text-blue-200 border border-blue-400/40 px-2 py-0.5 rounded-full font-bold">
@@ -579,14 +579,14 @@
       {
         id: "lis-cam19-t1",
         skill: "LISTENING",
-        title: "Cambridge 19 - Test 1: Academic Accommodation & Microclimate",
+        title: "Cambridge 19 - Test 1: Hinchingbrooke Country Park & Fieldwork",
         series: "CAMBRIDGE",
         duration: "40 Phút",
         band: "Band 7.5 - 8.5",
         attempts: "14,820",
         isNew: true,
         badgeColor: "orange",
-        desc: "Section 1-4: Hội thoại đăng ký nhà ở London, dự án bảo tồn chim ven biển và bài giảng vi khí hậu đô thị với bẫy thời gian hóc búa."
+        desc: "Băng ghi âm gốc Cambridge bản xứ (Native Human Audio): Phỏng vấn kiểm lâm viên Sally về tổ chức học ngoại khóa, đo đạc môi trường và bài học âm học thiên nhiên."
       },
       {
         id: "lis-cam19-t2",
@@ -627,14 +627,14 @@
       {
         id: "lis-cam18-t1",
         skill: "LISTENING",
-        title: "Cambridge 18 - Test 1: Renewable Energy Subsidies & Community Grants",
+        title: "Cambridge 18 - Test 1: Transport Survey & City Commute",
         series: "CAMBRIDGE",
         duration: "40 Phút",
         band: "Band 7.0 - 8.0",
         attempts: "24,530",
         isNew: false,
         badgeColor: "green",
-        desc: "Section 1 đăng ký trợ cấp lắp pin mặt trời hộ gia đình và Section 4 nghiên cứu sự suy giảm đa dạng sinh học trong rừng nhiệt đới."
+        desc: "Băng ghi âm gốc Cambridge bản xứ (Native Human Audio): Khảo sát thói quen đi lại bằng xe buýt của cư dân Sadie Jones với các bẫy ngày tháng và mã bưu chính kinh điển."
       },
       {
         id: "lis-cam18-t2",
@@ -1167,7 +1167,7 @@
 
           <div class="p-4 bg-iot-bgLight dark:bg-slate-900 border-t border-iot-border dark:border-slate-800 flex items-center justify-between">
             <span class="text-xs text-iot-muted dark:text-slate-400 font-mono">Exam + Socratic AI</span>
-            <a href="exam-room.html?skill=${encodeURIComponent(item.skill)}&title=${encodeURIComponent(item.title)}" class="bg-iot-orange hover:bg-iot-orangeHover text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm transition-all flex items-center gap-1.5 active:scale-95">
+            <a href="exam-room.html?id=${encodeURIComponent(item.id)}&skill=${encodeURIComponent(item.skill)}&title=${encodeURIComponent(item.title)}" class="bg-iot-orange hover:bg-iot-orangeHover text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm transition-all flex items-center gap-1.5 active:scale-95">
               <span>Bắt đầu luyện tập</span>
               <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
             </a>
