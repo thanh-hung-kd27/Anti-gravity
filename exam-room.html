@@ -51,6 +51,8 @@
 
   <!-- Socratic AI Cognitive Self-Learning Engine -->
   <script src="ai-engine.js"></script>
+  <!-- Academic Dictionary & Multi-tier Translation Suite -->
+  <script src="academic-dictionary-translator.js"></script>
 
   <style>
     body {
@@ -118,6 +120,11 @@
     <!-- Right: Timer, Theme & Submit -->
     <div class="flex items-center gap-2 sm:gap-3">
       <!-- AI Cognitive Profile Pill -->
+      <button onclick="window.academicDictionary.openDictionaryModal()" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-mono transition-all border border-white/15" title="Mở Từ Điển & Dịch Thuật Học Thuật">
+        <i data-lucide="languages" class="w-3.5 h-3.5 text-blue-300"></i>
+        <span class="hidden md:inline">Từ Điển &amp; Dịch</span>
+      </button>
+
       <button onclick="window.socraticAI.openCognitiveProfileModal()" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-mono transition-all border border-white/15" title="Mở Hồ Sơ Nhận Thức AI">
         <i data-lucide="brain" class="w-3.5 h-3.5 text-amber-300"></i>
         <span id="navBarStudentBadge" class="hidden sm:inline">Minh Đức (8.0)</span>
@@ -1073,24 +1080,97 @@
       // Default: WRITING
       viewport.innerHTML = `
         <div class="p-4 bg-iot-bgLight dark:bg-slate-900 rounded-xl border border-iot-border dark:border-slate-800 space-y-2">
-          <span class="text-xs font-bold text-iot-primary uppercase font-mono">IELTS WRITING TASK 2 PROMPT</span>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-iot-primary uppercase font-mono">IELTS WRITING TASK 2 PROMPT</span>
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 font-bold">40 Phút • Tối thiểu 250 từ</span>
+          </div>
           <p class="text-sm font-semibold text-iot-dark dark:text-white">"Some legal scholars argue that Artificial Intelligence should replace human judges in courtroom sentencing to eliminate racial and cognitive bias. To what extent do you agree or disagree?"</p>
         </div>
 
-        <div class="space-y-2">
-          <div class="flex justify-between text-xs font-semibold">
-            <span class="text-iot-dark dark:text-slate-200">Khu vực bài viết của thí sinh:</span>
-            <span class="font-mono text-iot-primary dark:text-blue-400">Số từ: 148 từ (Yêu cầu: 250+)</span>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center text-xs font-semibold">
+            <span class="text-iot-dark dark:text-slate-200 flex items-center gap-1.5">
+              <i data-lucide="edit-3" class="w-4 h-4 text-iot-orange"></i>
+              <span>Khu vực bài viết của thí sinh:</span>
+            </span>
+            <span id="writingWordCounter" class="font-mono text-iot-primary dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-1 rounded border border-blue-200 dark:border-blue-900">
+              Số từ: 41 từ (Yêu cầu: 250+)
+            </span>
           </div>
-          <textarea rows="11" class="w-full p-4 rounded-xl border border-iot-border dark:border-slate-700 text-sm font-sans text-iot-dark dark:text-white dark:bg-slate-900 focus:outline-none focus:border-iot-primary leading-relaxed">From a Kantian deontological perspective, judicial sentencing is fundamentally predicated on moral autonomy and intentionality—qualities intrinsically absent in deterministic algorithmic computation.
 
-While automated metrics may optimize procedural efficiency and eradicate human fatigue, delegating jurisprudence to artificial systems reduces moral agency to mere statistical correlation.</textarea>
+          <textarea id="examWritingInput" rows="10" oninput="updateExamWritingCount()"
+            class="w-full p-4 rounded-xl border border-iot-border dark:border-slate-700 text-sm font-sans text-iot-dark dark:text-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-iot-primary leading-relaxed shadow-inner">The goverment should make sure that artificial intelligence does not completely replace human judges. In my opinion, this is a very important issue because computers cannot understand human morality, which is a big problem in difficult criminal cases.</textarea>
+
+          <!-- Writing Tools Bar -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <div class="flex items-center gap-2">
+              <button onclick="runExamWritingProofread()" class="px-4 py-2.5 rounded-xl bg-iot-orange hover:bg-iot-orangeHover text-white font-bold text-xs uppercase tracking-wide shadow-iot-cta transition-all flex items-center gap-1.5 active:scale-95">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                <span>AI Sửa Chính Tả &amp; Nâng Cao Từ Vựng</span>
+              </button>
+              <button onclick="applyExamWritingPolished()" id="btnExamApplyPolished" class="hidden px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-all flex items-center gap-1">
+                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                <span>Áp dụng bản Band 8.5</span>
+              </button>
+            </div>
+
+            <span class="text-xs text-iot-muted dark:text-slate-400 font-mono">⚡ Tự động rà soát Lexical Resource &amp; GRA</span>
+          </div>
+
+          <!-- Dynamic Proofread Result Card -->
+          <div id="examWritingProofreadBox" class="hidden p-4 rounded-xl bg-slate-50 dark:bg-slate-900/95 border border-iot-border dark:border-slate-800 space-y-4">
+            <!-- Header & Score Mode Switcher -->
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-iot-border dark:border-slate-800 pb-3">
+              <span class="font-bold text-xs text-iot-primary dark:text-blue-400 flex items-center gap-1.5 font-mono">
+                <i data-lucide="award" class="w-4 h-4 text-iot-orange"></i>
+                <span>BẢNG ĐÁNH GIÁ TIÊU CHUẨN IELTS (9.0 = VÒNG TRÒN HOÀN TOÀN)</span>
+              </span>
+              <div class="inline-flex rounded-lg p-0.5 bg-slate-200 dark:bg-slate-800 text-[11px] font-mono">
+                <button type="button" id="btnExamScoreOriginal" onclick="setExamScoreMode('original')" class="px-2.5 py-1 rounded-md font-bold transition-all bg-white dark:bg-slate-700 text-iot-dark dark:text-white shadow-xs">
+                  ⦿ Điểm bài gốc
+                </button>
+                <button type="button" id="btnExamScoreUpgraded" onclick="setExamScoreMode('upgraded')" class="px-2.5 py-1 rounded-md font-bold transition-all text-iot-muted hover:text-iot-primary">
+                  ✨ Sau nâng cấp (Band 8.5+)
+                </button>
+              </div>
+            </div>
+
+            <!-- 5 Circular Radial Gauges (9.0 = Full Circle) -->
+            <div id="examCircularGaugesContainer" class="grid grid-cols-2 sm:grid-cols-5 gap-3 p-3 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700"></div>
+
+            <!-- In-situ Annotated Text with Clickable Badges -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-iot-dark dark:text-slate-200 flex items-center gap-1.5">
+                  <i data-lucide="crosshair" class="w-3.5 h-3.5 text-iot-orange"></i>
+                  <span>Vị trí cần nâng cấp trên bài viết (Click số huy hiệu để xem phân tích):</span>
+                </span>
+                <span id="examIssuesCountBadge" class="text-[11px] font-mono font-bold text-iot-orange"></span>
+              </div>
+              <div id="examProofAnnotated" class="p-3.5 bg-white dark:bg-slate-800/90 rounded-xl border border-slate-200 dark:border-slate-700 text-xs leading-relaxed font-serif text-iot-dark dark:text-slate-200 min-h-[70px]"></div>
+            </div>
+
+            <!-- Active Issue Deep Rationale Inspector Card -->
+            <div id="examActiveIssueCard" class="hidden p-3.5 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50/50 dark:from-[#1c2237] dark:to-[#171c2f] border border-amber-200 dark:border-amber-900/60 shadow-sm transition-all space-y-2.5"></div>
+
+            <!-- All Issues List -->
+            <div class="space-y-2">
+              <span class="text-xs font-bold text-iot-dark dark:text-slate-200 flex items-center gap-1.5">
+                <i data-lucide="list-checks" class="w-3.5 h-3.5 text-iot-primary"></i>
+                <span>Danh sách toàn bộ lỗi &amp; cụm từ học thuật thay thế:</span>
+              </span>
+              <div id="examProofDetails" class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs"></div>
+            </div>
+          </div>
         </div>
       `;
       chatBox.innerHTML = `
         <div class="p-3.5 rounded-xl bg-white dark:bg-[#111C44] border border-iot-border dark:border-slate-700 shadow-sm text-xs space-y-2">
-          <span class="font-bold text-iot-orange font-mono">Socratic Writing Mentor:</span>
-          <p>Luận điểm Kantian của bạn rất đanh thép. Hãy chuẩn bị đoạn thân bài 2 để giải quyết Phản đề (Antithesis) theo thuyết Vị lợi (Utilitarianism)!</p>
+          <span class="font-bold text-iot-orange font-mono flex items-center gap-1.5">
+            <i data-lucide="bot" class="w-4 h-4"></i>
+            <span>Socratic Writing Mentor:</span>
+          </span>
+          <p>Hãy viết bài luận của bạn. Bất kỳ lúc nào bạn cần kiểm tra chính tả hoặc nâng cấp từ vựng Band 8.0+, hãy bấm nút <strong>"AI Sửa Chính Tả &amp; Nâng Cao Từ Vựng"</strong> ở góc dưới bài viết!</p>
         </div>
       `;
     }
@@ -1989,6 +2069,256 @@ While automated metrics may optimize procedural efficiency and eradicate human f
         speakCurrentDialogue();
       } else {
         startListeningAudio();
+      }
+    }
+
+    // ==========================================
+    // EXAM ROOM WRITING PROOFREADING & COUNTER
+    // ==========================================
+    // EXAM ROOM WRITING PROOFREADING & COUNTER
+    // ==========================================
+    let lastExamWritingAnalysis = null;
+    let currentExamScoreMode = 'original'; // 'original' | 'upgraded'
+    let selectedExamIssueNumber = null;
+
+    function updateExamWritingCount() {
+      const input = document.getElementById('examWritingInput');
+      const counter = document.getElementById('writingWordCounter');
+      if (!input || !counter) return;
+      const text = input.value.trim();
+      const words = text ? text.split(/\s+/).filter(w => w.length > 0).length : 0;
+      counter.innerText = `Số từ: ${words} từ (Yêu cầu: 250+)`;
+    }
+
+    function setExamScoreMode(mode) {
+      currentExamScoreMode = mode;
+      const btnOrig = document.getElementById('btnExamScoreOriginal');
+      const btnUpg = document.getElementById('btnExamScoreUpgraded');
+      if (btnOrig && btnUpg) {
+        if (mode === 'original') {
+          btnOrig.className = 'px-2.5 py-1 rounded-md font-bold transition-all bg-white dark:bg-slate-700 text-iot-dark dark:text-white shadow-xs';
+          btnUpg.className = 'px-2.5 py-1 rounded-md font-bold transition-all text-iot-muted hover:text-iot-primary';
+        } else {
+          btnUpg.className = 'px-2.5 py-1 rounded-md font-bold transition-all bg-iot-orange text-white shadow-xs';
+          btnOrig.className = 'px-2.5 py-1 rounded-md font-bold transition-all text-iot-muted hover:text-iot-primary';
+        }
+      }
+      renderExamCircularGauges();
+    }
+
+    function renderExamCircularGauges() {
+      const container = document.getElementById('examCircularGaugesContainer');
+      if (!container || !lastExamWritingAnalysis) return;
+      const scores = lastExamWritingAnalysis.criteriaScores ? lastExamWritingAnalysis.criteriaScores[currentExamScoreMode] : {
+        overall: 6.0,
+        lexicalResource: 5.5,
+        grammarAccuracy: 6.0,
+        coherenceCohesion: 6.5,
+        taskResponse: 6.0
+      };
+
+      const metrics = [
+        { key: 'overall', label: 'OVERALL BAND', score: scores.overall, isMajor: true, color: currentExamScoreMode === 'upgraded' ? '#00b4d8' : '#2563eb' },
+        { key: 'lexicalResource', label: 'Lexical Resource', score: (scores.lexicalResource || scores.lr || 5.5), isMajor: false, color: '#f59e0b' },
+        { key: 'grammarAccuracy', label: 'Grammar & Accuracy', score: (scores.grammarAccuracy || scores.gra || 5.5), isMajor: false, color: '#10b981' },
+        { key: 'coherenceCohesion', label: 'Coherence & Cohesion', score: (scores.coherenceCohesion || scores.cc || 6.0), isMajor: false, color: '#8b5cf6' },
+        { key: 'taskResponse', label: 'Task Response', score: (scores.taskResponse || scores.tr || 6.0), isMajor: false, color: '#ec4899' }
+      ];
+
+      container.innerHTML = metrics.map(m => {
+        const radius = m.isMajor ? 32 : 28;
+        const strokeWidth = m.isMajor ? 6 : 5;
+        const circumference = 2 * Math.PI * radius;
+        // Formula: 9.0 is a 100% complete circle (offset = 0)
+        const progressFraction = Math.min(1, Math.max(0, m.score / 9.0));
+        const strokeDashoffset = circumference * (1 - progressFraction);
+        const center = m.isMajor ? 38 : 34;
+        const size = center * 2;
+
+        return `
+          <div class="flex flex-col items-center justify-center p-2 rounded-lg ${m.isMajor ? 'bg-blue-50/60 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60' : ''} text-center">
+            <div class="relative flex items-center justify-center" style="width: ${size}px; height: ${size}px;">
+              <svg width="${size}" height="${size}" class="transform -rotate-90">
+                <circle cx="${center}" cy="${center}" r="${radius}" stroke="currentColor" stroke-width="${strokeWidth}" class="text-slate-200 dark:text-slate-700/60" fill="transparent" />
+                <circle cx="${center}" cy="${center}" r="${radius}" stroke="${m.color}" stroke-width="${strokeWidth}" stroke-dasharray="${circumference}" stroke-dashoffset="${strokeDashoffset}" stroke-linecap="round" fill="transparent" style="transition: stroke-dashoffset 0.8s ease-in-out;" />
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span class="${m.isMajor ? 'text-sm font-black' : 'text-xs font-bold'} font-mono text-iot-dark dark:text-white leading-none">${m.score.toFixed(1)}</span>
+                <span class="text-[9px] font-mono text-iot-muted leading-tight">/ 9.0</span>
+              </div>
+            </div>
+            <span class="mt-1.5 text-[10px] ${m.isMajor ? 'font-bold text-iot-primary dark:text-blue-300' : 'text-slate-600 dark:text-slate-400'} uppercase font-mono tracking-tight">${m.label}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectExamIssue(issueNumber) {
+      selectedExamIssueNumber = issueNumber;
+      if (!lastExamWritingAnalysis || !lastExamWritingAnalysis.allIssues) return;
+      const issue = lastExamWritingAnalysis.allIssues.find(i => i.issueNumber === issueNumber);
+      const card = document.getElementById('examActiveIssueCard');
+      if (!card || !issue) return;
+
+      document.querySelectorAll('.exam-in-situ-tag').forEach(el => {
+        el.classList.remove('ring-4', 'ring-iot-orange', 'scale-105');
+      });
+      const targetTag = document.getElementById(`exam-tag-issue-${issueNumber}`);
+      if (targetTag) {
+        targetTag.classList.add('ring-4', 'ring-iot-orange', 'scale-105');
+        targetTag.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      const isSpelling = issue.type === 'spelling';
+      card.classList.remove('hidden');
+      card.innerHTML = `
+        <div class="flex items-start justify-between gap-2 border-b border-amber-200 dark:border-amber-900/50 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-iot-orange text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">#${issue.issueNumber}</span>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-xs font-mono ${isSpelling ? 'text-red-600 line-through' : 'text-slate-700 dark:text-slate-200'}">"${issue.originalText}"</span>
+                <span class="text-iot-muted font-mono text-xs">➔</span>
+                <span class="font-black text-xs font-mono text-iot-primary dark:text-blue-400 bg-white dark:bg-slate-800 px-2 py-0.5 rounded border border-blue-200 dark:border-blue-900">${issue.replacement}</span>
+              </div>
+              <span class="text-[10px] text-iot-muted font-mono">${issue.criterion || (isSpelling ? 'Grammatical Accuracy' : 'Lexical Resource')} • ${issue.cefrOriginal || 'A2/B1'} ➔ ${issue.cefrUpgraded || 'C1/C2'}</span>
+            </div>
+          </div>
+          <button onclick="replaceExamSingleIssue(${issue.issueNumber})" class="px-3 py-1 rounded-lg bg-iot-orange hover:bg-iot-orangeHover text-white font-bold text-xs shadow-xs transition-all flex items-center gap-1 active:scale-95 shrink-0">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+            <span>Thay thế từ này</span>
+          </button>
+        </div>
+
+        <div class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+          <div class="p-2 rounded bg-amber-100/60 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/40">
+            <span class="font-bold text-amber-900 dark:text-amber-200">⚠️ Tại sao bài gốc bị trừ điểm:</span>
+            <p class="text-[11px] mt-0.5 leading-relaxed">${issue.whyWeak}</p>
+          </div>
+          <div class="p-2 rounded bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/40">
+            <span class="font-bold text-iot-primary dark:text-blue-300">💡 Vì sao nên đặt là "${issue.replacement}" (Bản chất ngôn ngữ học):</span>
+            <p class="text-[11px] mt-0.5 leading-relaxed">${issue.whyReplacement}</p>
+          </div>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    function replaceExamSingleIssue(issueNumber) {
+      if (!lastExamWritingAnalysis || !lastExamWritingAnalysis.allIssues) return;
+      const issue = lastExamWritingAnalysis.allIssues.find(i => i.issueNumber === issueNumber);
+      const input = document.getElementById('examWritingInput');
+      if (!issue || !input) return;
+
+      const regex = new RegExp(`\\b${escapeRegExpExam(issue.originalText)}\\b`, 'i');
+      input.value = input.value.replace(regex, issue.replacement);
+      updateExamWritingCount();
+      runExamWritingProofread();
+    }
+
+    function escapeRegExpExam(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function runExamWritingProofread() {
+      const input = document.getElementById('examWritingInput');
+      if (!input) return;
+      const text = input.value.trim();
+      if (!text) {
+        alert('Vui lòng viết bài luận trước khi bấm kiểm tra.');
+        return;
+      }
+
+      if (window.socraticAI && window.socraticAI.analyzeAndBoostText) {
+        const res = window.socraticAI.analyzeAndBoostText(text);
+        lastExamWritingAnalysis = res;
+
+        const box = document.getElementById('examWritingProofreadBox');
+        const countBadge = document.getElementById('examIssuesCountBadge');
+        const annotatedEl = document.getElementById('examProofAnnotated');
+        const detailsEl = document.getElementById('examProofDetails');
+        const applyBtn = document.getElementById('btnExamApplyPolished');
+
+        if (box) box.classList.remove('hidden');
+        if (applyBtn) applyBtn.classList.remove('hidden');
+
+        // Render circular gauges (9.0 = full circle)
+        renderExamCircularGauges();
+
+        const issues = res.allIssues || [];
+        if (countBadge) {
+          countBadge.innerText = `${issues.length} vị trí cần cải thiện`;
+        }
+
+        // Render In-Situ Numbered Annotations
+        if (annotatedEl) {
+          if (issues.length === 0) {
+            annotatedEl.innerHTML = `<span class="text-iot-green font-bold">✓ Tuyệt vời! Văn bản không phát hiện lỗi chính tả hay từ vựng bậc thấp.</span><br/>${text}`;
+          } else {
+            let runningText = text;
+            const sortedIssues = [...issues].sort((a, b) => b.originalText.length - a.originalText.length);
+            sortedIssues.forEach(iss => {
+              const regex = new RegExp(`\\b${escapeRegExpExam(iss.originalText)}\\b`, 'gi');
+              const isSpelling = iss.type === 'spelling';
+              runningText = runningText.replace(regex, (match) => `
+                <span id="exam-tag-issue-${iss.issueNumber}" onclick="selectExamIssue(${iss.issueNumber})" class="exam-in-situ-tag inline-flex items-center gap-1 mx-0.5 px-2 py-0.5 rounded cursor-pointer transition-all border font-sans select-none ${isSpelling ? 'bg-red-50 hover:bg-red-100 text-red-700 border-red-300 dark:bg-red-950/60 dark:text-red-300 dark:border-red-800' : 'bg-blue-50 hover:bg-blue-100 text-iot-primary border-blue-300 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800'}">
+                  <span class="w-4 h-4 rounded-full text-[10px] font-mono font-bold flex items-center justify-center ${isSpelling ? 'bg-red-600 text-white' : 'bg-iot-orange text-white'}">#${iss.issueNumber}</span>
+                  <span class="font-bold underline decoration-dotted">${match}</span>
+                  <span class="text-[10px] font-mono opacity-80">➔ ${iss.replacement}</span>
+                </span>
+              `);
+            });
+            annotatedEl.innerHTML = runningText;
+          }
+        }
+
+        // Auto-select first issue
+        if (issues.length > 0) {
+          selectExamIssue(issues[0].issueNumber);
+        } else {
+          const card = document.getElementById('examActiveIssueCard');
+          if (card) card.classList.add('hidden');
+        }
+
+        // Render Details Grid
+        if (detailsEl) {
+          if (issues.length === 0) {
+            detailsEl.innerHTML = `<p class="col-span-2 text-xs text-iot-green">Không có điểm yếu từ vựng hoặc chính tả cần khắc phục.</p>`;
+          } else {
+            detailsEl.innerHTML = issues.map(iss => {
+              const isSpelling = iss.type === 'spelling';
+              return `
+                <div onclick="selectExamIssue(${iss.issueNumber})" class="p-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-iot-orange cursor-pointer transition-all flex items-start justify-between gap-2 shadow-xs">
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-1.5 font-mono text-xs">
+                      <span class="w-4 h-4 rounded-full ${isSpelling ? 'bg-red-600' : 'bg-iot-orange'} text-white text-[10px] font-bold flex items-center justify-center">#${iss.issueNumber}</span>
+                      <span class="${isSpelling ? 'line-through text-red-600' : 'font-semibold text-slate-700 dark:text-slate-300'}">"${iss.originalText}"</span>
+                      <span class="text-iot-muted">➔</span>
+                      <strong class="text-iot-primary dark:text-blue-400 font-bold">${iss.replacement}</strong>
+                    </div>
+                    <p class="text-[10px] text-iot-muted dark:text-slate-400 line-clamp-1">${iss.whyWeak}</p>
+                  </div>
+                  <button onclick="event.stopPropagation(); replaceExamSingleIssue(${iss.issueNumber})" class="px-2 py-1 rounded bg-iot-orange hover:bg-iot-orangeHover text-white text-[10px] font-bold transition-all shrink-0">
+                    Áp dụng
+                  </button>
+                </div>
+              `;
+            }).join('');
+          }
+        }
+
+        lucide.createIcons();
+      }
+    }
+
+    function applyExamWritingPolished() {
+      if (!lastExamWritingAnalysis || !lastExamWritingAnalysis.polishedText) return;
+      const input = document.getElementById('examWritingInput');
+      if (input) {
+        input.value = lastExamWritingAnalysis.polishedText;
+        updateExamWritingCount();
+        runExamWritingProofread();
+        alert('✓ Đã áp dụng toàn bộ bản nâng cấp từ vựng và sửa lỗi chính tả vào bài viết!');
       }
     }
 
