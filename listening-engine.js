@@ -1461,6 +1461,20 @@ function handleListeningAnswer(qNum, value) {
   updatePaletteButton(qNum);
   updatePartBadge(getPartNumForQuestion(qNum));
   updatePaletteCounter();
+
+  // Highlight selected option in MCQ if card is visible
+  const card = document.getElementById(`q_card_${qNum}`);
+  if (card) {
+    const labels = card.querySelectorAll('label');
+    labels.forEach(lbl => {
+      const radio = lbl.querySelector('input[type="radio"]');
+      if (radio && radio.value === listeningUserAnswers[qNum]) {
+        lbl.className = "p-2.5 rounded-lg border-2 cursor-pointer flex items-center gap-3 transition-all border-blue-600 dark:border-blue-400 bg-blue-100/90 dark:bg-blue-950/80 text-blue-950 dark:text-blue-100 font-semibold ring-2 ring-blue-500/20 shadow-xs";
+      } else if (radio) {
+        lbl.className = "p-2.5 rounded-lg border cursor-pointer flex items-center gap-3 transition-all border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-blue-400";
+      }
+    });
+  }
 }
 
 function handleChooseTwoToggle(qNum1, qNum2, key) {

@@ -799,7 +799,7 @@
       }
     } else {
       if (isAnswered) {
-        btnClass += "bg-blue-600 text-white shadow-xs ";
+        btnClass += "bg-blue-600 text-white shadow-xs font-black ring-2 ring-blue-400/40 ";
       } else {
         btnClass += "bg-white dark:bg-[#0D1C34] text-slate-800 dark:text-slate-100 border border-slate-300 dark:border-slate-600 hover:border-blue-500 hover:bg-slate-50 dark:hover:bg-[#152a4e] ";
       }
@@ -830,7 +830,7 @@
       if (isCorrect) btnClass += "bg-emerald-600 text-white shadow-xs ";
       else btnClass += "bg-rose-600 text-white shadow-xs ";
     } else {
-      if (isAnswered) btnClass += "bg-blue-600 text-white shadow-xs ";
+      if (isAnswered) btnClass += "bg-blue-600 text-white shadow-xs font-black ring-2 ring-blue-400/40 ";
       else btnClass += "bg-white dark:bg-[#0D1C34] text-slate-800 dark:text-slate-100 border border-slate-300 dark:border-slate-600 hover:border-blue-500 hover:bg-slate-50 dark:hover:bg-[#152a4e] ";
     }
 
@@ -972,20 +972,27 @@
   }
 
   function renderTfngQuestionCard(q) {
-    const val = readingUserAnswers[q.num] || '';
+    const val = (readingUserAnswers[q.num] || '').trim();
     const isFlagged = Boolean(readingFlaggedQuestions[q.num]);
     const details = isReadingSubmitted && readingGradingResults ? readingGradingResults.details[q.num] : null;
+    const isAnswered = val !== '';
 
-    let borderState = "border-slate-200 dark:border-slate-700/80";
+    let cardBorder = "border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-[#061224]";
     if (details) {
-      borderState = details.isCorrect ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/30" : "border-rose-500 bg-rose-50/50 dark:bg-rose-950/30";
+      cardBorder = details.isCorrect ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/30" : "border-rose-500 bg-rose-50/50 dark:bg-rose-950/30";
+    } else if (isAnswered) {
+      cardBorder = "border-blue-300 dark:border-blue-700 border-l-4 border-l-blue-600 dark:border-l-blue-500 bg-blue-50/30 dark:bg-blue-950/25 shadow-xs";
     }
 
+    const badgeClass = isAnswered
+      ? "w-6 h-6 rounded-lg bg-blue-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border border-blue-600 shadow-xs"
+      : "w-6 h-6 rounded-lg bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border border-emerald-300 dark:border-emerald-700";
+
     return `
-      <div id="q_card_${q.num}" class="p-4 rounded-xl bg-slate-50 dark:bg-[#061224] border ${borderState} space-y-3 transition-all shadow-2xs hover:border-slate-400 dark:hover:border-slate-600">
+      <div id="q_card_${q.num}" class="p-4 rounded-xl border ${cardBorder} space-y-3 transition-all shadow-2xs hover:border-slate-400 dark:hover:border-slate-600">
         <div class="flex items-start justify-between gap-2.5">
           <div class="flex items-start gap-2.5">
-            <span class="w-6 h-6 rounded-lg bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border border-emerald-300 dark:border-emerald-700">
+            <span data-qnum-badge="${q.num}" class="${badgeClass}">
               ${q.num}
             </span>
             <p class="text-xs sm:text-[13px] font-semibold text-slate-900 dark:text-slate-100 leading-relaxed font-sans">
@@ -1000,11 +1007,22 @@
 
         <!-- 3 Interactive Options: TRUE / FALSE / NOT GIVEN -->
         <div class="flex flex-wrap items-center gap-2 sm:gap-2.5 pl-8 sm:pl-9">
-          ${['TRUE', 'FALSE', 'NOT GIVEN'].map(opt => `
-            <button onclick="handleReadingAnswer(${q.num}, '${opt}')" onkeydown="handleReadingInputKeydown(event, ${q.num})" class="px-3.5 py-1.5 rounded-lg border text-xs font-mono font-bold transition-all ${val === opt ? 'bg-blue-600 text-white border-blue-600 shadow-xs ring-2 ring-blue-300 dark:ring-blue-800 font-black' : 'bg-white dark:bg-[#13233c] text-slate-800 dark:text-slate-100 border-slate-300 dark:border-slate-600 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-slate-100 dark:hover:bg-[#1a3052] shadow-2xs'}">
-              ${opt}
-            </button>
-          `).join('')}
+          ${['TRUE', 'FALSE', 'NOT GIVEN'].map(opt => {
+            const isSelected = val === opt;
+            const btnClass = isSelected
+              ? "px-3.5 py-1.5 rounded-lg border-2 text-xs font-mono font-black transition-all bg-blue-600 dark:bg-blue-600 text-white border-blue-700 dark:border-blue-400 shadow-md ring-2 ring-blue-400/50 scale-[1.02] flex items-center gap-1.5"
+              : "px-3.5 py-1.5 rounded-lg border text-xs font-mono font-bold transition-all bg-white dark:bg-[#13233c] text-slate-800 dark:text-slate-100 border-slate-300 dark:border-slate-600 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-slate-100 dark:hover:bg-[#1a3052] shadow-2xs";
+            return `
+              <button type="button"
+                      data-tfng-opt="${opt}"
+                      onclick="handleReadingAnswer(${q.num}, '${opt}')"
+                      onkeydown="handleReadingInputKeydown(event, ${q.num})"
+                      class="${btnClass}">
+                <span>${opt}</span>
+                ${isSelected ? `<span class="text-[10px] bg-white/20 px-1 py-0.2 rounded font-bold">✓</span>` : ''}
+              </button>
+            `;
+          }).join('')}
         </div>
 
         <!-- Feedback Card if submitted -->
@@ -1026,20 +1044,27 @@
   }
 
   function renderMcqQuestionCard(q) {
-    const val = readingUserAnswers[q.num] || '';
+    const val = (readingUserAnswers[q.num] || '').trim();
     const isFlagged = Boolean(readingFlaggedQuestions[q.num]);
     const details = isReadingSubmitted && readingGradingResults ? readingGradingResults.details[q.num] : null;
+    const isAnswered = val !== '';
 
-    let borderState = "border-slate-200 dark:border-slate-700/80";
+    let cardBorder = "border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-[#061224]";
     if (details) {
-      borderState = details.isCorrect ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/30" : "border-rose-500 bg-rose-50/50 dark:bg-rose-950/30";
+      cardBorder = details.isCorrect ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/30" : "border-rose-500 bg-rose-50/50 dark:bg-rose-950/30";
+    } else if (isAnswered) {
+      cardBorder = "border-blue-300 dark:border-blue-700 border-l-4 border-l-blue-600 dark:border-l-blue-500 bg-blue-50/30 dark:bg-blue-950/25 shadow-xs";
     }
 
+    const badgeClass = isAnswered
+      ? "w-6 h-6 rounded-lg bg-blue-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border border-blue-600 shadow-xs"
+      : "w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-300 font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border border-blue-300 dark:border-blue-700";
+
     return `
-      <div id="q_card_${q.num}" class="p-4 rounded-xl bg-slate-50 dark:bg-[#061224] border ${borderState} space-y-3.5 transition-all shadow-2xs hover:border-slate-400 dark:hover:border-slate-600">
+      <div id="q_card_${q.num}" class="p-4 rounded-xl border ${cardBorder} space-y-3.5 transition-all shadow-2xs hover:border-slate-400 dark:hover:border-slate-600">
         <div class="flex items-start justify-between gap-2.5">
           <div class="flex items-start gap-2.5">
-            <span class="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-300 font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border border-blue-300 dark:border-blue-700">
+            <span data-qnum-badge="${q.num}" class="${badgeClass}">
               ${q.num}
             </span>
             <p class="text-xs sm:text-[13px] font-semibold text-slate-900 dark:text-slate-100 leading-relaxed font-sans">
@@ -1054,14 +1079,33 @@
 
         <!-- MCQ Options (A, B, C, D) -->
         <div class="space-y-2 pl-8 sm:pl-9 text-xs font-sans">
-          ${q.options.map(opt => `
-            <div onclick="handleReadingAnswer(${q.num}, '${opt.key}')" onkeydown="handleReadingInputKeydown(event, ${q.num})" tabindex="0" class="p-3 rounded-xl border cursor-pointer transition-all flex items-start gap-3 ${val === opt.key ? 'bg-blue-50 dark:bg-blue-950/80 border-2 border-blue-600 dark:border-blue-400 text-blue-950 dark:text-blue-100 font-semibold shadow-xs ring-1 ring-blue-500/20' : 'bg-white dark:bg-[#13233c] border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:border-blue-400 dark:hover:border-blue-400 hover:bg-blue-50/40 dark:hover:bg-[#1a3052] shadow-2xs'}">
-              <span class="w-6 h-6 rounded-md font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border transition-all ${val === opt.key ? 'bg-blue-600 text-white border-blue-600 shadow-xs' : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300'}">
-                ${opt.key}
-              </span>
-              <span class="leading-relaxed text-xs sm:text-[13px] text-slate-800 dark:text-slate-100 pt-0.5">${opt.text}</span>
-            </div>
-          `).join('')}
+          ${q.options.map(opt => {
+            const isSelected = val === opt.key;
+            const rowClass = isSelected
+              ? "p-3 rounded-xl border-2 cursor-pointer transition-all flex items-start justify-between gap-3 bg-blue-100/90 dark:bg-blue-950/90 border-blue-600 dark:border-blue-400 text-blue-950 dark:text-blue-100 font-bold shadow-md ring-2 ring-blue-500/30 scale-[1.01]"
+              : "p-3 rounded-xl border cursor-pointer transition-all flex items-start justify-between gap-3 bg-white dark:bg-[#13233c] border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:border-blue-400 dark:hover:border-blue-400 hover:bg-blue-50/40 dark:hover:bg-[#1a3052] shadow-2xs";
+            const optBadgeClass = isSelected
+              ? "w-6 h-6 rounded-md font-mono font-black text-xs flex items-center justify-center shrink-0 mt-0.5 border-2 border-blue-600 bg-blue-600 text-white shadow-xs"
+              : "w-6 h-6 rounded-md font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300";
+
+            return `
+              <div data-mcq-opt="${opt.key}"
+                   onclick="handleReadingAnswer(${q.num}, '${opt.key}')"
+                   onkeydown="handleReadingInputKeydown(event, ${q.num})"
+                   tabindex="0"
+                   class="${rowClass}">
+                <div class="flex items-start gap-3 flex-1 min-w-0">
+                  <span data-mcq-badge="${opt.key}" class="${optBadgeClass}">
+                    ${opt.key}
+                  </span>
+                  <span class="leading-relaxed text-xs sm:text-[13px] pt-0.5">${opt.text}</span>
+                </div>
+                <span data-mcq-check="${opt.key}" class="shrink-0 text-blue-600 dark:text-blue-400 font-black text-sm pt-0.5 ${isSelected ? '' : 'hidden'}">
+                  ✓
+                </span>
+              </div>
+            `;
+          }).join('')}
         </div>
 
         <!-- Feedback Card if submitted -->
@@ -1083,22 +1127,36 @@
   }
 
   function renderSummaryBlankSegment(s) {
-    const val = readingUserAnswers[s.num] || '';
+    const val = (readingUserAnswers[s.num] || '').trim();
     const isFlagged = Boolean(readingFlaggedQuestions[s.num]);
     const details = isReadingSubmitted && readingGradingResults ? readingGradingResults.details[s.num] : null;
+    const isAnswered = val !== '';
 
-    let borderState = "border-slate-300 dark:border-slate-600";
+    let cardBorder = "border-slate-200 dark:border-slate-700/80 bg-white dark:bg-[#061224]";
     if (details) {
-      borderState = details.isCorrect ? "border-emerald-500 bg-emerald-50/60 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-100" : "border-rose-500 bg-rose-50/60 dark:bg-rose-950/40 text-rose-900 dark:text-rose-100";
+      cardBorder = details.isCorrect ? "border-emerald-500 bg-emerald-50/60 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-100" : "border-rose-500 bg-rose-50/60 dark:bg-rose-950/40 text-rose-900 dark:text-rose-100";
+    } else if (isAnswered) {
+      cardBorder = "border-emerald-400 dark:border-emerald-600 border-l-4 border-l-emerald-600 dark:border-l-emerald-500 bg-emerald-50/20 dark:bg-emerald-950/20 shadow-xs";
     }
 
+    let inputBorder = "border-slate-300 dark:border-slate-600 bg-white dark:bg-[#050C1A] text-slate-900 dark:text-white";
+    if (details) {
+      inputBorder = details.isCorrect ? "border-emerald-500 bg-emerald-50/60 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-100" : "border-rose-500 bg-rose-50/60 dark:bg-rose-950/40 text-rose-900 dark:text-rose-100";
+    } else if (isAnswered) {
+      inputBorder = "border-emerald-500 dark:border-emerald-400 bg-emerald-50/80 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-100 ring-2 ring-emerald-500/30 font-bold";
+    }
+
+    const badgeClass = isAnswered
+      ? "w-6 h-6 rounded-md bg-emerald-600 text-white font-mono font-bold text-xs inline-flex items-center justify-center border border-emerald-600 shadow-xs"
+      : "w-6 h-6 rounded-md bg-teal-100 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 font-mono font-bold text-xs inline-flex items-center justify-center border border-teal-300 dark:border-teal-700";
+
     return `
-      <div id="q_card_${s.num}" class="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-[#061224] border border-slate-200 dark:border-slate-700/80 space-y-2.5 shadow-2xs hover:border-slate-400 dark:hover:border-slate-600 transition-all">
+      <div id="q_card_${s.num}" class="p-3.5 sm:p-4 rounded-xl border ${cardBorder} space-y-2.5 shadow-2xs hover:border-slate-400 dark:hover:border-slate-600 transition-all">
         <div class="flex items-start justify-between gap-2.5">
           <div class="flex flex-wrap items-center gap-2 text-xs sm:text-[13px] text-slate-900 dark:text-slate-100 leading-relaxed font-sans">
             <span>${s.prefix || ''}</span>
             <div class="inline-flex items-center gap-1.5 mx-1">
-              <span class="w-6 h-6 rounded-md bg-teal-100 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 font-mono font-bold text-xs inline-flex items-center justify-center border border-teal-300 dark:border-teal-700">
+              <span data-blank-badge="${s.num}" class="${badgeClass}">
                 ${s.num}
               </span>
               <input type="text"
@@ -1108,11 +1166,9 @@
                      onkeydown="handleReadingInputKeydown(event, ${s.num})"
                      placeholder="${s.placeholder}"
                      class="px-3 py-1.5 rounded-lg border-2 text-xs sm:text-sm w-40 sm:w-52 font-mono font-bold transition-all shadow-inner
-                            bg-white dark:bg-[#050C1A]
-                            text-slate-900 dark:text-white
                             placeholder:text-slate-400 dark:placeholder:text-slate-500
                             focus:outline-none focus:border-blue-600 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20
-                            ${borderState}" />
+                            ${inputBorder}" />
             </div>
             <span>${s.suffix || ''}</span>
           </div>
@@ -1142,9 +1198,101 @@
   // ==========================================
   // 4. INTERACTION EVENT HANDLERS
   // ==========================================
+  function updateReadingQuestionCardUI(qNum) {
+    const card = document.getElementById(`q_card_${qNum}`);
+    if (!card) return;
+
+    // If test is submitted, do not overwrite grading feedback
+    if (isReadingSubmitted) return;
+
+    const val = (readingUserAnswers[qNum] || '').trim();
+    const isAnswered = val !== '';
+
+    // Check if it's TFNG
+    const tfngBtns = card.querySelectorAll('button[data-tfng-opt]');
+    if (tfngBtns && tfngBtns.length > 0) {
+      tfngBtns.forEach(btn => {
+        const opt = btn.getAttribute('data-tfng-opt');
+        if (opt === val) {
+          btn.className = "px-3.5 py-1.5 rounded-lg border-2 text-xs font-mono font-black transition-all bg-blue-600 dark:bg-blue-600 text-white border-blue-700 dark:border-blue-400 shadow-md ring-2 ring-blue-400/50 scale-[1.02] flex items-center gap-1.5";
+          btn.innerHTML = `<span>${opt}</span><span class="text-[10px] bg-white/20 px-1 py-0.2 rounded font-bold">✓</span>`;
+        } else {
+          btn.className = "px-3.5 py-1.5 rounded-lg border text-xs font-mono font-bold transition-all bg-white dark:bg-[#13233c] text-slate-800 dark:text-slate-100 border-slate-300 dark:border-slate-600 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-slate-100 dark:hover:bg-[#1a3052] shadow-2xs";
+          btn.innerHTML = `<span>${opt}</span>`;
+        }
+      });
+    }
+
+    // Check if it's MCQ
+    const mcqRows = card.querySelectorAll('[data-mcq-opt]');
+    if (mcqRows && mcqRows.length > 0) {
+      mcqRows.forEach(row => {
+        const optKey = row.getAttribute('data-mcq-opt');
+        const badge = row.querySelector('[data-mcq-badge]');
+        const checkMark = row.querySelector('[data-mcq-check]');
+        if (optKey === val) {
+          row.className = "p-3 rounded-xl border-2 cursor-pointer transition-all flex items-start justify-between gap-3 bg-blue-100/90 dark:bg-blue-950/90 border-blue-600 dark:border-blue-400 text-blue-950 dark:text-blue-100 font-bold shadow-md ring-2 ring-blue-500/30 scale-[1.01]";
+          if (badge) {
+            badge.className = "w-6 h-6 rounded-md font-mono font-black text-xs flex items-center justify-center shrink-0 mt-0.5 border-2 border-blue-600 bg-blue-600 text-white shadow-xs";
+          }
+          if (checkMark) checkMark.classList.remove('hidden');
+        } else {
+          row.className = "p-3 rounded-xl border cursor-pointer transition-all flex items-start justify-between gap-3 bg-white dark:bg-[#13233c] border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:border-blue-400 dark:hover:border-blue-400 hover:bg-blue-50/40 dark:hover:bg-[#1a3052] shadow-2xs";
+          if (badge) {
+            badge.className = "w-6 h-6 rounded-md font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300";
+          }
+          if (checkMark) checkMark.classList.add('hidden');
+        }
+      });
+    }
+
+    // Check if it's Summary Blank Input
+    const inputEl = document.getElementById(`q_input_${qNum}`);
+    const blankBadge = card.querySelector(`[data-blank-badge="${qNum}"]`);
+    if (inputEl) {
+      if (isAnswered) {
+        inputEl.className = "px-3 py-1.5 rounded-lg border-2 text-xs sm:text-sm w-40 sm:w-52 font-mono font-bold transition-all shadow-inner focus:outline-none focus:ring-2 border-emerald-500 dark:border-emerald-400 bg-emerald-50/80 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-100 ring-2 ring-emerald-500/30";
+        if (blankBadge) {
+          blankBadge.className = "w-6 h-6 rounded-md bg-emerald-600 text-white font-mono font-bold text-xs inline-flex items-center justify-center border border-emerald-600 shadow-xs";
+        }
+      } else {
+        inputEl.className = "px-3 py-1.5 rounded-lg border-2 text-xs sm:text-sm w-40 sm:w-52 font-mono font-bold transition-all shadow-inner bg-white dark:bg-[#050C1A] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-blue-600 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 border-slate-300 dark:border-slate-600";
+        if (blankBadge) {
+          blankBadge.className = "w-6 h-6 rounded-md bg-teal-100 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 font-mono font-bold text-xs inline-flex items-center justify-center border border-teal-300 dark:border-teal-700";
+        }
+      }
+    }
+
+    // Update parent card border / accent and question number badge
+    const qBadge = card.querySelector(`[data-qnum-badge="${qNum}"]`);
+    if (isAnswered) {
+      if (inputEl) {
+        card.className = "p-3.5 sm:p-4 rounded-xl border border-emerald-400 dark:border-emerald-600 border-l-4 border-l-emerald-600 dark:border-l-emerald-500 bg-emerald-50/20 dark:bg-emerald-950/20 space-y-2.5 shadow-xs transition-all";
+      } else {
+        card.className = "p-4 rounded-xl border border-blue-300 dark:border-blue-700 border-l-4 border-l-blue-600 dark:border-l-blue-500 bg-blue-50/30 dark:bg-blue-950/25 space-y-3.5 transition-all shadow-xs";
+      }
+      if (qBadge) {
+        qBadge.className = "w-6 h-6 rounded-lg bg-blue-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border border-blue-600 shadow-xs";
+      }
+    } else {
+      if (inputEl) {
+        card.className = "p-3.5 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-[#061224] space-y-2.5 shadow-2xs hover:border-slate-400 dark:hover:border-slate-600 transition-all";
+      } else {
+        card.className = "p-4 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-[#061224] space-y-3.5 transition-all shadow-2xs hover:border-slate-400 dark:hover:border-slate-600";
+      }
+      if (qBadge) {
+        const isTfng = Boolean(tfngBtns && tfngBtns.length > 0);
+        qBadge.className = isTfng
+          ? "w-6 h-6 rounded-lg bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border border-emerald-300 dark:border-emerald-700"
+          : "w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-300 font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border border-blue-300 dark:border-blue-700";
+      }
+    }
+  }
+
   function handleReadingAnswer(qNum, value) {
     readingUserAnswers[qNum] = (value != null ? String(value) : '').trim();
     updateReadingPaletteButton(qNum);
+    updateReadingQuestionCardUI(qNum);
 
     // Update passage badge count
     const qData = ALL_READING_QUESTIONS[qNum];
