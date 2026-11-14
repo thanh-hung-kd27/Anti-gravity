@@ -1487,13 +1487,29 @@ function handleChooseTwoToggle(qNum1, qNum2, key) {
   renderActivePartQuestions();
 }
 
-function switchListeningPart(partNum) {
+function switchListeningPart(partNum, syncAudio = true) {
   if (partNum < 1 || partNum > 4) return;
   currentListeningPartNum = partNum;
 
-  // IMPORTANT: DO NOT STOP OR RESET THE 30-MINUTE CONTINUOUS AUDIO!
-  // The candidate can freely navigate across Part 1, Part 2, Part 3, Part 4 to view and answer questions
-  // while the master Cambridge audio track continues playing uninterrupted!
+  const test = LISTENING_TESTS[currentListeningTestId];
+  const audio = document.getElementById('realListeningAudio');
+
+  // Seamless audio synchronization: seek audio immediately to part.startSec when candidate selects a part
+  if (syncAudio && audio && test && test.parts) {
+    const part = test.parts.find(p => p.partNum === partNum);
+    if (part && typeof part.startSec === 'number') {
+      audio.currentTime = part.startSec;
+      if (audio.paused) {
+        audio.play().catch(e => console.warn("Auto play on part switch:", e));
+      }
+      updateAudioButtonUI(true);
+    }
+  }
+
+  // If examiner TTS narration is active, immediately speak the new part
+  if (syncAudio && isExaminerTTSSpeaking) {
+    speakCurrentPartExaminerScript();
+  }
 
   // Update Part Tabs Header
   renderListeningPartTabsUI();
@@ -1509,19 +1525,7 @@ function switchListeningPart(partNum) {
 }
 
 function seekAudioToPart(partNum) {
-  if (partNum < 1 || partNum > 4) return;
-  const test = LISTENING_TESTS[currentListeningTestId];
-  const part = test.parts.find(p => p.partNum === partNum);
-  const audio = document.getElementById('realListeningAudio');
-
-  if (audio && part) {
-    audio.currentTime = part.startSec;
-    if (audio.paused) {
-      audio.play().catch(e => console.warn("Auto play on seek:", e));
-    }
-  }
-
-  switchListeningPart(partNum);
+  switchListeningPart(partNum, true);
 }
 
 function switchListeningTest(testId) {
@@ -2099,15 +2103,22 @@ function setupAudioEventListeners() {
     }
 
     // Auto-detect currently active Part in the 30-minute audio track
-    if (statusEl && test) {
+    if (test && test.parts) {
       let activePartInAudio = test.parts[0];
       for (let i = test.parts.length - 1; i >= 0; i--) {
-        if (audio.currentTime >= test.parts[i].startSec - 1) {
+        if (audio.currentTime >= test.parts[i].startSec - 0.5) {
           activePartInAudio = test.parts[i];
           break;
         }
       }
-      statusEl.innerText = `Đang phát Part ${activePartInAudio.partNum}: ${activePartInAudio.title.split(':')[1] || ''} • Phút ${formatAudioTime(audio.currentTime)} / ${test.totalDurationFormatted}`;
+      if (statusEl) {
+        statusEl.innerText = `Đang phát Part ${activePartInAudio.partNum}: ${activePartInAudio.title.split(':')[1] || ''} • Phút ${formatAudioTime(audio.currentTime)} / ${test.totalDurationFormatted}`;
+      }
+
+      // Auto-advance question view when audio naturally enters a new Part (without re-seeking audio)
+      if (activePartInAudio.partNum !== currentListeningPartNum) {
+        switchListeningPart(activePartInAudio.partNum, false);
+      }
     }
   };
 }
@@ -2145,6 +2156,21 @@ function seekAudioRelative(seconds) {
   const audio = document.getElementById('realListeningAudio');
   if (!audio) return;
   audio.currentTime = Math.max(0, Math.min(audio.duration || 9999, audio.currentTime + seconds));
+
+  // Sync question view with scrubbed audio position
+  const test = LISTENING_TESTS[currentListeningTestId];
+  if (test && test.parts) {
+    let activePartInAudio = test.parts[0];
+    for (let i = test.parts.length - 1; i >= 0; i--) {
+      if (audio.currentTime >= test.parts[i].startSec - 0.5) {
+        activePartInAudio = test.parts[i];
+        break;
+      }
+    }
+    if (activePartInAudio.partNum !== currentListeningPartNum) {
+      switchListeningPart(activePartInAudio.partNum, false);
+    }
+  }
 }
 
 function handleScrubClick(e) {
@@ -2156,6 +2182,21 @@ function handleScrubClick(e) {
   const clickX = e.clientX - rect.left;
   const fraction = Math.max(0, Math.min(1, clickX / rect.width));
   audio.currentTime = fraction * audio.duration;
+
+  // Immediately sync question view with scrubbed audio position
+  const test = LISTENING_TESTS[currentListeningTestId];
+  if (test && test.parts) {
+    let activePartInAudio = test.parts[0];
+    for (let i = test.parts.length - 1; i >= 0; i--) {
+      if (audio.currentTime >= test.parts[i].startSec - 0.5) {
+        activePartInAudio = test.parts[i];
+        break;
+      }
+    }
+    if (activePartInAudio.partNum !== currentListeningPartNum) {
+      switchListeningPart(activePartInAudio.partNum, false);
+    }
+  }
 }
 
 function setPlaybackSpeed(rate) {
@@ -2615,6 +2656,7 @@ if (typeof window !== 'undefined') {
   window.checkListeningAnswers = checkListeningAnswers;
   window.jumpToListeningQuestion = jumpToListeningQuestion;
   window.handleListeningAnswer = handleListeningAnswer;
+  window.getCurrentListeningPartNum = () => currentListeningPartNum;
   window.handleChooseTwoToggle = handleChooseTwoToggle;
   window.toggleListeningAudio = toggleListeningAudio;
   window.seekAudioRelative = seekAudioRelative;
