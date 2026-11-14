@@ -751,7 +751,7 @@
               <strong>Part 2 (3–4p):</strong> Nhận Cue Card, có <strong>1 phút nháp ý tưởng</strong> và <strong>2 phút trình bày</strong>.
             </div>
             <div class="p-2 rounded bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-900">
-              <strong>Part 3 (4–5p):</strong> Thảo luận chuyên sâu 2 chiều mang tính trừu tượng và triết học nhận thức.
+              <strong>Part 3 (4–5p):</strong> Thảo luận chuyên sâu 2 chiều mang tính trừu tượng và tư duy phản biện xã hội.
             </div>
           </div>
           <p class="text-[11px] text-iot-muted dark:text-slate-400 italic">
@@ -1314,7 +1314,7 @@
               <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-amber-800 dark:text-amber-300 font-mono flex items-center gap-1.5">
                   <i data-lucide="award" class="w-3.5 h-3.5"></i>
-                  <span>Bài phản biện mẫu Band 8.5+ &amp; Cấu trúc triết học:</span>
+                  <span>Bài phản biện mẫu Band 8.5+ &amp; Dàn ý lập luận chuyên sâu:</span>
                 </span>
                 <span class="text-[10px] font-mono uppercase text-amber-600 dark:text-amber-400">Examiner Standard</span>
               </div>
@@ -1771,7 +1771,7 @@
       bandTier = 'Expert User';
       feedback = {
         FC: "Nói hoàn toàn lưu loát, độ mạch lạc cao, phản xạ sắc bén, phát triển luận điểm sâu sắc và chặt chẽ xuyên suốt cả 3 phần thi.",
-        LR: "Vốn từ học thuật đỉnh cao (C1-C2), sử dụng nhuần nhuyễn các collocations triết học và thành ngữ tự nhiên" + (uniqueMatched.length ? ` (như: ${uniqueMatched.slice(0, 4).join(', ')})` : '') + ".",
+        LR: "Vốn từ học thuật đỉnh cao (C1-C2), sử dụng nhuần nhuyễn các collocations học thuật nâng cao và thành ngữ tự nhiên" + (uniqueMatched.length ? ` (như: ${uniqueMatched.slice(0, 4).join(', ')})` : '') + ".",
         GRA: "Kiểm soát cấu trúc ngữ pháp phức tạp với độ chính xác gần như tuyệt đối, đa dạng về mệnh đề phụ và đảo ngữ.",
         P: "Phát âm chuẩn xác, ngữ điệu tinh tế theo cảm xúc và nhịp điệu bản xứ mượt mà."
       };

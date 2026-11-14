@@ -2914,7 +2914,7 @@ const ADDITIONAL_LISTENING_TESTS = {
                   "cognitive"
                 ],
                 "display": "Cognitive",
-                "trap": "Viện Triết học Nhận thức (Institute of Cognitive Philosophy)"
+                "trap": "Viện Khoa học Nhận thức (Institute of Cognitive Sciences)"
               },
               {
                 "num": 3,
@@ -3231,7 +3231,7 @@ const ADDITIONAL_LISTENING_TESTS = {
         "qRange": "Câu 21–30",
         "startSec": 760,
         "startFormatted": "12:40",
-        "context": "Đối thoại biện chứng giữa nghiên cứu sinh Triết học và Kỹ sư AI về thiên kiến thuật toán",
+        "context": "Đối thoại học thuật giữa nghiên cứu sinh Khoa học Dữ liệu và Kỹ sư AI về thiên kiến thuật toán",
         "audioLocal": "",
         "audioType": "",
         "instructions": "Questions 21–25: Choose the correct letter, A, B or C. Questions 26–30: What philosophical stance is held by each scholar? Choose from A–G.",
@@ -3449,7 +3449,7 @@ const ADDITIONAL_LISTENING_TESTS = {
         "qRange": "Câu 31–40",
         "startSec": 1200,
         "startFormatted": "20:00",
-        "context": "Bài giảng Triết học Toán học và Khoa học máy tính về bản chất của chứng minh tự động",
+        "context": "Bài giảng Khoa học Máy tính và Toán học Ứng dụng về bản chất của chứng minh tự động",
         "audioLocal": "",
         "audioType": "",
         "instructions": "Questions 31–40: Complete the notes below. Write ONE WORD ONLY for each answer.",

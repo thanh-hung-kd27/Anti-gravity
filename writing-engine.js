@@ -1318,7 +1318,7 @@ On the one hand, AI can help judges check legal documents and historical cases q
           <summary class="font-bold text-blue-800 dark:text-blue-300 cursor-pointer list-none flex items-center justify-between font-mono">
             <span class="flex items-center gap-1.5">
               <i data-lucide="award" class="w-4 h-4 text-blue-600"></i>
-              <span>Bài luận mẫu Task 2 Band 8.5+ &amp; Cấu trúc triết học</span>
+              <span>Bài luận mẫu Task 2 Band 8.5+ &amp; Dàn ý lập luận chuyên sâu</span>
             </span>
             <span class="text-[11px] uppercase font-bold text-blue-600 group-open:hidden">Xem mẫu ➔</span>
             <i data-lucide="chevron-down" class="w-4 h-4 text-blue-600 hidden group-open:block"></i>

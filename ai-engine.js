@@ -46,7 +46,7 @@ const CognitiveDimensionsDefault = {
     score: 78,
     level: 'Xuất sắc',
     trend: '+5%',
-    description: 'Hiểu chính xác sắc thái ngữ nghĩa triết học, collocations học thuật và tính đẳng cấu nghĩa.'
+    description: 'Hiểu chính xác sắc thái ngữ nghĩa học thuật nâng cao, collocations học thuật và tính đẳng cấu nghĩa.'
   },
   epistemic_caution: {
     id: 'epistemic_caution',
@@ -130,7 +130,7 @@ class SocraticAIEngine {
           title: 'Suy diễn vượt quá dữ kiện văn bản (Epistemic Overreach)',
           category: 'truth_evaluation',
           frequency: 3,
-          context: 'Có xu hướng vội vàng chọn FALSE thay vì NOT GIVEN khi gặp các câu hỏi triết học ngôn ngữ và khoa học thần kinh.',
+          context: 'Có xu hướng vội vàng chọn FALSE thay vì NOT GIVEN khi gặp các câu hỏi ngôn ngữ học thuật và khoa học thần kinh.',
           remedy: 'Nguyên lý tam đoạn luận: Chỉ chọn FALSE khi bài đọc chứa tiền đề mâu thuẫn trực tiếp (P ∧ ¬P). Không có dữ kiện = NOT GIVEN.',
           detectedAt: new Date(Date.now() - 3600000 * 48).toISOString()
         },
@@ -147,7 +147,7 @@ class SocraticAIEngine {
       aiInsights: [
         'Học viên có tư duy bóc tách cấu trúc câu phức rất sắc bén (Điểm Cú pháp: 68%).',
         'Điểm nghẽn nhận thức lớn nhất là xu hướng tự suy luận tri thức cá nhân vào bài đọc TFNG.',
-        'Chiến lược tối ưu: Tập trung rèn luyện các bài Reading mang tính triết học nhận thức để bứt phá lên Band 8.5.'
+        'Chiến lược tối ưu: Tập trung rèn luyện các bài Reading mang tính tư duy học thuật nâng cao để bứt phá lên Band 8.5.'
       ]
     };
 
@@ -1071,7 +1071,7 @@ Quan sát cách cấu trúc phụ thuộc được phân tầng trong mô hình 
   > *"Education constitutes the bedrock of sustainable societal progression."*
   * *Điểm sáng:* Động từ liên kết \`constitutes\` (thay cho \`is\`), thuật ngữ \`bedrock\` (nền tảng vững chắc như đá tảng) và \`societal progression\` tăng đáng kể độ uyển chuyển.
 
-* **Band ${target}+ (Đẳng cấp C1-C2 - Tư duy Triết học & Danh từ hóa):**
+* **Band ${target}+ (Đẳng cấp C1-C2 - Tư duy Phản biện & Danh từ hóa):**
   > *"A robust educational infrastructure serves as the indispensable cornerstone underpinning enduring ecological and socio-economic resilience."*
   * *Điểm sáng C2:* Sử dụng \`indispensable cornerstone\` (viên đá góc tường không thể thiếu) kết hợp động từ phân từ \`underpinning\` (chống đỡ/làm trụ cột) và danh từ trừu tượng hóa \`resilience\`.
 
@@ -1639,7 +1639,7 @@ Tuy nhiên:
     }
     return `Chào **${name}**! Tôi là **Socratic AI Tutor**.
 
-Được lấy cảm hứng từ phương pháp đối thoại phản biện của nhà triết học cổ đại **Socrates** và sức mạnh xử lý ngôn ngữ học của các mô hình tiên tiến như **Claude 3.5 Sonnet** và **ChatGPT**, nhiệm vụ của tôi là:
+Được lấy cảm hứng từ phương pháp đối thoại phản biện **Socratic Method** chuẩn quốc tế và sức mạnh xử lý ngôn ngữ học của các mô hình tiên tiến như **Claude 3.5 Sonnet** và **ChatGPT**, nhiệm vụ của tôi là:
 1. Trả lời trực diện, chính xác và có chiều sâu mọi câu hỏi của bạn về khoa học, toán học, xã hội và ngôn ngữ.
 2. Dẫn dắt bạn tự phát hiện bẫy tư duy logic trong bài thi IELTS thay vì chỉ học vẹt đáp án.
 3. Giúp bạn nâng cấp năng lực tư duy phản biện và viết học thuật lên tầm vóc Band ${target}.`;
@@ -1700,7 +1700,7 @@ Chúc bạn có thêm năng lượng và cảm hứng để tiếp tục học t
   solveGeography(raw, q, name) {
     const geoMap = [
       { pattern: /thủ đô.*(úc|australia)/i, capital: "Canberra", country: "Úc (Australia)", note: "Rất nhiều người nhầm là Sydney hoặc Melbourne! Canberra được chọn làm thủ đô từ năm 1908 như một giải pháp ngoại giao dung hòa giữa hai thành phố lớn đối thủ là Sydney và Melbourne." },
-      { pattern: /thủ đô.*(pháp|france)/i, capital: "Paris", country: "Pháp (France)", note: "Paris được mệnh danh là 'Kinh đô Ánh sáng' (La Ville Lumière), trung tâm văn hóa, nghệ thuật, thời trang và triết học hàng đầu thế giới." },
+      { pattern: /thủ đô.*(pháp|france)/i, capital: "Paris", country: "Pháp (France)", note: "Paris được mệnh danh là 'Kinh đô Ánh sáng' (La Ville Lumière), trung tâm văn hóa, nghệ thuật, thời trang và học thuật hàng đầu thế giới." },
       { pattern: /thủ đô.*(mỹ|hoa kỳ|united states|usa)/i, capital: "Washington, D.C.", country: "Hoa Kỳ (USA)", note: "Nhiều người lầm tưởng New York là thủ đô. Washington, D.C. là một đặc khu liên bang độc lập mang tên vị Tổng thống lập quốc George Washington." },
       { pattern: /thủ đô.*canada/i, capital: "Ottawa", country: "Canada", note: "Nhiều người nhầm là Toronto, Vancouver hay Montreal. Ottawa được Nữ hoàng Victoria lựa chọn làm thủ đô vào năm 1857." },
       { pattern: /thủ đô.*(nhật|nhật bản|japan)/i, capital: "Tokyo", country: "Nhật Bản", note: "Tokyo là vùng đô thị đông dân nhất thế giới, từng mang tên cổ là Edo trước cuộc Minh Trị Duy tân năm 1868." },
@@ -1896,11 +1896,11 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
     }
 
     if (/socrates là ai|tiểu sử socrates|triết gia socrates/i.test(q)) {
-      return `Chào **${name}**! **Socrates** (khoảng 470 TCN – 399 TCN) là nhà triết học Hy Lạp cổ đại vĩ đại tại thành Athens, được coi là **người đặt nền móng cho toàn bộ truyền thống Triết học phương Tây**:
+      return `Chào **${name}**! **Socrates** (khoảng 470 TCN – 399 TCN) là nhà tư tưởng Hy Lạp cổ đại vĩ đại tại thành Athens, được coi là **người đặt nền móng cho phương pháp đối thoại phản biện Socratic Method**:
 
 ### 1. Phương Pháp Đối Thoại Socratic (Elenchus)
-* Khác với các triết gia đương thời chuyên thuyết giảng độc thoại, Socrates đi dạo khắp các quảng trường Athens và đặt ra những câu hỏi thăm dò sâu sắc để người đối thoại tự nhận ra những mâu thuẫn và ngụy biện trong nhận thức của chính họ.
-* Triết lý cốt lõi của ông: *"Tôi chỉ biết một điều duy nhất, đó là tôi không biết gì cả"* (The only true wisdom is in knowing you know nothing).
+* Khác với các học giả đương thời chuyên thuyết giảng độc thoại, Socrates đi dạo khắp các quảng trường Athens và đặt ra những câu hỏi thăm dò sâu sắc để người đối thoại tự nhận ra những mâu thuẫn và ngụy biện trong nhận thức của chính họ.
+* Tư tưởng cốt lõi của ông: *"Tôi chỉ biết một điều duy nhất, đó là tôi không biết gì cả"* (The only true wisdom is in knowing you know nothing).
 
 ### 2. Sự Tiếp Nối Tư Tưởng
 * Socrates không để lại bất kỳ văn bản viết tay nào; toàn bộ tư tưởng của ông được người học trò xuất sắc là **Plato** ghi chép lại qua các tác phẩm Đối thoại (*Dialogues*).
@@ -2483,7 +2483,7 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
         category: 'Formal Register',
         criterion: 'Lexical Resource (LR)',
         whyWeak: '"A lot of" là cụm từ cấm kỵ trong văn viết học thuật (Informal Quantifier). Giám khảo coi đây là dấu hiệu của người viết chưa được đào tạo về Academic Style.',
-        whyReplacement: '"A plethora of" (khi nhấn mạnh số lượng dồi dào/dư thừa) hoặc "a myriad of" (muôn hình vạn trạng) mang phong vị triết học và văn phong tạp chí nghiên cứu cao cấp.',
+        whyReplacement: '"A plethora of" (khi nhấn mạnh số lượng dồi dào/dư thừa) hoặc "a myriad of" (muôn hình vạn trạng) mang phong vị học thuật và văn phong tạp chí nghiên cứu cao cấp.',
         collocationTip: '"A plethora of socio-economic factors" / "a myriad of challenges".'
       },
       {
@@ -2532,7 +2532,7 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
         academicBand: 9.0,
         cefrOriginal: 'B1',
         cefrUpgraded: 'C2',
-        category: 'Philosophical Lexicon',
+        category: 'Advanced Academic Lexicon',
         criterion: 'Lexical Resource (LR)',
         whyWeak: '"Good thing" mang tính mơ hồ cực độ (Semantic Vague), không thể hiện được tính chất tốt là về mặt đạo đức, sức khỏe, xã hội hay kinh tế.',
         whyReplacement: '"Salutary development" là cụm từ vàng ngọc của Band 9.0 chỉ sự phát triển mang lại lợi ích lâu dài và lành mạnh; "meritorious outcome" nhấn mạnh giá trị xứng đáng.',
@@ -2632,10 +2632,10 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
         academicBand: 8.5,
         cefrOriginal: 'B1',
         cefrUpgraded: 'C2',
-        category: 'Philosophical Paradigm',
+        category: 'Academic Paradigm',
         criterion: 'Lexical Resource (LR)',
         whyWeak: '"Change" là động/danh từ bề mặt, không làm nổi bật được quy mô và tính chất bước ngoặt của sự chuyển đổi.',
-        whyReplacement: '"Undergo a paradigm shift" (sự chuyển dịch hệ hình nhận thức - khái niệm của triết gia Thomas Kuhn) ngay lập tức định vị bài viết ở đẳng cấp học giả.',
+        whyReplacement: '"Undergo a paradigm shift" (sự chuyển dịch hệ hình nhận thức - khái niệm của nhà khoa học Thomas Kuhn) ngay lập tức định vị bài viết ở đẳng cấp học giả.',
         collocationTip: '"The industry has undergone a paradigm shift towards...".'
       },
       {

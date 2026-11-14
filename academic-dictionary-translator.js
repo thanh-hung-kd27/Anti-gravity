@@ -522,7 +522,7 @@
       },
       collocations: [
         { phrase: "exert a profound influence on", vi: "tạo ra một ảnh hưởng sâu sắc lên" },
-        { phrase: "profound philosophical implications", vi: "những hệ lụy triết học sâu sắc" },
+        { phrase: "profound academic implications", vi: "những hệ lụy học thuật sâu sắc" },
         { phrase: "profound socio-economic transformation", vi: "sự chuyển mình kinh tế xã hội sâu rộng" }
       ],
       examples: [
@@ -566,7 +566,7 @@
       examples: [
         {
           en: "Philosophical premises must be substantiated by rigorous empirical observations to command scientific consensus.",
-          vi: "Các tiền đề triết học phải được chứng thực bằng những quan sát thực nghiệm nghiêm ngặt để nhận được sự đồng thuận khoa học."
+          vi: "Các tiền đề lý thuyết phải được chứng thực bằng những quan sát thực nghiệm nghiêm ngặt để nhận được sự đồng thuận khoa học."
         }
       ],
       synonyms: [

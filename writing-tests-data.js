@@ -421,7 +421,7 @@ In response, many experts suggest that governments should establish a Universal 
     // ==========================================
     'wri-philo-spec': {
       id: 'wri-philo-spec',
-      title: 'Writing Task 2: Baudrillard & Modern Consumerism',
+      title: 'Writing Task 2: Modern Consumerism & Consumer Behavior',
       defaultActiveTask: 2,
       totalTimeMinutes: 60,
       task1: {
@@ -517,7 +517,7 @@ In my view, while this trend allows people to express their personal style, it i
     // ==========================================
     'wri-philo-fouca': {
       id: 'wri-philo-fouca',
-      title: 'Writing Task 2: Foucault & The Digital Panopticon',
+      title: 'Writing Task 2: Digital Surveillance & Civil Liberties',
       defaultActiveTask: 2,
       totalTimeMinutes: 60,
       task1: {
