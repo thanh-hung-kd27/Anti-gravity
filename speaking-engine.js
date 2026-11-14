@@ -1796,24 +1796,10 @@
     };
   }
 
-  function submitSpeakingExam(forceSubmit = false) {
+  function submitSpeakingExam(forceSubmit = true) {
     harvestCurrentInputValues();
     stopSpeakingRecording();
     stopExaminerSpeech();
-
-    // Check word counts
-    const p1Words = Object.values(candidateTranscripts.part1 || {}).join(' ').trim().split(/\s+/).filter(Boolean).length;
-    const p2SpeechText = (candidateTranscripts.part2_speech || '').trim();
-    const p2NotesText = (candidateTranscripts.part2_prepNotes || '').trim();
-    const p2Words = (p2SpeechText + (p2NotesText && !p2SpeechText ? ' ' + p2NotesText : '')).trim().split(/\s+/).filter(Boolean).length;
-    const p3Words = Object.values(candidateTranscripts.part3 || {}).join(' ').trim().split(/\s+/).filter(Boolean).length;
-    const totalWords = p1Words + p2Words + p3Words;
-
-    // Zero-word confirmation prevention
-    if (totalWords === 0 && !forceSubmit) {
-      showZeroWordsWarningModal();
-      return;
-    }
 
     // Release exam lockdown mode if active
     if (window.examLockdown && typeof window.examLockdown.releaseExamLockdown === 'function') {
@@ -1878,9 +1864,9 @@
     if (!modal) {
       modal = document.createElement('div');
       modal.id = 'officialSpeakingScorecardModal';
-      modal.className = 'fixed inset-0 z-[9999] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto';
       document.body.appendChild(modal);
     }
+    modal.className = 'fixed inset-0 z-[99999] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto';
 
     const overallNum = parseFloat(results.overallScore.replace('Band ', ''));
     let cardGradient = 'from-purple-600 to-indigo-700';

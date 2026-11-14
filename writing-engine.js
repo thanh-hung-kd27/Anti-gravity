@@ -1570,18 +1570,8 @@ On the one hand, AI can help judges check legal documents and historical cases q
   // ==========================================
   // 8. SUBMISSION & SCORECARD MODAL
   // ==========================================
-  function submitWritingExamForGrading(forceSubmit = false) {
+  function submitWritingExamForGrading(forceSubmit = true) {
     harvestActiveTaskInput();
-
-    const t1Words = countWords(candidateWriting.task1);
-    const t2Words = countWords(candidateWriting.task2);
-    const totalWords = t1Words + t2Words;
-
-    // Zero-word confirmation prevention
-    if (totalWords === 0 && !forceSubmit) {
-      showZeroWritingWarningModal();
-      return;
-    }
 
     // Release exam lockdown mode if active
     if (window.examLockdown && typeof window.examLockdown.releaseExamLockdown === 'function') {
@@ -1593,37 +1583,8 @@ On the one hand, AI can help judges check legal documents and historical cases q
   }
 
   function showZeroWritingWarningModal() {
-    const oldModal = document.getElementById('zeroWritingWarningModal');
-    if (oldModal) oldModal.remove();
-
-    const modal = document.createElement('div');
-    modal.id = 'zeroWritingWarningModal';
-    modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200';
-    modal.innerHTML = `
-      <div class="bg-white dark:bg-slate-900 border-2 border-red-500/80 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 text-center">
-        <div class="w-14 h-14 rounded-full bg-red-100 dark:bg-red-950/80 text-red-600 flex items-center justify-center mx-auto">
-          <i data-lucide="alert-triangle" class="w-7 h-7"></i>
-        </div>
-        <h3 class="text-base font-bold text-slate-900 dark:text-white">
-          CẢNH BÁO: CHƯA CÓ NỘI DUNG BÀI VIẾT!
-        </h3>
-        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-          Hệ thống ghi nhận bạn <strong>chưa viết bài</strong> ở cả Task 1 (0 từ) và Task 2 (0 từ). Nếu nộp bài bây giờ, kết quả khảo thí sẽ được ghi nhận là <strong>Band 0.0</strong> theo quy chuẩn IDP &amp; British Council.
-        </p>
-        <div class="flex items-center gap-2 pt-2">
-          <button onclick="window.closeZeroWritingWarningModal()"
-            class="flex-1 py-2.5 rounded-xl bg-iot-orange hover:bg-iot-orangeHover text-white font-bold text-xs transition-all shadow-md">
-            Quay Lại Viết Bài
-          </button>
-          <button onclick="window.confirmZeroWritingSubmit()"
-            class="px-4 py-2.5 rounded-xl border border-red-300 dark:border-red-800 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/50 font-bold text-xs transition-all">
-            Vẫn Nộp (0.0)
-          </button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+    // Keep helper for backward compatibility
+    submitWritingExamForGrading(true);
   }
 
   function closeZeroWritingWarningModal() {
@@ -1648,7 +1609,7 @@ On the one hand, AI can help judges check legal documents and historical cases q
 
     const modal = document.createElement('div');
     modal.id = 'officialWritingScorecardModal';
-    modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 overflow-y-auto animate-in fade-in duration-200';
+    modal.className = 'fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 overflow-y-auto animate-in fade-in duration-200';
     modal.innerHTML = `
       <div class="bg-slate-900 border-2 border-amber-500/80 rounded-3xl p-6 sm:p-8 max-w-3xl w-full shadow-2xl text-white space-y-6 my-auto max-h-[92vh] overflow-y-auto">
         

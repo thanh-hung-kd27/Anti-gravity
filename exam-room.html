@@ -763,20 +763,33 @@
     }
 
     function submitExam() {
+      if (typeof examCountdownInterval !== 'undefined' && examCountdownInterval) {
+        clearInterval(examCountdownInterval);
+      }
       if (window.examLockdown && typeof window.examLockdown.releaseExamLockdown === 'function') {
         window.examLockdown.releaseExamLockdown();
       }
       if (typeof skillParam !== 'undefined' && skillParam === 'LISTENING') {
-        checkListeningAnswers();
+        if (typeof checkListeningAnswers === 'function') {
+          checkListeningAnswers();
+        } else if (typeof window.checkListeningAnswers === 'function') {
+          window.checkListeningAnswers();
+        }
         return;
       }
       if (typeof skillParam !== 'undefined' && skillParam === 'READING') {
-        checkReadingAnswers();
+        if (typeof checkReadingAnswers === 'function') {
+          checkReadingAnswers();
+        } else if (typeof window.checkReadingAnswers === 'function') {
+          window.checkReadingAnswers();
+        }
         return;
       }
       if (typeof skillParam !== 'undefined' && skillParam === 'WRITING') {
         if (typeof submitWritingExamForGrading === 'function') {
-          submitWritingExamForGrading();
+          submitWritingExamForGrading(true);
+        } else if (typeof window.submitWritingExamForGrading === 'function') {
+          window.submitWritingExamForGrading(true);
         } else {
           submitExamWritingForGrading();
         }
@@ -784,7 +797,10 @@
       }
       if (typeof skillParam !== 'undefined' && skillParam === 'SPEAKING') {
         if (typeof submitSpeakingExam === 'function') {
-          submitSpeakingExam();
+          submitSpeakingExam(true);
+          return;
+        } else if (typeof window.submitSpeakingExam === 'function') {
+          window.submitSpeakingExam(true);
           return;
         }
       }
@@ -797,26 +813,21 @@
 
     function submitExamWritingForGrading() {
       if (typeof window.submitWritingExamForGrading === 'function') {
-        window.submitWritingExamForGrading();
+        window.submitWritingExamForGrading(true);
         return;
       }
       if (window.examLockdown && typeof window.examLockdown.releaseExamLockdown === 'function') {
         window.examLockdown.releaseExamLockdown();
       }
       const input = document.getElementById('examWritingInput');
-      if (!input) return;
-      const essay = input.value.trim();
-      if (!essay) {
-        if (window.socraticAI && window.socraticAI.showLearningToast) {
-          window.socraticAI.showLearningToast("⚠️ Vui lòng viết bài luận trước khi yêu cầu chấm điểm.");
-        }
-        return;
-      }
+      const essay = input ? input.value.trim() : '';
       setRoomMode('practice');
       const promptEl = document.querySelector('.text-sm.font-semibold.text-iot-dark') || document.querySelector('.font-mono.text-iot-primary');
       const promptText = promptEl ? promptEl.innerText.replace(/"/g, '') : 'IELTS Writing Task 2';
 
-      const chatMsg = `Chấm điểm bài viết IELTS Writing sau đây theo tiêu chuẩn nghiêm ngặt của cựu giám khảo IDP/BC:\n\n[Đề bài]: ${promptText}\n\n[Bài làm]:\n${essay}`;
+      const chatMsg = essay
+        ? `Chấm điểm bài viết IELTS Writing sau đây theo tiêu chuẩn nghiêm ngặt của cựu giám khảo IDP/BC:\n\n[Đề bài]: ${promptText}\n\n[Bài làm]:\n${essay}`
+        : `Thí sinh nộp bài luận trống (0 từ). Hãy đánh giá theo quy chuẩn khảo thí IELTS: Band 0.0 hoặc 1.0 (Did not attempt / No assessable text) và cung cấp bài mẫu chuẩn Band 8.5+ cho đề: "${promptText}".`;
       handleIncomingChat(chatMsg);
     }
 

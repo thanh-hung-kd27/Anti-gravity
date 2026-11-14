@@ -588,7 +588,7 @@ function renderListeningTestEnvironment(testId) {
   const currentPart = test.parts.find(p => p.partNum === currentListeningPartNum) || test.parts[0];
 
   viewport.innerHTML = `
-    <div class="flex flex-col space-y-5 pb-32">
+    <div class="flex flex-col space-y-5 pb-44 sm:pb-32">
       
       <!-- 1. CAMBRIDGE EDTECH AUDIO PLAYER CONTAINER -->
       <div class="p-5 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-[#0c1a3a] dark:to-[#112456] rounded-2xl border border-blue-200 dark:border-blue-900 shadow-sm space-y-4 shrink-0">
@@ -795,8 +795,8 @@ function renderListeningTestEnvironment(testId) {
         </div>
 
         <!-- Submit Button -->
-        <div class="shrink-0">
-          <button onclick="checkListeningAnswers()" class="px-5 py-2 rounded-lg bg-iot-green hover:bg-green-700 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2 active:scale-95 whitespace-nowrap">
+        <div class="shrink-0 w-full sm:w-auto">
+          <button type="button" onclick="checkListeningAnswers()" class="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-iot-green hover:bg-green-700 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 active:scale-95 whitespace-nowrap cursor-pointer">
             <i data-lucide="send" class="w-3.5 h-3.5"></i>
             <span>Nộp bài (Chấm 40 câu)</span>
           </button>
@@ -1649,10 +1649,17 @@ function updatePaletteCounter() {
 // ==========================================
 
 function checkListeningAnswers() {
+  const audio = document.getElementById('realListeningAudio');
+  if (audio) {
+    audio.pause();
+  }
+  if (isExaminerTTSSpeaking) {
+    stopExaminerVoiceSynthesis();
+  }
   if (typeof window !== 'undefined' && window.examLockdown && typeof window.examLockdown.releaseExamLockdown === 'function') {
     window.examLockdown.releaseExamLockdown();
   }
-  const test = LISTENING_TESTS[currentListeningTestId];
+  const test = LISTENING_TESTS[currentListeningTestId] || Object.values(LISTENING_TESTS)[0];
   if (!test) return;
 
   let totalScore = 0;
@@ -2065,14 +2072,15 @@ function setupAudioEventListeners() {
     updateAudioButtonUI(false);
     const statusEl = document.getElementById('audioTrackStatus');
     const pingEl = document.getElementById('audioPingIndicator');
-    if (statusEl) statusEl.innerText = `Đã hoàn thành Part ${currentListeningPartNum}`;
+    if (statusEl) statusEl.innerText = `Đã hoàn thành toàn bộ bài thi nghe (30 phút)`;
     if (pingEl) pingEl.className = "w-3 h-3 rounded-full bg-slate-400";
 
-    // Auto prompt to next part if available
-    if (currentListeningPartNum < 4) {
+    // Auto submit exam unconditionally on audio finish
+    if (!isListeningSubmitted) {
       if (window.socraticAI && window.socraticAI.showLearningToast) {
-        window.socraticAI.showLearningToast(`Đã kết thúc Part ${currentListeningPartNum}. Chuyển sang Part ${currentListeningPartNum + 1}...`);
+        window.socraticAI.showLearningToast(`⏳ Băng ghi âm 30 phút đã kết thúc! Hệ thống tự động nộp bài thi Listening.`);
       }
+      checkListeningAnswers();
     }
   };
 
@@ -2376,9 +2384,9 @@ function openOfficialScorecardModal(results) {
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'officialScorecardModal';
-    modal.className = 'fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto';
     document.body.appendChild(modal);
   }
+  modal.className = 'fixed inset-0 z-[99999] bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto';
 
   const { totalScore, estBand, partScores, mistakes } = results;
   const accuracy = ((totalScore / 40) * 100).toFixed(1);

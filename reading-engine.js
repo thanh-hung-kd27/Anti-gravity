@@ -1408,9 +1408,9 @@
     if (!modal) {
       modal = document.createElement('div');
       modal.id = 'officialReadingScorecardModal';
-      modal.className = 'fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto';
       document.body.appendChild(modal);
     }
+    modal.className = 'fixed inset-0 z-[99999] bg-slate-900/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto';
 
     const { totalScore, estBand, passageScores, mistakes } = results;
     const accuracy = ((totalScore / 40) * 100).toFixed(1);
