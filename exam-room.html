@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi" class="scroll-smooth" id="htmlRoot">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +9,9 @@
   <!-- Google Fonts: Inter & Roboto Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet" />
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -53,6 +56,20 @@
   <script src="ai-engine.js"></script>
   <!-- Academic Dictionary & Multi-tier Translation Suite -->
   <script src="academic-dictionary-translator.js"></script>
+  <!-- Additional Official Cambridge Listening Tests (Cam 19 T2-4, Cam 18 T2, Actual Vol 4-5) -->
+  <script src="listening-tests-data.js"></script>
+  <!-- Authentic Cambridge 4-Part IELTS Listening Engine (40 Questions & Native Audio) -->
+  <script src="listening-engine.js"></script>
+  <!-- Authentic Cambridge 3-Passage IELTS Reading Engine (40 Questions, 60 Minutes) -->
+  <script src="reading-engine.js"></script>
+  <!-- Authentic Cambridge 3-Part IELTS Speaking Engine (11–14 Minutes, 3 Parts, IDP/BC) -->
+  <script src="speaking-engine.js"></script>
+  <!-- Secure CD-IELTS Fullscreen Kiosk Lockdown & Anti-Cheat Proctoring Engine -->
+  <script src="exam-lockdown.js"></script>
+  <!-- Additional Official Cambridge & Philosophical Writing Tests Data -->
+  <script src="writing-tests-data.js"></script>
+  <!-- Authentic Cambridge 2-Task IELTS Writing Engine (60 Minutes, Task 1 & Task 2, IDP/BC) -->
+  <script src="writing-engine.js"></script>
 
   <style>
     body {
@@ -60,32 +77,41 @@
       line-height: 1.6;
       transition: background-color 0.25s ease, color 0.25s ease;
     }
+
     ::-webkit-scrollbar {
       width: 6px;
     }
+
     ::-webkit-scrollbar-track {
       background: #F8F9FA;
     }
+
     .dark ::-webkit-scrollbar-track {
       background: #0F172A;
     }
+
     ::-webkit-scrollbar-thumb {
       background: #CBD5E1;
       border-radius: 4px;
     }
+
     .dark ::-webkit-scrollbar-thumb {
       background: #334155;
     }
   </style>
 </head>
-<body class="antialiased bg-[#F8F9FA] text-iot-body dark:bg-[#071326] dark:text-slate-200 h-screen flex flex-col overflow-hidden">
+
+<body
+  class="antialiased bg-[#F8F9FA] text-iot-body dark:bg-[#071326] dark:text-slate-200 h-screen flex flex-col overflow-hidden">
 
   <!-- TOP ROOM NAV BAR -->
-  <header class="bg-iot-navy text-white px-5 py-3 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 dark:bg-[#050C1A] shrink-0">
-    
+  <header
+    class="bg-iot-navy text-white px-5 py-3 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 dark:bg-[#050C1A] shrink-0">
+
     <!-- Left: Back to Library & Test Info -->
     <div class="flex items-center gap-4">
-      <a href="library.html" class="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg bg-white/10 transition-colors">
+      <a href="library.html"
+        class="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg bg-white/10 transition-colors">
         <i data-lucide="arrow-left" class="w-4 h-4"></i>
         <span>Quay Lại Thư Viện</span>
       </a>
@@ -93,53 +119,64 @@
       <div class="h-5 w-px bg-white/20 hidden sm:block"></div>
 
       <div class="flex items-center gap-2.5">
-        <span id="activeSkillBadge" class="bg-iot-orange text-white text-xs font-bold px-2 py-0.5 rounded font-mono uppercase">
-          WRITING
+        <span id="activeSkillBadge"
+          class="bg-emerald-600 text-white text-xs font-bold px-2 py-0.5 rounded font-mono uppercase">
+          READING
         </span>
         <div>
           <h1 class="text-sm font-bold text-white leading-tight" id="activeExamTitle">
-            Cambridge 19 - Test 1: Writing Task 2 (AI Sentencing)
+            Cambridge 19 - Test 1: Academic Reading (Passages 1–3)
           </h1>
           <span class="text-[11px] text-slate-300 font-mono">IELTS Academic Computer-Delivered Interface</span>
         </div>
       </div>
     </div>
 
-    <!-- Center: Mode Switcher (Luyện tập vs Thi thật) -->
-    <div class="flex items-center bg-slate-900/90 p-1 rounded-lg border border-slate-700">
-      <button id="btnPracticeMode" onclick="setRoomMode('practice')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-iot-primary text-white shadow-sm">
-        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i>
-        <span>Chế độ Luyện tập (Có AI)</span>
-      </button>
-      <button id="btnExamMode" onclick="setRoomMode('exam')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition-all">
-        <i data-lucide="lock" class="w-3.5 h-3.5"></i>
-        <span>Chế độ Thi thật (Khóa AI)</span>
-      </button>
+    <!-- Center: Official Cambridge CD-IELTS Status Indicator -->
+    <div class="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-white/10 font-mono text-xs text-slate-200 border border-white/10">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="font-bold">Cambridge Computer-Delivered IELTS Testing Engine</span>
     </div>
 
     <!-- Right: Timer, Theme & Submit -->
     <div class="flex items-center gap-2 sm:gap-3">
       <!-- AI Cognitive Profile Pill -->
-      <button onclick="window.academicDictionary.openDictionaryModal()" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-mono transition-all border border-white/15" title="Mở Từ Điển & Dịch Thuật Học Thuật">
+      <button onclick="window.academicDictionary.openDictionaryModal()"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-mono transition-all border border-white/15"
+        title="Mở Từ Điển & Dịch Thuật Học Thuật">
         <i data-lucide="languages" class="w-3.5 h-3.5 text-blue-300"></i>
         <span class="hidden md:inline">Từ Điển &amp; Dịch</span>
       </button>
 
-      <button onclick="window.socraticAI.openCognitiveProfileModal()" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-mono transition-all border border-white/15" title="Mở Hồ Sơ & Đổi Tên Học Viên">
+      <button onclick="window.socraticAI.openCognitiveProfileModal()"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-mono transition-all border border-white/15"
+        title="Mở Hồ Sơ & Đổi Tên Học Viên">
         <i data-lucide="brain" class="w-3.5 h-3.5 text-amber-300"></i>
         <span id="navBarStudentBadge" class="hidden sm:inline">Học viên (8.0)</span>
       </button>
 
-      <div class="flex items-center gap-1.5 font-mono text-xs bg-white/10 px-3 py-1.5 rounded-lg border border-white/10">
+      <div
+        class="flex items-center gap-1.5 font-mono text-xs bg-white/10 px-3 py-1.5 rounded-lg border border-white/10">
         <i data-lucide="clock" class="w-3.5 h-3.5 text-iot-orange"></i>
-        <span id="roomTimer" class="font-bold text-white">39:48</span>
+        <span id="roomTimer" class="font-bold text-white">60:00</span>
       </div>
 
-      <button onclick="toggleTheme()" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white" title="Chuyển chế độ sáng/tối">
+      <!-- Fullscreen Kiosk Mode Indicator / Toggle -->
+      <button id="btnToggleFullscreen"
+        onclick="window.examLockdown && window.examLockdown.toggleExamLockdownFullscreen()"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-mono transition-all border border-white/15"
+        title="Khóa Toàn Màn Hình Khảo Thí">
+        <i data-lucide="maximize" class="w-3.5 h-3.5"></i>
+        <span class="hidden lg:inline">Toàn Màn Hình</span>
+      </button>
+
+      <button onclick="toggleTheme()" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white"
+        title="Chuyển chế độ sáng/tối">
         <i id="themeToggleIcon" data-lucide="moon" class="w-4 h-4"></i>
       </button>
 
-      <button onclick="submitExam()" class="bg-iot-green hover:bg-green-700 text-white text-xs font-bold px-3 sm:px-4 py-2 rounded-lg shadow-sm transition-all flex items-center gap-1.5 active:scale-95">
+      <button onclick="submitExam()"
+        class="bg-iot-green hover:bg-green-700 text-white text-xs font-bold px-3 sm:px-4 py-2 rounded-lg shadow-sm transition-all flex items-center gap-1.5 active:scale-95">
         <i data-lucide="check-square" class="w-3.5 h-3.5"></i>
         <span class="hidden sm:inline">Nộp Bài Thi</span>
         <span class="sm:hidden">Nộp</span>
@@ -148,102 +185,13 @@
 
   </header>
 
-  <!-- SPLIT-SCREEN WORKSPACE: 70% LEFT (EXAM PAPER) vs 30% RIGHT (SOCRATIC AI) -->
-  <main class="flex-1 flex flex-col lg:flex-row overflow-hidden">
-    
-    <!-- LEFT 70%: TEST ENVIRONMENT (Tự động tải nội dung Listening / Reading / Writing / Speaking) -->
-    <div class="flex-1 lg:w-[70%] bg-white dark:bg-[#0B132B] overflow-y-auto p-6 lg:p-8 space-y-6 border-b lg:border-b-0 lg:border-r border-iot-border dark:border-slate-800" id="testViewport">
+  <!-- FULLSCREEN CD-IELTS EXAM WORKSPACE (100% WIDTH) -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <div
+      class="flex-1 w-full bg-white dark:bg-[#0B132B] overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6"
+      id="testViewport">
       <!-- Dynamic Content rendered by JavaScript -->
     </div>
-
-    <!-- RIGHT 30%: SOCRATIC AI CHATBOT SIDEBAR -->
-    <aside id="aiSidebar" class="w-full lg:w-[30%] bg-slate-50 dark:bg-[#071326] flex flex-col shadow-ai-sidebar relative transition-all duration-300">
-      
-      <!-- AI Header with Live Learner State & Model Selector -->
-      <div class="p-3 bg-white dark:bg-[#0B132B] border-b border-iot-border dark:border-slate-800 flex items-center justify-between shrink-0">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-600 via-iot-orange to-amber-400 text-white flex items-center justify-center font-bold text-sm shadow-md ring-2 ring-orange-400/20">
-            ✦
-          </div>
-          <div>
-            <div class="flex items-center gap-1.5">
-              <h2 class="font-bold text-xs text-iot-dark dark:text-white flex items-center gap-1">
-                <span>Claude / Socratic AI</span>
-                <span class="w-2 h-2 rounded-full bg-iot-green animate-pulse"></span>
-              </h2>
-              <span id="activeModelTag" class="text-[9px] font-mono bg-blue-100 text-iot-primary dark:bg-blue-900/60 dark:text-blue-300 px-1.5 py-0.2 rounded font-bold">
-                Claude 3.5
-              </span>
-            </div>
-            <p class="text-[10px] text-iot-muted dark:text-slate-400 font-mono">
-              Học viên: <strong id="aiSidebarStudentName" class="text-iot-primary dark:text-blue-400">Học viên</strong> • Band <strong id="aiSidebarTargetBand" class="text-iot-orange">8.0</strong>
-            </p>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-1">
-          <button onclick="window.socraticAI.openAPIConfigModal()" class="p-1.5 rounded-lg text-slate-500 hover:text-iot-primary hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-xs" title="Cấu hình Claude / ChatGPT / Gemini API">
-            <i data-lucide="settings" class="w-3.5 h-3.5"></i>
-          </button>
-          <button onclick="clearChatMessages()" class="p-1.5 rounded-lg text-slate-500 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-xs" title="Làm mới cuộc trò chuyện">
-            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-          </button>
-          <button onclick="window.socraticAI.openCognitiveProfileModal()" class="text-[10px] font-mono font-bold text-iot-primary bg-blue-50 dark:bg-blue-900/50 dark:text-blue-300 hover:bg-blue-100 px-2 py-1 rounded-lg border border-blue-200 dark:border-blue-800 transition-all flex items-center gap-1">
-            <i data-lucide="brain" class="w-3 h-3 text-iot-orange"></i>
-            <span>Hồ Sơ</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Chat Messages Container -->
-      <div id="aiChatBox" class="flex-1 p-4 overflow-y-auto space-y-4 text-xs font-sans">
-        <!-- Message transcript -->
-      </div>
-
-      <!-- Quick AI Action Prompts -->
-      <div class="px-3 py-2 bg-slate-100 dark:bg-slate-800/80 border-t border-iot-border dark:border-slate-700 flex flex-wrap gap-1.5 shrink-0">
-        <button onclick="askPromptPreset('syntax')" class="px-2 py-1 rounded bg-white dark:bg-slate-700 text-[11px] font-mono hover:text-iot-primary border border-slate-200 dark:border-slate-600">
-          🔍 Phân tích cú pháp câu
-        </button>
-        <button onclick="askPromptPreset('dialectic')" class="px-2 py-1 rounded bg-white dark:bg-slate-700 text-[11px] font-mono hover:text-iot-orange border border-slate-200 dark:border-slate-600">
-          ⚖️ Gợi ý phản đề Hegel
-        </button>
-      </div>
-
-      <!-- Input Form with Streaming Stop Button -->
-      <div class="p-3 bg-white dark:bg-[#0B132B] border-t border-iot-border dark:border-slate-800 shrink-0">
-        <form onsubmit="handleUserChat(event)" class="flex items-center gap-2">
-          <input type="text" id="userChatInput" placeholder="Hỏi bất kỳ điều gì (như Claude hay ChatGPT)..." class="flex-1 px-3 py-2 rounded-lg border border-iot-border dark:border-slate-700 text-xs text-iot-dark dark:text-white dark:bg-slate-900 focus:outline-none focus:border-iot-primary" />
-          <button id="btnSendChat" type="submit" class="p-2 rounded-lg bg-iot-primary hover:bg-iot-primaryHover text-white shadow-sm transition-all active:scale-95">
-            <i data-lucide="send" class="w-3.5 h-3.5"></i>
-          </button>
-          <button id="btnStopChat" type="button" onclick="stopGenerating()" class="hidden p-2 rounded-lg bg-red-600 hover:bg-red-700 text-white shadow-sm transition-all active:scale-95" title="Dừng sinh câu trả lời">
-            <i data-lucide="square" class="w-3.5 h-3.5"></i>
-          </button>
-        </form>
-      </div>
-
-      <!-- EXAM MODE LOCK OVERLAY (Hiển thị khi chuyển sang Thi Thật) -->
-      <div id="examLockOverlay" class="absolute inset-0 bg-slate-900/95 backdrop-blur-md z-30 p-6 flex flex-col items-center justify-center text-center text-white space-y-4 hidden">
-        <div class="w-14 h-14 rounded-full bg-red-500/20 border border-red-500 text-red-400 flex items-center justify-center">
-          <i data-lucide="lock" class="w-7 h-7"></i>
-        </div>
-        <div class="space-y-1 max-w-xs">
-          <h3 class="font-bold text-base text-white">Chế Độ Thi Thật Đang Bật</h3>
-          <p class="text-xs text-slate-300 leading-relaxed">
-            Trợ giảng AI đã tạm khóa hoàn toàn để đảm bảo tính minh bạch như kỳ thi IELTS chính thức.
-          </p>
-        </div>
-        <div class="p-3 bg-white/5 rounded-lg border border-white/10 text-[11px] text-slate-300 max-w-xs">
-          🔒 Khi bạn bấm <strong>"Nộp Bài Thi"</strong>, AI sẽ mở khóa trở lại để chữa lỗi cú pháp và phân tích lập luận chi tiết!
-        </div>
-        <button onclick="setRoomMode('practice')" class="text-xs text-blue-300 hover:text-white underline font-mono">
-          Bật lại Chế độ Luyện tập
-        </button>
-      </div>
-
-    </aside>
-
   </main>
 
   <!-- JAVASCRIPT LOGIC -->
@@ -274,617 +222,122 @@
       lucide.createIcons();
     }
 
-    // ==========================================
-    // AUTHENTIC CAMBRIDGE IELTS LISTENING ENGINE (NATIVE HUMAN AUDIO)
-    // ==========================================
-    const LISTENING_TESTS = {
-      'cam19-t1': {
-        id: 'cam19-t1',
-        title: 'Cambridge 19 - Test 1: Hinchingbrooke Country Park',
-        subtitle: 'Băng ghi âm gốc Cambridge bản xứ • Hội thoại Ranger Sally & Teacher John Chapman',
-        audioLocal: 'audio/cam19-test1-part1.m4a',
-        audioCdn: 'https://ieltstrainingonline.com/wp-content/uploads/2024/07/cam19-test1-part1.m4a',
-        audioType: 'audio/mp4',
-        formTitle: 'HINCHINGBROOKE COUNTRY PARK - SCHOOL VISITS',
-        instructions: 'Questions 1–10: Complete the notes below. Write ONE WORD AND/OR A NUMBER for each answer.',
-        questions: [
-          { num: 1, label: 'Park covers:', suffix: 'hectares (former gravel farmland)', placeholder: 'Số...', expected: ['69', 'sixty-nine', '69 hectares'], display: '69', trap: 'Bẫy: 170 mẫu Anh (acres) vs 69 héc-ta (hectares)' },
-          { num: 2, label: 'Features: two large lakes, ponds and a:', suffix: 'flowing through the park', placeholder: 'Từ điền...', expected: ['stream', 'a stream'], display: 'stream', trap: 'Dòng suối (stream) chảy qua công viên' },
-          { num: 3, label: 'Science focus: help children collect and analyse:', suffix: 'about observed species', placeholder: 'Từ điền...', expected: ['data'], display: 'data', trap: 'Thu thập và phân tích dữ liệu (data)' },
-          { num: 4, label: 'Geography focus: learn and practice reading a:', suffix: 'and using a compass', placeholder: 'Từ điền...', expected: ['map', 'a map'], display: 'map', trap: 'Kỹ năng đọc bản đồ (map) và dùng la bàn' },
-          { num: 5, label: 'Leisure and tourism: study the impact of:', suffix: '', placeholder: 'Từ điền...', expected: ['visitors', 'the visitors', 'visitor'], display: 'visitors', trap: 'Tác động của du khách (visitors)' },
-          { num: 6, label: 'Music: children experiment with natural materials to make:', suffix: 'and explore rhythm', placeholder: 'Từ điền...', expected: ['sounds', 'sound'], display: 'sounds', trap: 'Tạo ra các âm thanh (sounds) tự nhiên' },
-          { num: 7, label: 'Outdoor learning benefit: provides more:', suffix: 'than classroom environments', placeholder: 'Từ điền...', expected: ['freedom', 'more freedom'], display: 'freedom', trap: 'Sự tự do (freedom) ngoài trời' },
-          { num: 8, label: 'Social development: enhances communication and social:', suffix: '', placeholder: 'Từ điền...', expected: ['skills', 'skill'], display: 'skills', trap: 'Kỹ năng xã hội (social skills)' },
-          { num: 9, label: 'Cost per pupil:', prefix: '£', suffix: 'per visiting student', placeholder: 'Số tiền...', expected: ['4.95', '£4.95'], display: '4.95', trap: 'Bẫy số tiền: £4.95 mỗi học sinh' },
-          { num: 10, label: 'Adult supervision: school party must have qualified:', suffix: 'at all times', placeholder: 'Từ điền...', expected: ['leaders', 'leader'], display: 'leaders', trap: 'Người phụ trách dẫn đoàn (leaders)' }
-        ],
-        transcript: [
-          { time: 0, speaker: "Cambridge Examiner", text: "You will hear a telephone conversation between a ranger at Hinchingbrooke Country Park and a school teacher. First, you have some time to look at Questions 1 to 6." },
-          { time: 28, speaker: "Sally (Park Ranger)", text: "Good morning. Hinchingbrooke Country Park, Sally speaking. I'm one of the rangers." },
-          { time: 34, speaker: "John Chapman", text: "Oh hello. My name's John Chapman, and I'm a teaching assistant at a local primary school. I've been asked to arrange a visit to the park for two of our classes." },
-          { time: 43, speaker: "Sally", text: "OK. What would you like to know?" },
-          { time: 46, speaker: "John Chapman", text: "Well, I'm new to this area, so perhaps you could tell me something about the park first, please." },
-          { time: 51, speaker: "Sally", text: "Of course. Altogether the park covers 170 acres, that's 69 hectares. There are three main types of habitat: wetland, grassland and woodland.", trap: "Đáp án Câu 1: 69 hectares (Bẫy 170 acres)" },
-          { time: 66, speaker: "John Chapman", text: "Right." },
-          { time: 68, speaker: "Sally", text: "The wetland is quite varied, too. Once gravel extraction was completed, pits filled with water forming large lakes, smaller ponds and a stream that flows through the park.", trap: "Đáp án Câu 2: stream" },
-          { time: 82, speaker: "John Chapman", text: "OK, so I suppose with these different habitats there's quite a variety of wildlife." },
-          { time: 87, speaker: "Sally", text: "There certainly is! And we can organise a wide range of educational activities and adapt them to suit all ages." },
-          { time: 94, speaker: "Sally", text: "Well, one focus is on science, where we help children discover plants, trees and insects. They also collect and analyse data about the things they see.", trap: "Đáp án Câu 3: data" },
-          { time: 106, speaker: "John Chapman", text: "Uhuh." },
-          { time: 108, speaker: "Sally", text: "Another focus is on geography. The park is a great environment to learn and practice reading a map and using a compass to navigate around the park.", trap: "Đáp án Câu 4: map" },
-          { time: 121, speaker: "John Chapman", text: "Do you do anything connected with leisure and tourism?" },
-          { time: 125, speaker: "Sally", text: "Yes, mostly! The children find out about visitors, their impact, the problems they may cause and how we manage them.", trap: "Đáp án Câu 5: visitors" },
-          { time: 135, speaker: "Sally", text: "And another subject we cover is music: here the children experiment with natural materials to make sounds and explore rhythm and tempo.", trap: "Đáp án Câu 6: sounds" },
-          { time: 147, speaker: "John Chapman", text: "That must be fun! What about costs and group leadership requirements?" },
-          { time: 153, speaker: "Cambridge Examiner", text: "Now listen and answer questions 7 to 10." },
-          { time: 172, speaker: "Sally", text: "Being outdoors gives children much more freedom than the confines of a traditional classroom.", trap: "Đáp án Câu 7: freedom" },
-          { time: 185, speaker: "Sally", text: "Working in teams develops essential communication and social skills through collaborative exploration.", trap: "Đáp án Câu 8: skills" },
-          { time: 200, speaker: "Sally", text: "For educational visits, our subsidized admission rate is strictly £4.95 per visiting child.", trap: "Đáp án Câu 9: 4.95" },
-          { time: 220, speaker: "Sally", text: "For safety compliance, school parties must ensure they are accompanied by qualified adult leaders.", trap: "Đáp án Câu 10: leaders" },
-          { time: 245, speaker: "Cambridge Examiner", text: "That is the end of Section 1. You now have half a minute to check your answers." }
-        ]
-      },
-      'cam18-t1': {
-        id: 'cam18-t1',
-        title: 'Cambridge 18 - Test 1: Transport Survey',
-        subtitle: 'Băng ghi âm gốc Cambridge bản xứ • Phỏng vấn cư dân Sadie Jones về thói quen sử dụng xe bus',
-        audioLocal: 'audio/cam18-test1-part1.mp3',
-        audioCdn: 'https://ieltstrainingonline.com/wp-content/uploads/2023/06/cam18-test1-part1.mp3',
-        audioType: 'audio/mpeg',
-        formTitle: 'TRANSPORT SURVEY - PASSENGER COMMUTE FORM',
-        instructions: 'Questions 1–10: Complete the notes below. Write ONE WORD AND/OR A NUMBER for each answer.',
-        questions: [
-          { num: 1, label: 'Postcode:', suffix: '', placeholder: 'Mã bưu chính...', expected: ['dw30 7yz', 'dw307yz', 'dw3q 7yz', 'dw3q7yz'], display: 'DW30 7YZ', trap: 'Mã bưu chính của Sadie Jones' },
-          { num: 2, label: 'Date of journey:', suffix: 'April (interviewer initially confused date)', placeholder: 'Ngày...', expected: ['24th april', '24th', '24 april', '24'], display: '24th April', trap: 'Bẫy ngày 24th vs 25th' },
-          { num: 3, label: 'Primary purpose of journey: visit the:', suffix: '', placeholder: 'Mục đích...', expected: ['dentist', 'dentist check-up'], display: 'dentist', trap: 'Đi khám nha sĩ (dentist), không phải đi mua sắm' },
-          { num: 4, label: 'Stopped driving car due to high cost and lack of:', suffix: '', placeholder: 'Lý do...', expected: ['parking', 'car parking'], display: 'parking', trap: 'Khó tìm chỗ đậu xe (parking)' },
-          { num: 5, label: 'Journey start location: bus stop on:', suffix: 'Street', placeholder: 'Tên đường...', expected: ['claxby', 'claxby street'], display: 'Claxby', trap: 'Đánh vần tên đường C-L-A-X-B-Y' },
-          { num: 6, label: 'Complaint: morning bus was 10 minutes:', suffix: '', placeholder: 'Tình trạng...', expected: ['late', 'delayed'], display: 'late', trap: 'Xe buýt bị trễ 10 phút (late)' },
-          { num: 7, label: 'Timetable dissatisfaction: services end too early in the:', suffix: '', placeholder: 'Buổi...', expected: ['evening', 'evenings'], display: 'evening', trap: 'Chuyến xe buýt kết thúc quá sớm vào buổi tối' },
-          { num: 8, label: 'Dislikes crowded buses: particularly on the route passing the:', suffix: '', placeholder: 'Địa điểm...', expected: ['supermarket', 'local supermarket'], display: 'supermarket', trap: 'Đoạn đường qua siêu thị (supermarket)' },
-          { num: 9, label: 'Environmental concern: buses cause excessive air:', suffix: 'in town centre', placeholder: 'Từ điền...', expected: ['pollution', 'air pollution'], display: 'pollution', trap: 'Ô nhiễm không khí (pollution)' },
-          { num: 10, label: 'Encouraging cycling: council should provide secure bicycle:', suffix: 'at main hubs', placeholder: 'Cơ sở...', expected: ['storage', 'parking storage', 'secure storage'], display: 'storage', trap: 'Khu vực gửi/lưu trữ xe đạp an toàn (storage)' }
-        ],
-        transcript: [
-          { time: 0, speaker: "Cambridge Examiner", text: "You will hear a man asking a woman called Sadie Jones questions about how she travels. First, you have some time to look at Questions 1 to 4." },
-          { time: 26, speaker: "Interviewer", text: "Excuse me. Would you mind if I asked you some questions? We're doing a survey on transport." },
-          { time: 31, speaker: "Sadie Jones", text: "Yes, that's OK." },
-          { time: 33, speaker: "Interviewer", text: "First of all, can I take your name? And could I have your postcode, please?" },
-          { time: 42, speaker: "Sadie Jones", text: "It's DW30 7YZ.", trap: "Đáp án Câu 1: DW30 7YZ" },
-          { time: 54, speaker: "Interviewer", text: "Did you use public transport today? That was today, the 24th of April, isn't it?", trap: "Đáp án Câu 2: 24th April" },
-          { time: 64, speaker: "Sadie Jones", text: "Yes, I did some shopping, but the main reason I came here was to go to the dentist.", trap: "Đáp án Câu 3: dentist" },
-          { time: 78, speaker: "Sadie Jones", text: "I stopped driving ages ago because parking was so difficult to find and it costs so much.", trap: "Đáp án Câu 4: parking" },
-          { time: 92, speaker: "Sadie Jones", text: "I started my journey at the bus stop on Claxby Street. That's C-L-A-X-B-Y.", trap: "Đáp án Câu 5: Claxby" },
-          { time: 110, speaker: "Sadie Jones", text: "The bus is quick when it's on time, but this morning it was late by about 10 minutes.", trap: "Đáp án Câu 6: late" },
-          { time: 128, speaker: "Sadie Jones", text: "Any time I've been in town in the evening, I've really struggled to get one. The service ends too early.", trap: "Đáp án Câu 7: evening" },
-          { time: 148, speaker: "Sadie Jones", text: "Buses get extremely crowded around the supermarket stops.", trap: "Đáp án Câu 8: supermarket" },
-          { time: 165, speaker: "Sadie Jones", text: "I worry a lot about the air pollution that older diesel buses generate in our narrow high streets.", trap: "Đáp án Câu 9: pollution" },
-          { time: 185, speaker: "Sadie Jones", text: "I'd love to cycle more if the town council built safe lanes and provided secure storage for bikes.", trap: "Đáp án Câu 10: storage" },
-          { time: 210, speaker: "Cambridge Examiner", text: "That is the end of Section 1. You now have half a minute to check your answers." }
-        ]
-      },
-      'cam19-t2': {
-        id: 'cam19-t2',
-        title: 'Cambridge 19 - Test 2: Library Research & Coastal Conservation',
-        subtitle: 'Băng ghi âm gốc Cambridge bản xứ • Nghiên cứu bản đồ thư viện & rạn san hô nhân tạo',
-        audioLocal: 'audio/cam19-test2-part1.m4a',
-        audioCdn: 'https://ieltstrainingonline.com/wp-content/uploads/2024/07/cam19-test2-part1.m4a',
-        audioType: 'audio/mp4',
-        formTitle: 'ELECTRONIC LIBRARY CATALOGUE & SERVICES',
-        instructions: 'Questions 1–10: Complete the notes below. Write ONE WORD AND/OR A NUMBER for each answer.',
-        questions: [
-          { num: 1, label: 'Access card validity:', suffix: 'months from issue date', placeholder: 'Số...', expected: ['12', 'twelve'], display: '12', trap: 'Thời hạn thẻ thư viện' },
-          { num: 2, label: 'Study carrels located on Level:', suffix: '', placeholder: 'Tầng...', expected: ['3', 'three', 'level 3'], display: '3', trap: 'Vị trí phòng tự học' },
-          { num: 3, label: 'Wireless printing requires registration of university:', suffix: '', placeholder: 'Tài khoản...', expected: ['username', 'id', 'account'], display: 'username', trap: 'Tên đăng nhập hệ thống in' }
-        ],
-        transcript: [
-          { time: 0, speaker: "Cambridge Examiner", text: "You will hear a university librarian explaining services to new students." }
-        ]
-      },
-      'cam18-t2': {
-        id: 'cam18-t2',
-        title: 'Cambridge 18 - Test 2: Marine Biology Fieldwork',
-        subtitle: 'Băng ghi âm gốc Cambridge bản xứ • Khảo sát sinh học biển & âm học cá voi',
-        audioLocal: 'audio/cam18-test2-part1.mp3',
-        audioCdn: 'https://ieltstrainingonline.com/wp-content/uploads/2023/06/cam18-test2-part1.mp3',
-        audioType: 'audio/mpeg',
-        formTitle: 'MARINE BIOLOGY FIELDWORK VOLUNTEER BRIEFING',
-        instructions: 'Questions 1–10: Complete the notes below. Write ONE WORD AND/OR A NUMBER for each answer.',
-        questions: [
-          { num: 1, label: 'Boat departure wharf:', suffix: 'harbour pier', placeholder: 'Tên...', expected: ['pier 4', 'pier four', '4'], display: 'Pier 4', trap: 'Bến tàu khởi hành' }
-        ],
-        transcript: [
-          { time: 0, speaker: "Cambridge Examiner", text: "You will hear a briefing about marine acoustic research." }
-        ]
-      }
-    };
 
-    let currentListeningTestId = 'cam19-t1';
-
-    function renderListeningTestEnvironment(testId) {
-      currentListeningTestId = LISTENING_TESTS[testId] ? testId : 'cam19-t1';
-      const test = LISTENING_TESTS[currentListeningTestId];
-
-      const viewport = document.getElementById('testViewport');
-      if (!viewport) return;
-
-      viewport.innerHTML = `
-        <!-- CAMBRIDGE EDTECH AUDIO PLAYER CONTAINER -->
-        <div class="p-5 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-[#0c1a3a] dark:to-[#112456] rounded-2xl border border-blue-200 dark:border-blue-900 shadow-sm space-y-4">
-          
-          <!-- Audio Element (Native HTML5 Real Human Audio, No AI Voice) -->
-          <audio id="realListeningAudio" preload="auto">
-            <source src="${test.audioLocal}" type="${test.audioType}">
-            <source src="${test.audioCdn}" type="${test.audioType}">
-            Trình duyệt của bạn không hỗ trợ thẻ audio.
-          </audio>
-
-          <!-- Audio Header Bar -->
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-blue-200/60 dark:border-blue-800/60 pb-3">
-            <div class="flex items-center gap-2.5">
-              <span id="audioPingIndicator" class="w-3 h-3 rounded-full bg-slate-400"></span>
-              <div>
-                <span id="audioTrackTitle" class="text-xs font-bold text-iot-primary dark:text-blue-300 font-mono block uppercase tracking-wide">
-                  ${test.title}
-                </span>
-                <span id="audioTrackSubtitle" class="text-[11px] text-iot-muted dark:text-slate-400">
-                  ${test.subtitle}
-                </span>
-              </div>
-            </div>
-
-            <!-- Controls: Switch Test & Headphone Test -->
-            <div class="flex items-center gap-2">
-              <select id="listeningTestSelector" onchange="switchListeningTest(this.value)" class="px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-blue-200 dark:border-blue-700 text-xs text-iot-primary dark:text-blue-300 font-mono font-bold focus:outline-none shadow-xs">
-                <option value="cam19-t1" ${currentListeningTestId === 'cam19-t1' ? 'selected' : ''}>Cambridge 19 - Test 1 (Hinchingbrooke)</option>
-                <option value="cam18-t1" ${currentListeningTestId === 'cam18-t1' ? 'selected' : ''}>Cambridge 18 - Test 1 (Sadie Jones Bus)</option>
-                <option value="cam19-t2" ${currentListeningTestId === 'cam19-t2' ? 'selected' : ''}>Cambridge 19 - Test 2 (Thư viện)</option>
-                <option value="cam18-t2" ${currentListeningTestId === 'cam18-t2' ? 'selected' : ''}>Cambridge 18 - Test 2 (Sinh học biển)</option>
-              </select>
-
-              <button onclick="testHeadphoneSound()" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-blue-200 dark:border-blue-700 text-xs text-iot-primary dark:text-blue-300 font-medium hover:bg-blue-100 dark:hover:bg-slate-700 transition-all flex items-center gap-1.5 shadow-sm active:scale-95" title="Bấm để phát chuông thử âm thanh tai nghe chuẩn CD-IELTS">
-                <i data-lucide="headphones" class="w-3.5 h-3.5 text-iot-orange"></i>
-                <span class="hidden sm:inline">Test tai nghe</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Main Player Interface -->
-          <div class="p-4 bg-white dark:bg-[#071326] rounded-xl border border-blue-100 dark:border-blue-900/60 shadow-inner space-y-3">
-            
-            <div class="flex flex-wrap items-center gap-4">
-              <!-- Big Play / Pause Button -->
-              <button id="btnAudioToggle" onclick="toggleListeningAudio()" class="w-12 h-12 rounded-full bg-iot-primary hover:bg-iot-primaryHover text-white flex items-center justify-center font-bold shadow-md transition-all active:scale-95 shrink-0" title="Phát / Dừng băng ghi âm thật">
-                <i id="audioPlayIcon" data-lucide="play" class="w-5 h-5 ml-0.5"></i>
-              </button>
-
-              <!-- Rewind 10s -->
-              <button onclick="seekAudioRelative(-10)" class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-iot-dark dark:text-white transition-all active:scale-90" title="Lùi lại 10 giây">
-                <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-              </button>
-
-              <!-- Forward 10s -->
-              <button onclick="seekAudioRelative(10)" class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-iot-dark dark:text-white transition-all active:scale-90" title="Tua tới 10 giây">
-                <i data-lucide="rotate-cw" class="w-4 h-4"></i>
-              </button>
-
-              <!-- Scrubber Bar -->
-              <div class="flex-1 min-w-[180px]">
-                <div class="flex justify-between text-[11px] font-mono text-iot-muted dark:text-slate-400 mb-1">
-                  <span id="audioCurrentTime">00:00</span>
-                  <span class="text-iot-primary dark:text-blue-400 font-bold" id="audioTrackStatus">Sẵn sàng phát (Giọng người bản xứ chuẩn Cambridge)</span>
-                  <span id="audioTotalDuration">05:15</span>
-                </div>
-                <div class="relative w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-full cursor-pointer overflow-hidden" onclick="handleScrubClick(event)" id="audioProgressBarContainer">
-                  <div id="audioProgressBar" class="h-full bg-iot-primary transition-all duration-150 w-0 relative">
-                    <div class="absolute right-0 top-0 bottom-0 w-2 bg-amber-400"></div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Speed Controller Buttons -->
-              <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
-                <button onclick="setPlaybackSpeed(0.8)" id="speedBtn-08" class="speed-btn px-2 py-1 rounded text-[11px] font-mono text-slate-600 dark:text-slate-400 hover:text-white">0.8x</button>
-                <button onclick="setPlaybackSpeed(1.0)" id="speedBtn-10" class="speed-btn px-2 py-1 rounded text-[11px] font-mono font-bold bg-iot-primary text-white shadow-sm">1.0x</button>
-                <button onclick="setPlaybackSpeed(1.2)" id="speedBtn-12" class="speed-btn px-2 py-1 rounded text-[11px] font-mono text-slate-600 dark:text-slate-400 hover:text-white">1.2x</button>
-              </div>
-
-              <!-- Volume Control -->
-              <div class="hidden sm:flex items-center gap-2 text-iot-muted dark:text-slate-400">
-                <button onclick="toggleAudioMute()" id="btnMuteAudio" class="p-1 hover:text-iot-primary">
-                  <i id="volumeIcon" data-lucide="volume-2" class="w-4 h-4"></i>
-                </button>
-                <input type="range" id="audioVolumeSlider" min="0" max="1" step="0.05" value="0.9" oninput="changeAudioVolume(this.value)" class="w-16 h-1.5 bg-slate-200 rounded-lg accent-iot-primary cursor-pointer" />
-              </div>
-
-            </div>
-
-            <!-- CD-IELTS Standard Exam Mode Notice (No Transcript During Exam) -->
-            <div class="p-2.5 rounded-lg bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200/40 dark:border-blue-900/40 text-xs flex items-center justify-between text-iot-muted dark:text-slate-400">
-              <div class="flex items-center gap-2">
-                <i data-lucide="shield-check" class="w-4 h-4 text-iot-green shrink-0"></i>
-                <span class="text-[11px] font-mono">Quy chế thi CD-IELTS: Lời thoại (Script) được ẩn để đánh giá trung thực 100% năng lực nghe bản xứ.</span>
-              </div>
-              <span class="text-[10px] font-mono bg-blue-100 dark:bg-blue-900/60 text-iot-primary dark:text-blue-300 px-2 py-0.5 rounded font-bold shrink-0">EXAM MODE</span>
-            </div>
-
-          </div>
-
-        </div>
-
-        <!-- EXAM QUESTIONS SECTION -->
-        <div class="space-y-6">
-          
-          <!-- Instructions Bar -->
-          <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-iot-border dark:border-slate-800 flex items-center justify-between">
-            <div>
-              <h2 class="font-bold text-sm text-iot-dark dark:text-white uppercase tracking-wide">
-                ${test.instructions}
-              </h2>
-              <p class="text-xs text-iot-muted dark:text-slate-400">
-                Lắng nghe kỹ đoạn hội thoại và điền từ khóa hoặc số chính xác vào mỗi ô bên dưới.
-              </p>
-            </div>
-            <span class="text-xs font-mono bg-blue-100 text-iot-primary dark:bg-blue-900/60 dark:text-blue-300 px-2.5 py-1 rounded font-bold shrink-0">
-              ${test.questions.length} Questions • Note Completion
-            </span>
-          </div>
-
-          <!-- Notes Paper Form -->
-          <div class="p-6 bg-white dark:bg-slate-900/90 rounded-2xl border border-iot-border dark:border-slate-800 shadow-sm space-y-4">
-            <h3 class="font-bold text-base text-iot-dark dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">
-              ${test.formTitle}
-            </h3>
-
-            <div class="grid grid-cols-1 gap-3.5 text-xs sm:text-sm">
-              ${test.questions.map(q => `
-                <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg flex flex-wrap items-center justify-between gap-2 border border-slate-100 dark:border-slate-800">
-                  <span class="font-semibold text-iot-dark dark:text-slate-200">
-                    ${q.num}. ${q.label}
-                  </span>
-                  <div class="flex items-center gap-2">
-                    ${q.prefix ? `<span class="font-bold text-iot-dark dark:text-white">${q.prefix}</span>` : ''}
-                    <input type="text" id="q${q.num}" placeholder="${q.placeholder}" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-900 text-xs w-48 font-mono focus:border-iot-primary focus:outline-none transition-colors" />
-                    ${q.suffix ? `<span class="text-[11px] text-iot-muted">${q.suffix}</span>` : ''}
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-
-          <!-- Section Submission Bar -->
-          <div class="p-4 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-iot-border dark:border-slate-700 flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <span class="font-bold text-xs text-iot-dark dark:text-white flex items-center gap-1.5">
-                <i data-lucide="check-circle" class="w-4 h-4 text-iot-green"></i>
-                <span>Hoàn thành Section: ${test.questions.length} Câu hỏi</span>
-              </span>
-              <p class="text-[11px] text-iot-muted dark:text-slate-400">
-                Socratic AI sẽ đối chiếu câu trả lời với Answer Key gốc Cambridge và phân tích bẫy nghe.
-              </p>
-            </div>
-            <button onclick="checkListeningAnswers()" class="px-5 py-2.5 rounded-lg bg-iot-green hover:bg-green-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 active:scale-95">
-              <i data-lucide="activity" class="w-3.5 h-3.5"></i>
-              <span>Nộp Bài Nghe (Chấm Điểm &amp; Phân Tích Bẫy)</span>
-            </button>
-          </div>
-
-        </div>
-      `;
-
-      setupAudioEventListeners();
-      if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
-    }
-
-    function switchListeningTest(testId) {
-      if (!LISTENING_TESTS[testId]) return;
-      currentListeningTestId = testId;
-      const test = LISTENING_TESTS[testId];
-
-      const audio = document.getElementById('realListeningAudio');
-      if (audio) {
-        audio.pause();
-        audio.currentTime = 0;
-      }
-
-      const url = new URL(window.location);
-      url.searchParams.set('id', testId);
-      url.searchParams.set('title', test.title);
-      window.history.replaceState({}, '', url);
-
-      document.getElementById('activeExamTitle').innerText = test.title;
-      renderListeningTestEnvironment(testId);
-    }
-
-    function setupAudioEventListeners() {
-      const audio = document.getElementById('realListeningAudio');
-      if (!audio) return;
-
-      audio.onloadedmetadata = () => {
-        const totalDurationEl = document.getElementById('audioTotalDuration');
-        if (totalDurationEl && !isNaN(audio.duration)) {
-          totalDurationEl.innerText = formatAudioTime(audio.duration);
-        }
-      };
-
-      audio.onplay = () => {
-        updateAudioButtonUI(true);
-        const statusEl = document.getElementById('audioTrackStatus');
-        const pingEl = document.getElementById('audioPingIndicator');
-        if (statusEl) statusEl.innerText = "Đang phát băng ghi âm Cambridge bản xứ (Native Human Audio)...";
-        if (pingEl) pingEl.className = "w-3 h-3 rounded-full bg-iot-green animate-ping";
-      };
-
-      audio.onpause = () => {
-        updateAudioButtonUI(false);
-        const statusEl = document.getElementById('audioTrackStatus');
-        const pingEl = document.getElementById('audioPingIndicator');
-        if (statusEl) statusEl.innerText = "Tạm dừng";
-        if (pingEl) pingEl.className = "w-3 h-3 rounded-full bg-amber-400";
-      };
-
-      audio.onended = () => {
-        updateAudioButtonUI(false);
-        const statusEl = document.getElementById('audioTrackStatus');
-        const pingEl = document.getElementById('audioPingIndicator');
-        if (statusEl) statusEl.innerText = "Đã hoàn thành đoạn ghi âm";
-        if (pingEl) pingEl.className = "w-3 h-3 rounded-full bg-slate-400";
-      };
-
-      audio.ontimeupdate = () => {
-        const currentEl = document.getElementById('audioCurrentTime');
-        const progBar = document.getElementById('audioProgressBar');
-        if (currentEl) currentEl.innerText = formatAudioTime(audio.currentTime);
-        if (progBar && audio.duration) {
-          const pct = (audio.currentTime / audio.duration) * 100;
-          progBar.style.width = pct + '%';
-        }
-      };
-    }
-
-    function toggleListeningAudio() {
-      const audio = document.getElementById('realListeningAudio');
-      if (!audio) return;
-      if (audio.paused) {
-        audio.play().catch(e => {
-          console.warn("Audio play prevented:", e);
-          const statusEl = document.getElementById('audioTrackStatus');
-          if (statusEl) statusEl.innerText = "Vui lòng bấm lại nút Phát để bắt đầu.";
-        });
-      } else {
-        audio.pause();
-      }
-    }
-
-    function seekAudioRelative(seconds) {
-      const audio = document.getElementById('realListeningAudio');
-      if (!audio) return;
-      audio.currentTime = Math.max(0, Math.min(audio.duration || 9999, audio.currentTime + seconds));
-    }
-
-    function handleScrubClick(e) {
-      const audio = document.getElementById('realListeningAudio');
-      const container = document.getElementById('audioProgressBarContainer');
-      if (!audio || !container || !audio.duration) return;
-
-      const rect = container.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const fraction = Math.max(0, Math.min(1, clickX / rect.width));
-      audio.currentTime = fraction * audio.duration;
-    }
-
-    function setPlaybackSpeed(rate) {
-      const audio = document.getElementById('realListeningAudio');
-      if (audio) {
-        audio.playbackRate = rate;
-      }
-      ['08', '10', '12'].forEach(id => {
-        const btn = document.getElementById('speedBtn-' + id);
-        if (btn) {
-          btn.className = "speed-btn px-2 py-1 rounded text-[11px] font-mono text-slate-600 dark:text-slate-400 hover:text-white";
-        }
-      });
-      const activeId = rate === 0.8 ? '08' : (rate === 1.2 ? '12' : '10');
-      const activeBtn = document.getElementById('speedBtn-' + activeId);
-      if (activeBtn) {
-        activeBtn.className = "speed-btn px-2 py-1 rounded text-[11px] font-mono font-bold bg-iot-primary text-white shadow-sm";
-      }
-    }
-
-    function toggleAudioMute() {
-      const audio = document.getElementById('realListeningAudio');
-      if (!audio) return;
-      audio.muted = !audio.muted;
-      const icon = document.getElementById('volumeIcon');
-      if (icon) {
-        icon.setAttribute('data-lucide', audio.muted ? 'volume-x' : 'volume-2');
-        if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
-      }
-    }
-
-    function changeAudioVolume(val) {
-      const audio = document.getElementById('realListeningAudio');
-      if (!audio) return;
-      audio.volume = parseFloat(val);
-      audio.muted = audio.volume === 0;
-      const icon = document.getElementById('volumeIcon');
-      if (icon) {
-        icon.setAttribute('data-lucide', audio.muted ? 'volume-x' : 'volume-2');
-        if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
-      }
-    }
-
-    function formatAudioTime(seconds) {
-      if (isNaN(seconds)) return "00:00";
-      const mins = Math.floor(seconds / 60);
-      const secs = Math.floor(seconds % 60);
-      return (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
-    }
-
-    function updateAudioButtonUI(isPlaying) {
-      const icon = document.getElementById('audioPlayIcon');
-      if (!icon) return;
-      icon.setAttribute('data-lucide', isPlaying ? 'pause' : 'play');
-      if (!isPlaying) icon.classList.add('ml-0.5');
-      else icon.classList.remove('ml-0.5');
-      if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
-    }
-
-    function testHeadphoneSound() {
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) {
-          alert("Trình duyệt hỗ trợ âm thanh Web Audio.");
-          return;
-        }
-        const ctx = new AudioCtx();
-        const now = ctx.currentTime;
-        // Official Cambridge CD-IELTS stereo calibration bell
-        const freqs = [880, 1320]; // A5, E6
-        freqs.forEach((f, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(f, now + idx * 0.22);
-          gain.gain.setValueAtTime(0.001, now + idx * 0.22);
-          gain.gain.exponentialRampToValueAtTime(0.25, now + idx * 0.22 + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.22 + 0.45);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now + idx * 0.22);
-          osc.stop(now + idx * 0.22 + 0.5);
-        });
-        if (window.socraticAI && window.socraticAI.showLearningToast) {
-          window.socraticAI.showLearningToast("🎧 Tai nghe đã được cân bằng chuẩn phòng thi CD-IELTS.");
-        }
-      } catch (e) {
-        console.warn("Audio test error:", e);
-      }
-    }
-
-    function checkListeningAnswers() {
-      const test = LISTENING_TESTS[currentListeningTestId];
-      if (!test) return;
-
-      let score = 0;
-      const mistakes = [];
-
-      test.questions.forEach(q => {
-        const inputEl = document.getElementById('q' + q.num);
-        const userAns = inputEl ? inputEl.value.trim() : '';
-        const cleanUser = userAns.toLowerCase().replace(/[.,!?;:()]/g, '').trim();
-
-        const isCorrect = q.expected.some(exp => {
-          const cleanExp = exp.toLowerCase().replace(/[.,!?;:()]/g, '').trim();
-          return cleanUser === cleanExp || cleanUser.includes(cleanExp);
-        });
-
-        if (isCorrect && cleanUser.length > 0) {
-          score++;
-          if (inputEl) {
-            inputEl.classList.remove('border-red-500', 'bg-red-50');
-            inputEl.classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-950/40');
-          }
-        } else {
-          mistakes.push({
-            qNum: q.num,
-            userAns: userAns || "Chưa điền",
-            correctAns: q.display,
-            trap: q.trap
-          });
-          if (inputEl) {
-            inputEl.classList.remove('border-green-500', 'bg-green-50');
-            inputEl.classList.add('border-red-500', 'bg-red-50', 'dark:bg-red-950/40');
-          }
-        }
-      });
-
-      let estBand = 'Band 5.0';
-      if (score >= 9) estBand = 'Band 8.5 - 9.0';
-      else if (score >= 8) estBand = 'Band 8.0';
-      else if (score >= 7) estBand = 'Band 7.5';
-      else if (score >= 6) estBand = 'Band 7.0';
-      else if (score >= 4) estBand = 'Band 6.0';
-
-      const studentName = window.socraticAI ? window.socraticAI.profile.name : 'Bạn';
-
-      // Record into Socratic AI Profile
-      if (window.socraticAI) {
-        window.socraticAI.recordTestResult({
-          testId: test.id,
-          title: test.title,
-          skill: 'LISTENING',
-          score: score,
-          total: test.questions.length,
-          mistakes: mistakes.map(m => ({
-            qNum: m.qNum,
-            userAns: m.userAns,
-            correctAns: m.correctAns,
-            category: 'distractor_resistance',
-            fallacy: m.trap
-          }))
-        });
-      }
-
-      alert(`KẾT QUẢ LISTENING CỦA ${studentName.toUpperCase()}:\n\nĐạt: ${score}/${test.questions.length} câu chính xác (${estBand})!\n\n🧠 Băng ghi âm thật chuẩn Cambridge đã giúp kiểm tra chính xác khả năng nghe bản xứ.`);
-
-      // Render Socratic Report in Chat Box
-      const chatContainer = document.getElementById('aiChatBox');
-      if (chatContainer) {
-        let wrongSummaryHtml = '';
-        if (mistakes.length === 0) {
-          wrongSummaryHtml = `<p class="text-iot-green font-bold">🎉 Xuất sắc ${studentName}! Bạn đạt điểm tuyệt đối ${score}/${test.questions.length}, vượt qua toàn bộ bẫy âm thanh bản xứ.</p>`;
-        } else {
-          wrongSummaryHtml = `
-            <div class="space-y-1.5 text-[11px]">
-              <span class="font-bold text-red-600 dark:text-red-400">Các bẫy âm thanh Cambridge cần lưu ý:</span>
-              <ul class="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-300 font-mono">
-                ${mistakes.map(m => `<li><strong>Câu ${m.qNum}:</strong> Bạn điền <em>"${m.userAns}"</em> ➔ Đáp án gốc: <strong>"${m.correctAns}"</strong><br/><span class="text-iot-muted pl-3">→ ${m.trap}</span></li>`).join('')}
-              </ul>
-            </div>
-          `;
-        }
-
-        chatContainer.innerHTML += `
-          <div class="p-3.5 rounded-xl bg-blue-50 dark:bg-[#112444] border border-blue-300 dark:border-blue-800 shadow-sm text-xs space-y-3">
-            <div class="flex items-center justify-between font-mono font-bold text-iot-primary dark:text-blue-300">
-              <span>BÁO CÁO KẾT QUẢ: ${test.title.toUpperCase()}</span>
-              <span class="bg-iot-green text-white px-2 py-0.5 rounded text-[10px]">${score}/${test.questions.length} (${estBand})</span>
-            </div>
-            ${wrongSummaryHtml}
-            <div class="p-2.5 rounded bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-800/80 text-[11px] leading-relaxed text-iot-dark dark:text-slate-200">
-              💡 <strong>Phân Tích Socratic:</strong> Trong các bài nghe chuẩn Cambridge, người bản xứ thường dùng kỹ thuật "Distractor Correction" (nêu thông tin ban đầu rồi sửa lại) hoặc thay đổi đơn vị đo lường (như acres ➔ hectares). Hãy giữ bình tĩnh nghe trọn ý của câu.
-            </div>
-            <button onclick="window.socraticAI.openCognitiveProfileModal()" class="w-full py-2 rounded-lg bg-iot-primary hover:bg-iot-primaryHover text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm">
-              <i data-lucide="brain" class="w-3.5 h-3.5 text-amber-300"></i>
-              <span>Xem Bảng Phân Tích Nhận Thức AI Chi Tiết</span>
-            </button>
-          </div>
-        `;
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-        if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
-      }
-    }
-
-    // Get URL Parameters (e.g. ?id=wri-cam19-t1&skill=WRITING)
+    // Get URL Parameters (e.g. ?id=wri-cam19-t1&skill=READING)
     const urlParams = new URLSearchParams(window.location.search);
-    const skillParam = urlParams.get('skill') || 'WRITING';
-    const titleParam = urlParams.get('title') || 'Cambridge 19 - Test 1';
+    const rawSkill = (urlParams.get('skill') || '').trim().toUpperCase();
+    const rawTitle = urlParams.get('title') || '';
 
-    document.getElementById('activeSkillBadge').innerText = skillParam;
-    document.getElementById('activeExamTitle').innerText = titleParam;
+    let skillParam = rawSkill;
+    if (!skillParam) {
+      if (rawTitle.toLowerCase().includes('reading')) skillParam = 'READING';
+      else if (rawTitle.toLowerCase().includes('listening')) skillParam = 'LISTENING';
+      else if (rawTitle.toLowerCase().includes('speaking')) skillParam = 'SPEAKING';
+      else if (rawTitle.toLowerCase().includes('writing')) skillParam = 'WRITING';
+      else skillParam = 'READING'; // Default to READING
+    }
+    window.activeExamSkill = skillParam;
+
+    const defaultTitle = skillParam === 'READING'
+      ? 'Cambridge 19 - Test 1: Academic Reading (Passages 1–3)'
+      : (skillParam === 'LISTENING' ? 'Cambridge 19 - Test 1: Listening (Sections 1–4)' : (skillParam === 'SPEAKING' ? 'Cambridge 19 - Test 1: Speaking Interview' : 'Cambridge 19 - Test 1: Academic Writing (Tasks 1 & 2)'));
+    const titleParam = rawTitle || defaultTitle;
+
+    const skillBadge = document.getElementById('activeSkillBadge');
+    if (skillBadge) {
+      skillBadge.innerText = skillParam;
+      if (skillParam === 'READING') {
+        skillBadge.className = 'bg-emerald-600 text-white text-xs font-bold px-2 py-0.5 rounded font-mono uppercase';
+      } else if (skillParam === 'LISTENING') {
+        skillBadge.className = 'bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded font-mono uppercase';
+      } else if (skillParam === 'SPEAKING') {
+        skillBadge.className = 'bg-purple-600 text-white text-xs font-bold px-2 py-0.5 rounded font-mono uppercase';
+      } else {
+        skillBadge.className = 'bg-iot-orange text-white text-xs font-bold px-2 py-0.5 rounded font-mono uppercase';
+      }
+    }
+    const examTitleEl = document.getElementById('activeExamTitle');
+    if (examTitleEl) examTitleEl.innerText = titleParam;
+
+    let examCountdownRemaining = 0;
+    let examCountdownInterval = null;
+
+    function initExamRoomCountdownTimer(skill) {
+      if (examCountdownInterval) clearInterval(examCountdownInterval);
+
+      if (skill === 'LISTENING') {
+        // Default 30 minutes for IELTS Listening
+        examCountdownRemaining = 30 * 60;
+      } else if (skill === 'READING') {
+        examCountdownRemaining = 60 * 60;
+      } else if (skill === 'WRITING') {
+        examCountdownRemaining = 60 * 60;
+      } else if (skill === 'SPEAKING') {
+        examCountdownRemaining = 14 * 60;
+      } else {
+        examCountdownRemaining = 40 * 60;
+      }
+
+      updateRoomTimerDisplay();
+
+      examCountdownInterval = setInterval(() => {
+        // If listening audio is active, audio.ontimeupdate handles the exact sync
+        const audio = document.getElementById('realListeningAudio');
+        if (skill === 'LISTENING' && audio && !audio.paused && audio.duration) {
+          return; // synced in ontimeupdate
+        }
+
+        if (examCountdownRemaining > 0) {
+          examCountdownRemaining--;
+          updateRoomTimerDisplay();
+
+          if (examCountdownRemaining === 0) {
+            clearInterval(examCountdownInterval);
+            if (typeof submitExam === 'function') submitExam();
+          }
+        }
+      }, 1000);
+    }
+
+    function updateRoomTimerDisplay() {
+      const timerEl = document.getElementById('roomTimer');
+      if (!timerEl) return;
+      const mins = Math.floor(examCountdownRemaining / 60);
+      const secs = examCountdownRemaining % 60;
+      timerEl.innerText = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+
+      if (examCountdownRemaining <= 300 && examCountdownRemaining > 60) {
+        timerEl.className = 'font-bold text-amber-400 animate-pulse';
+      } else if (examCountdownRemaining <= 60 && examCountdownRemaining > 0) {
+        timerEl.className = 'font-black text-red-400 animate-ping';
+      } else {
+        timerEl.className = 'font-bold text-white';
+      }
+    }
+
+    initExamRoomCountdownTimer(skillParam);
 
     // Render Test Viewport based on Skill
     const viewport = document.getElementById('testViewport');
     const chatBox = document.getElementById('aiChatBox');
 
     if (skillParam === 'LISTENING') {
-      const targetId = urlParams.get('id') || (titleParam.includes('18') ? 'cam18-t1' : 'cam19-t1');
+      const rawId = urlParams.get('id') || '';
+      let targetId = rawId;
+      if (!targetId) {
+        if (titleParam.includes('18 - Test 2') || titleParam.includes('18-t2')) targetId = 'cam18-t2';
+        else if (titleParam.includes('18')) targetId = 'cam18-t1';
+        else if (titleParam.includes('19 - Test 2') || titleParam.includes('19-t2')) targetId = 'cam19-t2';
+        else if (titleParam.includes('19 - Test 3') || titleParam.includes('19-t3')) targetId = 'cam19-t3';
+        else if (titleParam.includes('19 - Test 4') || titleParam.includes('19-t4')) targetId = 'cam19-t4';
+        else if (titleParam.includes('vol4') || titleParam.includes('Syntax') || titleParam.includes('Neuro')) targetId = 'actual-vol4';
+        else if (titleParam.includes('vol5') || titleParam.includes('Bias')) targetId = 'actual-vol5';
+        else targetId = 'cam19-t1';
+      }
       renderListeningTestEnvironment(targetId);
 
-      const studentName = window.socraticAI ? window.socraticAI.profile.name : 'Bạn';
-      const studentTarget = window.socraticAI ? window.socraticAI.profile.targetBand : '8.0';
+      const studentName = window.socraticAI && window.socraticAI.profile ? window.socraticAI.profile.name : 'Bạn';
+      const studentTarget = window.socraticAI && window.socraticAI.profile ? window.socraticAI.profile.targetBand : '8.0';
 
       chatBox.innerHTML = `
         <div class="p-3.5 rounded-xl bg-white dark:bg-[#111C44] border border-iot-border dark:border-slate-700 shadow-sm text-xs space-y-2">
@@ -893,13 +346,13 @@
             <span>Socratic Listening Mentor:</span>
           </div>
           <p class="leading-relaxed">
-            Chào <strong>${studentName}</strong> (Mục tiêu Band <strong>${studentTarget}</strong>)! Bạn đang nghe <strong>băng ghi âm gốc Cambridge bản xứ</strong> (Native Human Audio).
+            Chào <strong>${studentName}</strong> (Mục tiêu Band <strong>${studentTarget}</strong>)! Bạn đang làm bài thi <strong>IELTS Listening toàn diện 4 Parts (40 câu hỏi)</strong> với <strong>băng ghi âm gốc Cambridge người bản xứ phát liên tục ~30 phút</strong>.
           </p>
           <p class="leading-relaxed text-[11px] text-iot-muted dark:text-slate-400">
-            Hệ thống đã loại bỏ hoàn toàn giọng đọc AI nhân tạo. Bạn đang trải nghiệm tốc độ nói, ngữ điệu và bẫy phát âm chuẩn 100% như trong phòng thi thật.
+            Mô phỏng 100% chuẩn thi máy tính CD-IELTS: âm thanh 30 phút chạy liên tục xuyên suốt (không bị gián đoạn hay ngắt tiếng khi bạn chuyển Tab qua lại giữa các Part), thanh timeline đầy đủ các mốc Part 1–4, bảng theo dõi 40 câu thời gian thực và tự động chấm điểm chuyển đổi IELTS Band.
           </p>
           <div class="p-2.5 rounded-lg bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-900 text-[11px] leading-relaxed">
-            💡 <strong>Quy tắc thi thật:</strong> Bạn có thời gian đọc đề trước khi nghe. Hãy dùng nút <strong>"Test tai nghe"</strong> bên trên để kiểm tra âm lượng trước khi bấm Phát.
+            💡 <strong>Quy chế thi CD-IELTS:</strong> Âm thanh phát liền mạch từ đầu đến cuối bài thi (~30 phút). Bấm nút <strong>"Test tai nghe"</strong> bên trên để chuẩn hóa âm lượng trước khi bấm Phát.
           </div>
         </div>
       `;
@@ -908,461 +361,37 @@
         if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
       }, 50);
     } else if (skillParam === 'READING') {
-      viewport.innerHTML = `
-        <div class="flex flex-col h-full space-y-4">
-          
-          <!-- TOP READING TOOLBAR -->
-          <div class="p-3.5 bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50 dark:from-[#081b2e] dark:to-[#0f2d4a] rounded-xl border border-emerald-200 dark:border-emerald-900/60 shadow-sm flex flex-wrap items-center justify-between gap-3 shrink-0">
-            <div class="flex items-center gap-2.5">
-              <span class="px-2 py-0.5 rounded bg-emerald-600 text-white text-[11px] font-bold font-mono uppercase tracking-wider">
-                PASSAGE 3 (ACADEMIC)
-              </span>
-              <div>
-                <h2 class="text-xs sm:text-sm font-bold text-iot-dark dark:text-white leading-tight">
-                  Linguistic Relativity, Cognitive Architecture, and the Limits of Thought
-                </h2>
-                <span class="text-[11px] text-iot-muted dark:text-slate-400 font-mono">Độ khó: Band 8.0 - 9.0 • Độ dài: 860 từ • Thời gian khuyến nghị: 20 phút</span>
-              </div>
-            </div>
+      // Authentic Cambridge 3-Passage Academic Reading Engine (40 Questions, 60 Minutes)
+      renderReadingTestEnvironment();
 
-            <!-- Reading Tools (Highlighter, Font Size, Reset) -->
-            <div class="flex items-center gap-2">
-              <div class="flex items-center bg-white dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm text-xs">
-                <span class="text-[10px] text-iot-muted px-1.5 font-mono">Cỡ chữ:</span>
-                <button onclick="changeReadingFontSize(-1)" class="px-2 py-0.5 rounded hover:bg-slate-100 dark:hover:bg-slate-700 font-bold" title="Giảm cỡ chữ">A-</button>
-                <button onclick="changeReadingFontSize(1)" class="px-2 py-0.5 rounded hover:bg-slate-100 dark:hover:bg-slate-700 font-bold" title="Tăng cỡ chữ">A+</button>
-              </div>
-
-              <div class="flex items-center bg-white dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm text-xs">
-                <span class="text-[10px] text-iot-muted px-1.5 font-mono">Bút highlight:</span>
-                <button onclick="highlightSelection('yellow')" class="px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 text-amber-900 font-bold text-[11px] mr-1" title="Bôi màu vàng">Vàng</button>
-                <button onclick="highlightSelection('cyan')" class="px-2 py-0.5 rounded bg-cyan-200 hover:bg-cyan-300 text-cyan-900 font-bold text-[11px] mr-1" title="Bôi màu xanh">Xanh</button>
-                <button onclick="clearReadingHighlights()" class="px-1.5 py-0.5 rounded hover:bg-slate-100 dark:hover:bg-slate-700 text-red-500" title="Xóa toàn bộ highlight"><i data-lucide="eraser" class="w-3.5 h-3.5"></i></button>
-              </div>
-            </div>
-          </div>
-
-          <!-- SPLIT-SCREEN READING WORKSPACE: LEFT PASSAGE (50%) & RIGHT QUESTIONS (50%) -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 flex-1 min-h-[580px] overflow-hidden">
-            
-            <!-- LEFT 50%: PASSAGE VIEWER WITH INDEPENDENT SCROLL -->
-            <div id="readingPassageContainer" class="p-6 bg-white dark:bg-[#071326] rounded-2xl border border-iot-border dark:border-slate-800 shadow-sm overflow-y-auto max-h-[calc(100vh-250px)] space-y-4 leading-relaxed font-sans text-sm text-iot-dark dark:text-slate-200 select-text">
-              
-              <div class="border-b border-slate-100 dark:border-slate-800 pb-3">
-                <span class="text-xs font-mono font-bold text-iot-primary dark:text-blue-400 uppercase">READING PASSAGE 3</span>
-                <h3 class="text-lg font-bold text-iot-dark dark:text-white mt-1">
-                  Linguistic Relativity, Cognitive Architecture, and the Limits of Thought
-                </h3>
-                <p class="text-xs text-iot-muted italic mt-0.5">
-                  An academic inquiry into the formal syntax of natural languages, generative universal grammar, and the philosophical boundaries of human consciousness.
-                </p>
-              </div>
-
-              <!-- Paragraph A -->
-              <div id="para-A" class="space-y-1.5 pt-1">
-                <span class="font-bold font-mono text-iot-primary dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded text-xs">[Paragraph A]</span>
-                <p class="passage-text">
-                  For over two centuries, philosophers of mind and anthropological linguists have grappled with the intimate entanglement between formal language and human consciousness. In its most unyielding formulation—known colloquially as the strong Sapir-Whorf hypothesis or <em>radical linguistic determinism</em>—the theory posits that human cognitive architecture is inexorably constrained by the formal syntax and lexical taxonomy of one's native tongue. Propounded in the early twentieth century by Edward Sapir and his protégé Benjamin Lee Whorf, this perspective suggested that individuals do not merely experience an objective external reality and subsequently describe it with vocal symbols; rather, the grammar of their specific linguistic heritage acts as a perceptual prism, carving the continuous flux of phenomenological sensations into predetermined conceptual categories. In Whorf's own stark formulation, an individual whose language lacks temporal inflectional morphology does not simply describe time differently—they inhabit an entirely disparate metaphysical temporal landscape.
-                </p>
-              </div>
-
-              <!-- Paragraph B -->
-              <div id="para-B" class="space-y-1.5 pt-2">
-                <span class="font-bold font-mono text-iot-primary dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded text-xs">[Paragraph B]</span>
-                <p class="passage-text">
-                  By the mid-twentieth century, however, this radical determinist paradigm encountered severe empirical resistance. Cognitive psychologists and cross-cultural anthropologists began subjecting the hypothesis to rigorous experimental falsification. A landmark refutation emerged from the seminal color perception experiments conducted by Eleanor Rosch among the Dani, an indigenous community inhabiting the highlands of Papua New Guinea. The Dani lexicon contains precisely two fundamental color terms: <em>mili</em> (encompassing dark and cool hues such as blue, green, and black) and <em>mola</em> (denoting light and warm colors including red, yellow, and white). According to the strict tenets of linguistic determinism, the Dani should have been perceptually incapable of discriminating between adjacent spectral hues for which they possessed no distinct nominal designations. Yet, empirical testing decisively established that Dani subjects distinguished focal chromatic shades with identical perceptual acuity and neurobiological precision to native English speakers. Language did not constrain sensory discrimination; biological ocular receptors and neural processing pathways operated invariant of linguistic codification.
-                </p>
-              </div>
-
-              <!-- Paragraph C -->
-              <div id="para-C" class="space-y-1.5 pt-2">
-                <span class="font-bold font-mono text-iot-primary dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded text-xs">[Paragraph C]</span>
-                <p class="passage-text">
-                  The theoretical coup de grâce against strong determinism was delivered by Noam Chomsky's cognitive revolution in generative linguistics. Chomsky forcefully argued that human languages, despite their conspicuous surface-level typological variances, share an invariant, biologically endowed computational blueprint known as Universal Grammar (UG). Beneath the phonetic and morphological diversity of the world's seven thousand tongues lies a uniform recursive syntactic operation—formalized in minimalist syntax as <em>Merge</em>—which constructs hierarchically structured expressions from discrete lexical items. From this nativist vantage point, language is not an external arbitrary cultural invention that moulds an empty mind; instead, it is an innate cognitive organ (*the faculty of language*) that matures within the individual according to genetically hardwired structural principles. Thought, therefore, fundamentally precedes speech, rooted in a universal internal conceptual framework (*Mentalese* or the Language of Thought) that exists independently of superficial communicative phonology.
-                </p>
-              </div>
-
-              <!-- Paragraph D -->
-              <div id="para-D" class="space-y-1.5 pt-2">
-                <span class="font-bold font-mono text-iot-primary dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded text-xs">[Paragraph D]</span>
-                <p class="passage-text">
-                  Contemporary neuroimaging technologies—most notably functional Magnetic Resonance Imaging (fMRI) and magnetoencephalography (MEG)—have provided profound physiological corroboration for this pre-linguistic conceptual architecture. Experimental paradigms investigating neurological activation during abstract problem-solving demonstrate that dense semantic computations occur across the bilateral prefrontal and parietal cortices milliseconds prior to the recruitment of Broca's area and Wernicke's area, which govern phonetic linear encoding and syntactic concatenation. Furthermore, clinical investigations of individuals afflicted with severe global aphasia—patients who have suffered catastrophic damage to linguistic processing centers—reveal that these individuals frequently retain intact capacities for deductive syllogistic reasoning, complex spatial navigation, theory of mind attribution, and mathematical calculations. If thought were strictly coterminous with syntactic expression, the dissolution of grammar would inevitably trigger the complete collapse of analytical cognition.
-                </p>
-              </div>
-
-              <!-- Paragraph E -->
-              <div id="para-E" class="space-y-1.5 pt-2">
-                <span class="font-bold font-mono text-iot-primary dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded text-xs">[Paragraph E]</span>
-                <p class="passage-text">
-                  Nevertheless, the decisive burial of radical linguistic determinism did not consign relativity to obsolescence. In recent decades, a sophisticated neo-Whorfian consensus has emerged, championed by cognitive psychologists such as Lera Boroditsky and Dan Slobin. Termed <em>weak linguistic relativity</em> or the "thinking for speaking" paradigm, this modern perspective contends that while language does not erect impassable frontiers around human thought, it subtly and systematically directs habitual cognitive attention. Consider the empirical investigations into spatial orientation among the Australian Aboriginal community of Pormpuraaw, who speak Kuuk Thaayorre. Unlike Indo-European languages that employ egocentric spatial coordinates (<em>"to my left"</em>, <em>"behind you"</em>), Kuuk Thaayorre utilizes absolute geocentric cardinal directions (<em>"north"</em>, <em>"south-west"</em>). Consequently, speakers of Kuuk Thaayorre maintain an astonishing, almost subterranean dead-reckoning ability, continually tracking cardinal orientation in unfamiliar subterranean environments with an automaticity foreign to egocentric speakers. Language does not render the concept of absolute space impossible for an English speaker; rather, it renders spatial awareness an obligatory, automated feature of daily cognitive processing for the Australian aboriginal speaker.
-                </p>
-              </div>
-
-              <!-- Paragraph F -->
-              <div id="para-F" class="space-y-1.5 pt-2">
-                <span class="font-bold font-mono text-iot-primary dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded text-xs">[Paragraph F]</span>
-                <p class="passage-text">
-                  This nuanced reconciliation between universal cognitive architecture and linguistic influence finds its most fertile theoretical ground in the <em>Extended Mind thesis</em>, articulated by philosophers Andy Clark and David Chalmers, alongside the historical scaffolding theories of Lev Vygotsky. From this philosophical standpoint, formal language is neither an all-powerful prison nor an irrelevant cosmetic veneer. Instead, language functions as a supreme cognitive artifact—an external epistemic scaffold. Human working memory is notoriously fragile, strictly bounded by neurological bandwidth. Syntactic structures, mathematical notation, and formal semantic distinctions serve as cognitive levers, allowing the finite biological mind to manipulate intricate chains of inference, decontextualize abstract propositions, and stabilize transient mental states. In this sense, mastering advanced academic syntax and formal logical semantics does not alter the underlying biological wetware of the brain; it equips the thinker with a higher-order cognitive prosthesis that elevates inferential power and minimizes logical fallacies.
-                </p>
-              </div>
-
-              <!-- Paragraph G -->
-              <div id="para-G" class="space-y-1.5 pt-2 pb-4">
-                <span class="font-bold font-mono text-iot-primary dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded text-xs">[Paragraph G]</span>
-                <p class="passage-text">
-                  Ultimately, the relationship between thought and language is neither one of tyrannical subjugation nor of complete detachment, but one of dialectic synergy. The human intellect possesses a biologically autonomous foundation of perceptual and inferential faculties that operates prior to lexical acquisition. Yet, when interfaced with the sophisticated apparatus of formal syntactic recursion and philosophical taxonomy, this raw cognitive potential is transfigured. Language does not invent reality from a metaphysical void; rather, it lends discipline to ambiguity, organizes dialectical antitheses into coherent syntheses, and provides the necessary symbolic scaffolding whereby human consciousness can critically examine its own reasoning.
-                </p>
-              </div>
-
-            </div>
-
-            <!-- RIGHT 50%: QUESTION VIEWER (14 FULL IELTS QUESTIONS: 27 TO 40) -->
-            <div id="readingQuestionsContainer" class="p-6 bg-slate-50 dark:bg-[#0c1833] rounded-2xl border border-iot-border dark:border-slate-800 shadow-sm overflow-y-auto max-h-[calc(100vh-250px)] space-y-6">
-              
-              <!-- PART 1: MATCHING HEADINGS (QUESTIONS 27-31) -->
-              <div class="p-5 bg-white dark:bg-[#071326] rounded-xl border border-iot-border dark:border-slate-800 shadow-sm space-y-4" id="section-headings">
-                <div class="border-b border-slate-100 dark:border-slate-800 pb-2.5">
-                  <span class="text-xs font-mono font-bold text-iot-primary dark:text-blue-400 uppercase">SECTION 1 • QUESTIONS 27–31</span>
-                  <h4 class="font-bold text-sm text-iot-dark dark:text-white mt-0.5">Matching Headings</h4>
-                  <p class="text-xs text-iot-muted dark:text-slate-400 mt-1">
-                    Reading Passage 3 has seven paragraphs, <strong>A–G</strong>. Choose the correct heading for paragraphs <strong>B–F</strong> from the list of headings below.
-                  </p>
-                </div>
-
-                <!-- List of Headings Box -->
-                <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 text-xs space-y-2">
-                  <div class="font-bold font-mono text-iot-dark dark:text-white uppercase tracking-wider text-[11px]">List of Headings</div>
-                  <ul class="space-y-1.5 text-slate-700 dark:text-slate-300 font-sans">
-                    <li><strong>i.</strong> Neurological evidence proving that conceptual calculation precedes verbal articulation</li>
-                    <li><strong>ii.</strong> Experimental refutation of the hypothesis that vocabulary dictates sensory perception</li>
-                    <li><strong>iii.</strong> Language as an external epistemic scaffold amplifying finite biological cognition</li>
-                    <li><strong>iv.</strong> An innate, universal computational syntax underlying all surface languages</li>
-                    <li><strong>v.</strong> Automated attention biases: How grammatical features cultivate cognitive habits</li>
-                    <li><strong>vi.</strong> The absolute dominance of cultural environment over biological ocular structures</li>
-                    <li><strong>vii.</strong> Early anthropological assumptions regarding the linguistic imprisonment of reality</li>
-                    <li><strong>viii.</strong> The total eradication of analytical reasoning following neurological damage</li>
-                  </ul>
-                  <div class="pt-1 text-[11px] text-iot-muted font-mono italic">
-                    Example: <strong>Paragraph A</strong> ➔ Heading <strong>vii</strong>
-                  </div>
-                </div>
-
-                <!-- Questions 27 to 31 Inputs -->
-                <div class="space-y-3 text-xs pt-1">
-                  
-                  <div id="question-card-27" class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg flex flex-wrap items-center justify-between gap-2 border border-slate-200 dark:border-slate-700">
-                    <span class="font-semibold text-iot-dark dark:text-slate-200"><strong>27.</strong> Paragraph B</span>
-                    <select id="ans-27" onchange="handleAnswerChange(27, this.value)" class="px-3 py-1.5 rounded border border-slate-300 dark:border-slate-600 dark:bg-slate-900 text-xs font-mono font-bold text-iot-primary focus:outline-none focus:border-iot-primary">
-                      <option value="">Chọn heading...</option>
-                      <option value="i">i</option>
-                      <option value="ii">ii</option>
-                      <option value="iii">iii</option>
-                      <option value="iv">iv</option>
-                      <option value="v">v</option>
-                      <option value="vi">vi</option>
-                      <option value="vii">vii</option>
-                      <option value="viii">viii</option>
-                    </select>
-                  </div>
-
-                  <div id="question-card-28" class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg flex flex-wrap items-center justify-between gap-2 border border-slate-200 dark:border-slate-700">
-                    <span class="font-semibold text-iot-dark dark:text-slate-200"><strong>28.</strong> Paragraph C</span>
-                    <select id="ans-28" onchange="handleAnswerChange(28, this.value)" class="px-3 py-1.5 rounded border border-slate-300 dark:border-slate-600 dark:bg-slate-900 text-xs font-mono font-bold text-iot-primary focus:outline-none focus:border-iot-primary">
-                      <option value="">Chọn heading...</option>
-                      <option value="i">i</option>
-                      <option value="ii">ii</option>
-                      <option value="iii">iii</option>
-                      <option value="iv">iv</option>
-                      <option value="v">v</option>
-                      <option value="vi">vi</option>
-                      <option value="vii">vii</option>
-                      <option value="viii">viii</option>
-                    </select>
-                  </div>
-
-                  <div id="question-card-29" class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg flex flex-wrap items-center justify-between gap-2 border border-slate-200 dark:border-slate-700">
-                    <span class="font-semibold text-iot-dark dark:text-slate-200"><strong>29.</strong> Paragraph D</span>
-                    <select id="ans-29" onchange="handleAnswerChange(29, this.value)" class="px-3 py-1.5 rounded border border-slate-300 dark:border-slate-600 dark:bg-slate-900 text-xs font-mono font-bold text-iot-primary focus:outline-none focus:border-iot-primary">
-                      <option value="">Chọn heading...</option>
-                      <option value="i">i</option>
-                      <option value="ii">ii</option>
-                      <option value="iii">iii</option>
-                      <option value="iv">iv</option>
-                      <option value="v">v</option>
-                      <option value="vi">vi</option>
-                      <option value="vii">vii</option>
-                      <option value="viii">viii</option>
-                    </select>
-                  </div>
-
-                  <div id="question-card-30" class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg flex flex-wrap items-center justify-between gap-2 border border-slate-200 dark:border-slate-700">
-                    <span class="font-semibold text-iot-dark dark:text-slate-200"><strong>30.</strong> Paragraph E</span>
-                    <select id="ans-30" onchange="handleAnswerChange(30, this.value)" class="px-3 py-1.5 rounded border border-slate-300 dark:border-slate-600 dark:bg-slate-900 text-xs font-mono font-bold text-iot-primary focus:outline-none focus:border-iot-primary">
-                      <option value="">Chọn heading...</option>
-                      <option value="i">i</option>
-                      <option value="ii">ii</option>
-                      <option value="iii">iii</option>
-                      <option value="iv">iv</option>
-                      <option value="v">v</option>
-                      <option value="vi">vi</option>
-                      <option value="vii">vii</option>
-                      <option value="viii">viii</option>
-                    </select>
-                  </div>
-
-                  <div id="question-card-31" class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg flex flex-wrap items-center justify-between gap-2 border border-slate-200 dark:border-slate-700">
-                    <span class="font-semibold text-iot-dark dark:text-slate-200"><strong>31.</strong> Paragraph F</span>
-                    <select id="ans-31" onchange="handleAnswerChange(31, this.value)" class="px-3 py-1.5 rounded border border-slate-300 dark:border-slate-600 dark:bg-slate-900 text-xs font-mono font-bold text-iot-primary focus:outline-none focus:border-iot-primary">
-                      <option value="">Chọn heading...</option>
-                      <option value="i">i</option>
-                      <option value="ii">ii</option>
-                      <option value="iii">iii</option>
-                      <option value="iv">iv</option>
-                      <option value="v">v</option>
-                      <option value="vi">vi</option>
-                      <option value="vii">vii</option>
-                      <option value="viii">viii</option>
-                    </select>
-                  </div>
-
-                </div>
-              </div>
-
-              <!-- PART 2: TRUE / FALSE / NOT GIVEN (QUESTIONS 32-35) -->
-              <div class="p-5 bg-white dark:bg-[#071326] rounded-xl border border-iot-border dark:border-slate-800 shadow-sm space-y-4" id="section-tfng">
-                <div class="border-b border-slate-100 dark:border-slate-800 pb-2.5">
-                  <span class="text-xs font-mono font-bold text-iot-primary dark:text-blue-400 uppercase">SECTION 2 • QUESTIONS 32–35</span>
-                  <h4 class="font-bold text-sm text-iot-dark dark:text-white mt-0.5">True / False / Not Given</h4>
-                  <p class="text-xs text-iot-muted dark:text-slate-400 mt-1">
-                    Do the following statements agree with the information given in Reading Passage 3?
-                  </p>
-                </div>
-
-                <div class="space-y-4 text-xs">
-                  
-                  <div id="question-card-32" class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg space-y-2 border border-slate-200 dark:border-slate-700">
-                    <p class="font-semibold text-iot-dark dark:text-slate-200 leading-relaxed">
-                      <strong>32.</strong> Early proponents of radical linguistic determinism claimed that speakers are fundamentally incapable of experiencing concepts absent from their native tongue.
-                    </p>
-                    <div class="flex flex-wrap gap-4 pt-1 font-mono">
-                      <label class="flex items-center gap-1.5 cursor-pointer hover:text-iot-primary"><input type="radio" name="q32" value="TRUE" onchange="handleAnswerChange(32, 'TRUE')" class="accent-iot-primary" /> TRUE</label>
-                      <label class="flex items-center gap-1.5 cursor-pointer hover:text-iot-primary"><input type="radio" name="q32" value="FALSE" onchange="handleAnswerChange(32, 'FALSE')" class="accent-iot-primary" /> FALSE</label>
-                      <label class="flex items-center gap-1.5 cursor-pointer hover:text-iot-primary"><input type="radio" name="q32" value="NOT GIVEN" onchange="handleAnswerChange(32, 'NOT GIVEN')" class="accent-iot-primary" /> NOT GIVEN</label>
-                    </div>
-                  </div>
-
-                  <div id="question-card-33" class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg space-y-2 border border-slate-200 dark:border-slate-700">
-                    <p class="font-semibold text-iot-dark dark:text-slate-200 leading-relaxed">
-                      <strong>33.</strong> The Dani color perception study proved that having only two color terms impaired their neurological ability to differentiate between adjacent chromatic shades.
-                    </p>
-                    <div class="flex flex-wrap gap-4 pt-1 font-mono">
-                      <label class="flex items-center gap-1.5 cursor-pointer hover:text-iot-primary"><input type="radio" name="q33" value="TRUE" onchange="handleAnswerChange(33, 'TRUE')" class="accent-iot-primary" /> TRUE</label>
-                      <label class="flex items-center gap-1.5 cursor-pointer hover:text-iot-primary"><input type="radio" name="q33" value="FALSE" onchange="handleAnswerChange(33, 'FALSE')" class="accent-iot-primary" /> FALSE</label>
-                      <label class="flex items-center gap-1.5 cursor-pointer hover:text-iot-primary"><input type="radio" name="q33" value="NOT GIVEN" onchange="handleAnswerChange(33, 'NOT GIVEN')" class="accent-iot-primary" /> NOT GIVEN</label>
-                    </div>
-                  </div>
-
-                  <div id="question-card-34" class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg space-y-2 border border-slate-200 dark:border-slate-700">
-                    <p class="font-semibold text-iot-dark dark:text-slate-200 leading-relaxed">
-                      <strong>34.</strong> Noam Chomsky conducted physical surgical experiments on human brain tissue to locate the physiological biological boundaries of Universal Grammar.
-                    </p>
-                    <div class="flex flex-wrap gap-4 pt-1 font-mono">
-                      <label class="flex items-center gap-1.5 cursor-pointer hover:text-iot-primary"><input type="radio" name="q34" value="TRUE" onchange="handleAnswerChange(34, 'TRUE')" class="accent-iot-primary" /> TRUE</label>
-                      <label class="flex items-center gap-1.5 cursor-pointer hover:text-iot-primary"><input type="radio" name="q34" value="FALSE" onchange="handleAnswerChange(34, 'FALSE')" class="accent-iot-primary" /> FALSE</label>
-                      <label class="flex items-center gap-1.5 cursor-pointer hover:text-iot-primary"><input type="radio" name="q34" value="NOT GIVEN" onchange="handleAnswerChange(34, 'NOT GIVEN')" class="accent-iot-primary" /> NOT GIVEN</label>
-                    </div>
-                  </div>
-
-                  <div id="question-card-35" class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg space-y-2 border border-slate-200 dark:border-slate-700">
-                    <p class="font-semibold text-iot-dark dark:text-slate-200 leading-relaxed">
-                      <strong>35.</strong> Clinical data from patients suffering from severe global aphasia indicates that the total breakdown of grammar causes an immediate destruction of spatial and mathematical logic.
-                    </p>
-                    <div class="flex flex-wrap gap-4 pt-1 font-mono">
-                      <label class="flex items-center gap-1.5 cursor-pointer hover:text-iot-primary"><input type="radio" name="q35" value="TRUE" onchange="handleAnswerChange(35, 'TRUE')" class="accent-iot-primary" /> TRUE</label>
-                      <label class="flex items-center gap-1.5 cursor-pointer hover:text-iot-primary"><input type="radio" name="q35" value="FALSE" onchange="handleAnswerChange(35, 'FALSE')" class="accent-iot-primary" /> FALSE</label>
-                      <label class="flex items-center gap-1.5 cursor-pointer hover:text-iot-primary"><input type="radio" name="q35" value="NOT GIVEN" onchange="handleAnswerChange(35, 'NOT GIVEN')" class="accent-iot-primary" /> NOT GIVEN</label>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-              <!-- PART 3: SUMMARY COMPLETION WITH BOX (QUESTIONS 36-40) -->
-              <div class="p-5 bg-white dark:bg-[#071326] rounded-xl border border-iot-border dark:border-slate-800 shadow-sm space-y-4" id="section-summary">
-                <div class="border-b border-slate-100 dark:border-slate-800 pb-2.5">
-                  <span class="text-xs font-mono font-bold text-iot-primary dark:text-blue-400 uppercase">SECTION 3 • QUESTIONS 36–40</span>
-                  <h4 class="font-bold text-sm text-iot-dark dark:text-white mt-0.5">Summary Completion (Word Bank)</h4>
-                  <p class="text-xs text-iot-muted dark:text-slate-400 mt-1">
-                    Complete the summary below using the list of phrases (<strong>A–H</strong>) from the box.
-                  </p>
-                </div>
-
-                <!-- Word Bank Box -->
-                <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 text-xs">
-                  <div class="font-bold font-mono text-iot-dark dark:text-white uppercase tracking-wider text-[11px] mb-2">Word Bank:</div>
-                  <div class="grid grid-cols-2 gap-2 text-slate-700 dark:text-slate-300 font-mono text-[11px]">
-                    <div><strong>A.</strong> cognitive scaffolding</div>
-                    <div><strong>B.</strong> biological ocular receptors</div>
-                    <div><strong>C.</strong> habitual cognitive attention</div>
-                    <div><strong>D.</strong> radical linguistic determinism</div>
-                    <div><strong>E.</strong> global aphasia</div>
-                    <div><strong>F.</strong> recursive Merge</div>
-                    <div><strong>G.</strong> superficial typological variances</div>
-                    <div><strong>H.</strong> absolute cardinal boundaries</div>
-                  </div>
-                </div>
-
-                <!-- Summary Text with Interactive Dropdowns -->
-                <div class="p-4 bg-slate-50 dark:bg-slate-800/40 rounded-lg text-xs sm:text-sm leading-loose border border-slate-200 dark:border-slate-700 space-y-3">
-                  <h5 class="font-bold text-iot-dark dark:text-white uppercase text-xs font-mono">The Synthesis of Language and Cognition</h5>
-                  
-                  <p class="leading-loose">
-                    While early twentieth-century linguistics was dominated by the dogma of 
-                    <strong class="text-iot-primary">(36)</strong> 
-                    <select id="ans-36" onchange="handleAnswerChange(36, this.value)" class="inline-block px-2 py-1 mx-1 rounded border border-slate-300 dark:border-slate-600 dark:bg-slate-900 font-mono font-bold text-iot-primary text-xs">
-                      <option value="">[36] Chọn đáp án...</option>
-                      <option value="A">A. cognitive scaffolding</option>
-                      <option value="B">B. biological ocular receptors</option>
-                      <option value="C">C. habitual cognitive attention</option>
-                      <option value="D">D. radical linguistic determinism</option>
-                      <option value="E">E. global aphasia</option>
-                      <option value="F">F. recursive Merge</option>
-                      <option value="G">G. superficial typological variances</option>
-                      <option value="H">H. absolute cardinal boundaries</option>
-                    </select>, 
-                    empirical experiments in chromatic perception established that 
-                    <strong class="text-iot-primary">(37)</strong> 
-                    <select id="ans-37" onchange="handleAnswerChange(37, this.value)" class="inline-block px-2 py-1 mx-1 rounded border border-slate-300 dark:border-slate-600 dark:bg-slate-900 font-mono font-bold text-iot-primary text-xs">
-                      <option value="">[37] Chọn đáp án...</option>
-                      <option value="A">A. cognitive scaffolding</option>
-                      <option value="B">B. biological ocular receptors</option>
-                      <option value="C">C. habitual cognitive attention</option>
-                      <option value="D">D. radical linguistic determinism</option>
-                      <option value="E">E. global aphasia</option>
-                      <option value="F">F. recursive Merge</option>
-                      <option value="G">G. superficial typological variances</option>
-                      <option value="H">H. absolute cardinal boundaries</option>
-                    </select>
-                    operate invariant of vocabulary. Generative grammar further reinforced this finding by demonstrating that all tongues share a common computational engine predicated on 
-                    <strong class="text-iot-primary">(38)</strong> 
-                    <select id="ans-38" onchange="handleAnswerChange(38, this.value)" class="inline-block px-2 py-1 mx-1 rounded border border-slate-300 dark:border-slate-600 dark:bg-slate-900 font-mono font-bold text-iot-primary text-xs">
-                      <option value="">[38] Chọn đáp án...</option>
-                      <option value="A">A. cognitive scaffolding</option>
-                      <option value="B">B. biological ocular receptors</option>
-                      <option value="C">C. habitual cognitive attention</option>
-                      <option value="D">D. radical linguistic determinism</option>
-                      <option value="E">E. global aphasia</option>
-                      <option value="F">F. recursive Merge</option>
-                      <option value="G">G. superficial typological variances</option>
-                      <option value="H">H. absolute cardinal boundaries</option>
-                    </select>. 
-                    Nonetheless, modern neo-Whorfian theorists highlight that specific grammatical forms guide 
-                    <strong class="text-iot-primary">(39)</strong> 
-                    <select id="ans-39" onchange="handleAnswerChange(39, this.value)" class="inline-block px-2 py-1 mx-1 rounded border border-slate-300 dark:border-slate-600 dark:bg-slate-900 font-mono font-bold text-iot-primary text-xs">
-                      <option value="">[39] Chọn đáp án...</option>
-                      <option value="A">A. cognitive scaffolding</option>
-                      <option value="B">B. biological ocular receptors</option>
-                      <option value="C">C. habitual cognitive attention</option>
-                      <option value="D">D. radical linguistic determinism</option>
-                      <option value="E">E. global aphasia</option>
-                      <option value="F">F. recursive Merge</option>
-                      <option value="G">G. superficial typological variances</option>
-                      <option value="H">H. absolute cardinal boundaries</option>
-                    </select>. 
-                    In contemporary philosophy of mind, language is therefore celebrated as a supreme mechanism of 
-                    <strong class="text-iot-primary">(40)</strong> 
-                    <select id="ans-40" onchange="handleAnswerChange(40, this.value)" class="inline-block px-2 py-1 mx-1 rounded border border-slate-300 dark:border-slate-600 dark:bg-slate-900 font-mono font-bold text-iot-primary text-xs">
-                      <option value="">[40] Chọn đáp án...</option>
-                      <option value="A">A. cognitive scaffolding</option>
-                      <option value="B">B. biological ocular receptors</option>
-                      <option value="C">C. habitual cognitive attention</option>
-                      <option value="D">D. radical linguistic determinism</option>
-                      <option value="E">E. global aphasia</option>
-                      <option value="F">F. recursive Merge</option>
-                      <option value="G">G. superficial typological variances</option>
-                      <option value="H">H. absolute cardinal boundaries</option>
-                    </select>, 
-                    empowering humanity to conduct complex multi-layered chains of inference.
-                  </p>
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <!-- BOTTOM QUESTION PALETTE & PROGRESS RIBBON -->
-          <div class="p-3 bg-white dark:bg-[#071326] rounded-xl border border-iot-border dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 shadow-sm shrink-0">
-            <div class="flex items-center gap-2.5 overflow-x-auto py-1">
-              <span class="text-xs font-mono font-bold text-iot-dark dark:text-white uppercase shrink-0">Bảng câu hỏi:</span>
-              <div class="flex items-center gap-1.5" id="readingPaletteContainer">
-                <!-- Dynamically rendered 27-40 buttons -->
-              </div>
-            </div>
-
-            <div class="flex items-center gap-3 text-xs font-mono shrink-0">
-              <span id="readingProgressCounter" class="font-bold text-iot-primary dark:text-blue-400">Đã làm: 0 / 14 câu</span>
-              <button onclick="checkReadingAnswers()" class="px-3.5 py-1.5 rounded-lg bg-iot-green hover:bg-green-700 text-white font-bold transition-all shadow-sm flex items-center gap-1.5 active:scale-95">
-                <i data-lucide="check-circle" class="w-4 h-4"></i>
-                <span>Chấm Điểm &amp; Chữa Chi Tiết</span>
-              </button>
-            </div>
-          </div>
-
-        </div>
-      `;
+      const studentName = window.socraticAI && window.socraticAI.profile ? window.socraticAI.profile.name : 'Bạn';
+      const studentTarget = window.socraticAI && window.socraticAI.profile ? window.socraticAI.profile.targetBand : '8.0';
 
       chatBox.innerHTML = `
-        <div class="p-4 rounded-xl bg-white dark:bg-[#111C44] border border-iot-border dark:border-slate-700 shadow-sm text-xs space-y-3">
-          <div class="flex items-center gap-2 text-iot-green font-bold font-mono">
-            <i data-lucide="book-open" class="w-4 h-4"></i>
-            <span>Socratic Reading Mentor:</span>
+        <div class="p-3.5 rounded-xl bg-white dark:bg-[#111C44] border border-iot-border dark:border-slate-700 shadow-sm text-xs space-y-2.5">
+          <div class="flex items-center gap-2 text-emerald-600 font-bold font-mono">
+            <i data-lucide="book-open" class="w-4 h-4 text-emerald-600"></i>
+            <span>SOCRATIC AI: ACADEMIC READING EXAM</span>
           </div>
-          <p class="leading-relaxed text-slate-700 dark:text-slate-300">
-            Chào mừng bạn đến với <strong>Reading Passage 3</strong>. Bài đọc đạt chuẩn học thuật Cambridge với độ dài 860 từ và 14 câu hỏi chuyên sâu.
+          <p class="text-iot-dark dark:text-slate-200 leading-relaxed text-xs">
+            Chào <strong>${studentName}</strong>! Bạn đang trong phòng thi <strong>IELTS Academic Reading</strong> chuẩn quốc tế (3 Passages, 40 câu hỏi, thời gian 60 phút).
           </p>
-          <div class="space-y-2 border-t border-slate-100 dark:border-slate-800 pt-3">
-            <span class="text-[11px] font-mono font-bold text-iot-orange block uppercase tracking-wider">HỎI NHANH TRỢ GIẢNG SOCRATIC:</span>
-            <button onclick="askPromptPreset('heading-logic')" class="w-full text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950/60 border border-slate-200 dark:border-slate-700 transition-colors block text-[11px]">
-              🔍 <strong>Câu 27-31:</strong> Phân biệt Heading khái quát vs Chi tiết ngẫu nhiên
-            </button>
-            <button onclick="askPromptPreset('tfng-trap')" class="w-full text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-amber-950/60 border border-slate-200 dark:border-slate-700 transition-colors block text-[11px]">
-              ⚖️ <strong>Câu 34:</strong> Tại sao Chomsky là "NOT GIVEN" chứ không phải "FALSE"?
-            </button>
-            <button onclick="askPromptPreset('extended-mind')" class="w-full text-left p-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-purple-50 dark:hover:bg-purple-950/60 border border-slate-200 dark:border-slate-700 transition-colors block text-[11px]">
-              💡 <strong>Đoạn F:</strong> Khái niệm "Extended Mind" và "Cognitive Scaffolding"
-            </button>
+          <div class="p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-900 text-[11px] leading-relaxed text-slate-700 dark:text-slate-300">
+            💡 <strong>Quy chế thi CD-IELTS:</strong> Hãy phân bổ thời gian hợp lý (~20 phút/Passage). Nhấn <strong>Enter</strong> để chuyển câu tiếp theo, hoặc dùng bảng điều hướng 40 câu ở thanh dưới.
+          </div>
+          <div class="pt-1 flex items-center justify-between text-[11px] font-mono text-iot-muted border-t border-slate-100 dark:border-slate-800">
+            <span>Mục tiêu: Band ${studentTarget}</span>
+            <span>Chuẩn: IDP / British Council</span>
           </div>
         </div>
       `;
 
-      // Initialize Reading Palette & Icons
       setTimeout(() => {
-        initReadingPalette();
-        lucide.createIcons();
+        if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
       }, 50);
     } else if (skillParam === 'SPEAKING') {
-      viewport.innerHTML = `
-        <div class="space-y-6 text-center py-8">
-          <span class="bg-purple-100 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 font-mono text-xs px-3 py-1 rounded font-bold">SPEAKING PART 3: SOCRATIC VOICE INTERVIEW</span>
-          <div class="p-8 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 max-w-xl mx-auto space-y-4">
-            <h2 class="text-lg font-bold text-iot-dark dark:text-white leading-snug">"Do you believe that purchasing material goods genuinely elevates human happiness, or is it merely an ephemeral sensation?"</h2>
-            <div class="py-4">
-              <button onclick="alert('Đang thu âm microphone của bạn...')" class="w-16 h-16 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center mx-auto shadow-lg active:scale-95 transition-all">
-                <i data-lucide="mic" class="w-7 h-7"></i>
-              </button>
-              <p class="text-[11px] text-iot-muted mt-2 font-mono">Nhấp microphone để bắt đầu trả lời (Tối đa 2 phút)</p>
-            </div>
-          </div>
-        </div>
-      `;
-      chatBox.innerHTML = `
-        <div class="p-3.5 rounded-xl bg-white dark:bg-[#111C44] border border-iot-border dark:border-slate-700 shadow-sm text-xs space-y-2">
-          <span class="font-bold text-purple-600 font-mono">Socratic Voice Examiner:</span>
-          <p>Hãy sẵn sàng phản biện về Nghịch lý Easterlin và Khái niệm Siêu thực (Hyperreality) của Baudrillard khi phân tích về chủ nghĩa tiêu dùng!</p>
-        </div>
-      `;
+      const targetId = urlParams.get('id') || 'cam19-spk-t1';
+      renderSpeakingTestEnvironment(targetId);
     } else if (skillParam === 'FULL MOCK') {
       viewport.innerHTML = `
         <div class="space-y-6">
@@ -1439,131 +468,73 @@
         </div>
       `;
     } else {
-      // Default: WRITING
-      viewport.innerHTML = `
-        <div class="p-4 bg-iot-bgLight dark:bg-slate-900 rounded-xl border border-iot-border dark:border-slate-800 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-iot-primary uppercase font-mono">IELTS WRITING TASK 2 PROMPT</span>
-            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 font-bold">40 Phút • Tối thiểu 250 từ</span>
-          </div>
-          <p class="text-sm font-semibold text-iot-dark dark:text-white">"Some legal scholars argue that Artificial Intelligence should replace human judges in courtroom sentencing to eliminate racial and cognitive bias. To what extent do you agree or disagree?"</p>
-        </div>
+      // Default: WRITING (Authentic 60-Minute Task 1 & Task 2 CD-IELTS Engine)
+      let targetId = (urlParams.get('id') || '').trim();
+      if (!targetId) {
+        const titleL = titleParam.toLowerCase();
+        if (titleL.includes('baud') || titleL.includes('consumerism')) targetId = 'wri-philo-spec';
+        else if (titleL.includes('fouca') || titleL.includes('panopticon')) targetId = 'wri-philo-fouca';
+        else if (titleL.includes('poly') || titleL.includes('biodegradable')) targetId = 'wri-task1-proc';
+        else if (titleL.includes('renew') || titleL.includes('dynamics')) targetId = 'wri-task1-dyn';
+        else if (titleL.includes('test 2') || titleL.includes('space') || titleL.includes('poverty')) targetId = 'wri-cam19-t2';
+        else if (titleL.includes('test 3') || titleL.includes('remote') || titleL.includes('alienation')) targetId = 'wri-cam19-t3';
+        else if (titleL.includes('test 4') || titleL.includes('basic income') || titleL.includes('ubi')) targetId = 'wri-cam19-t4';
+        else targetId = 'cam19-wri-t1';
+      }
+      if (typeof initWritingWorkspace === 'function') {
+        initWritingWorkspace(targetId);
+      }
 
-        <div class="space-y-3">
-          <div class="flex justify-between items-center text-xs font-semibold">
-            <span class="text-iot-dark dark:text-slate-200 flex items-center gap-1.5">
-              <i data-lucide="edit-3" class="w-4 h-4 text-iot-orange"></i>
-              <span>Khu vực bài viết của thí sinh:</span>
-            </span>
-            <span id="writingWordCounter" class="font-mono text-iot-primary dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-1 rounded border border-blue-200 dark:border-blue-900">
-              Số từ: 41 từ (Yêu cầu: 250+)
-            </span>
-          </div>
-
-          <textarea id="examWritingInput" rows="10" oninput="updateExamWritingCount()"
-            class="w-full p-4 rounded-xl border border-iot-border dark:border-slate-700 text-sm font-sans text-iot-dark dark:text-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-iot-primary leading-relaxed shadow-inner">The goverment should make sure that artificial intelligence does not completely replace human judges. In my opinion, this is a very important issue because computers cannot understand human morality, which is a big problem in difficult criminal cases.</textarea>
-
-          <!-- Writing Tools Bar -->
-          <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
-            <div class="flex items-center gap-2">
-              <button onclick="submitExamWritingForGrading()" class="px-4 py-2.5 rounded-xl bg-iot-primary hover:bg-iot-primaryHover text-white font-bold text-xs uppercase tracking-wide shadow-iot-cta transition-all flex items-center gap-1.5 active:scale-95" title="Khảo Thí AI Chấm Điểm 4 Tiêu Chí">
-                <i data-lucide="award" class="w-4 h-4 text-amber-300"></i>
-                <span>Khảo Thí AI Chấm Điểm (4 Tiêu Chí)</span>
-              </button>
-              <button onclick="runExamWritingProofread()" class="px-3.5 py-2.5 rounded-xl bg-iot-orange hover:bg-iot-orangeHover text-white font-bold text-xs uppercase tracking-wide shadow-sm transition-all flex items-center gap-1.5 active:scale-95">
-                <i data-lucide="sparkles" class="w-4 h-4"></i>
-                <span>Sửa Lỗi &amp; Nâng Cao Từ Vựng</span>
-              </button>
-              <button onclick="applyExamWritingPolished()" id="btnExamApplyPolished" class="hidden px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-all flex items-center gap-1">
-                <i data-lucide="check" class="w-3.5 h-3.5"></i>
-                <span>Áp dụng bản Band 8.5</span>
-              </button>
-            </div>
-
-            <span class="text-xs text-iot-muted dark:text-slate-400 font-mono">⚡ Chuẩn Khảo Thí IDP / British Council</span>
-          </div>
-
-          <!-- Dynamic Proofread Result Card -->
-          <div id="examWritingProofreadBox" class="hidden p-4 rounded-xl bg-slate-50 dark:bg-slate-900/95 border border-iot-border dark:border-slate-800 space-y-4">
-            <!-- Header & Score Mode Switcher -->
-            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-iot-border dark:border-slate-800 pb-3">
-              <span class="font-bold text-xs text-iot-primary dark:text-blue-400 flex items-center gap-1.5 font-mono">
-                <i data-lucide="award" class="w-4 h-4 text-iot-orange"></i>
-                <span>BẢNG ĐÁNH GIÁ TIÊU CHUẨN IELTS (9.0 = VÒNG TRÒN HOÀN TOÀN)</span>
-              </span>
-              <div class="inline-flex rounded-lg p-0.5 bg-slate-200 dark:bg-slate-800 text-[11px] font-mono">
-                <button type="button" id="btnExamScoreOriginal" onclick="setExamScoreMode('original')" class="px-2.5 py-1 rounded-md font-bold transition-all bg-white dark:bg-slate-700 text-iot-dark dark:text-white shadow-xs">
-                  ⦿ Điểm bài gốc
-                </button>
-                <button type="button" id="btnExamScoreUpgraded" onclick="setExamScoreMode('upgraded')" class="px-2.5 py-1 rounded-md font-bold transition-all text-iot-muted hover:text-iot-primary">
-                  ✨ Sau nâng cấp (Band 8.5+)
-                </button>
-              </div>
-            </div>
-
-            <!-- 5 Circular Radial Gauges (9.0 = Full Circle) -->
-            <div id="examCircularGaugesContainer" class="grid grid-cols-2 sm:grid-cols-5 gap-3 p-3 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700"></div>
-
-            <!-- In-situ Annotated Text with Clickable Badges -->
-            <div class="space-y-1.5">
-              <div class="flex items-center justify-between text-xs">
-                <span class="font-bold text-iot-dark dark:text-slate-200 flex items-center gap-1.5">
-                  <i data-lucide="crosshair" class="w-3.5 h-3.5 text-iot-orange"></i>
-                  <span>Vị trí cần nâng cấp trên bài viết (Click số huy hiệu để xem phân tích):</span>
-                </span>
-                <span id="examIssuesCountBadge" class="text-[11px] font-mono font-bold text-iot-orange"></span>
-              </div>
-              <div id="examProofAnnotated" class="p-3.5 bg-white dark:bg-slate-800/90 rounded-xl border border-slate-200 dark:border-slate-700 text-xs leading-relaxed font-serif text-iot-dark dark:text-slate-200 min-h-[70px]"></div>
-            </div>
-
-            <!-- Active Issue Deep Rationale Inspector Card -->
-            <div id="examActiveIssueCard" class="hidden p-3.5 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50/50 dark:from-[#1c2237] dark:to-[#171c2f] border border-amber-200 dark:border-amber-900/60 shadow-sm transition-all space-y-2.5"></div>
-
-            <!-- All Issues List -->
-            <div class="space-y-2">
-              <span class="text-xs font-bold text-iot-dark dark:text-slate-200 flex items-center gap-1.5">
-                <i data-lucide="list-checks" class="w-3.5 h-3.5 text-iot-primary"></i>
-                <span>Danh sách toàn bộ lỗi &amp; cụm từ học thuật thay thế:</span>
-              </span>
-              <div id="examProofDetails" class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs"></div>
-            </div>
-          </div>
-        </div>
-      `;
       chatBox.innerHTML = `
         <div class="p-3.5 rounded-xl bg-white dark:bg-[#111C44] border border-iot-border dark:border-slate-700 shadow-sm text-xs space-y-2">
-          <span class="font-bold text-iot-orange font-mono flex items-center gap-1.5">
-            <i data-lucide="bot" class="w-4 h-4"></i>
+          <div class="flex items-center gap-2 text-iot-orange font-bold font-mono">
+            <i data-lucide="pen-tool" class="w-4 h-4"></i>
             <span>Socratic Writing Mentor:</span>
-          </span>
-          <p>Hãy viết bài luận của bạn. Bất kỳ lúc nào bạn cần kiểm tra chính tả hoặc nâng cấp từ vựng Band 8.0+, hãy bấm nút <strong>"AI Sửa Chính Tả &amp; Nâng Cao Từ Vựng"</strong> ở góc dưới bài viết!</p>
+          </div>
+          <p class="leading-relaxed text-slate-700 dark:text-slate-300">
+            Chào mừng bạn đến với kỳ thi <strong>IELTS Writing chuẩn CD-IELTS (60 phút)</strong>. Đề thi gồm 2 phần độc lập:
+          </p>
+          <div class="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5 font-mono text-[11px]">
+            <div class="flex items-center justify-between text-amber-600 dark:text-amber-400 font-bold">
+              <span>📊 Task 1: Academic Report</span>
+              <span>20p • Tối thiểu 150 từ (1/3 điểm)</span>
+            </div>
+            <div class="flex items-center justify-between text-blue-600 dark:text-blue-400 font-bold">
+              <span>✍️ Task 2: Discursive Essay</span>
+              <span>40p • Tối thiểu 250 từ (2/3 điểm)</span>
+            </div>
+          </div>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">
+            💡 Bạn có thể chuyển đổi qua lại giữa Task 1 và Task 2 bất kỳ lúc nào. Hệ thống tự động đếm từ và lưu bài theo thời gian thực!
+          </p>
         </div>
       `;
     }
 
-    // Mode Toggle Logic
-    let currentRoomMode = 'practice';
+    // Room Mode Handler
+    let currentRoomMode = 'exam';
     function setRoomMode(mode) {
-      currentRoomMode = mode;
+      currentRoomMode = mode || 'exam';
       const btnPractice = document.getElementById('btnPracticeMode');
       const btnExam = document.getElementById('btnExamMode');
       const lockOverlay = document.getElementById('examLockOverlay');
-
-      if (mode === 'exam') {
-        btnExam.classList.add('bg-red-600', 'text-white', 'font-bold');
-        btnExam.classList.remove('text-slate-400');
-        btnPractice.classList.remove('bg-iot-primary', 'text-white');
-        btnPractice.classList.add('text-slate-400');
-        lockOverlay.classList.remove('hidden');
-      } else {
-        btnPractice.classList.add('bg-iot-primary', 'text-white');
-        btnPractice.classList.remove('text-slate-400');
-        btnExam.classList.remove('bg-red-600', 'text-white', 'font-bold');
-        btnExam.classList.add('text-slate-400');
-        lockOverlay.classList.add('hidden');
+      if (btnExam && btnPractice && lockOverlay) {
+        if (mode === 'exam') {
+          btnExam.classList.add('bg-red-600', 'text-white', 'font-bold');
+          btnExam.classList.remove('text-slate-400');
+          btnPractice.classList.remove('bg-iot-primary', 'text-white');
+          btnPractice.classList.add('text-slate-400');
+          lockOverlay.classList.remove('hidden');
+        } else {
+          btnPractice.classList.add('bg-iot-primary', 'text-white');
+          btnPractice.classList.remove('text-slate-400');
+          btnExam.classList.remove('bg-red-600', 'text-white', 'font-bold');
+          btnExam.classList.add('text-slate-400');
+          lockOverlay.classList.add('hidden');
+        }
       }
-      lucide.createIcons();
     }
+    window.setRoomMode = setRoomMode;
 
     function askPromptPreset(type) {
       if (currentRoomMode === 'exam') return;
@@ -1597,7 +568,9 @@
 
     function handleIncomingChat(userText) {
       if (currentRoomMode === 'exam') {
-        alert("Chế độ Thi thật đang bật. Trợ giảng AI đã tạm khóa.");
+        if (window.socraticAI && window.socraticAI.showLearningToast) {
+          window.socraticAI.showLearningToast("⚠️ Chế độ Thi thật đang bật. Trợ giảng AI tạm khóa để đảm bảo tính khảo thí độc lập.");
+        }
         return;
       }
 
@@ -1782,259 +755,67 @@
     }
 
     function submitExam() {
+      if (window.examLockdown && typeof window.examLockdown.releaseExamLockdown === 'function') {
+        window.examLockdown.releaseExamLockdown();
+      }
       if (typeof skillParam !== 'undefined' && skillParam === 'LISTENING') {
         checkListeningAnswers();
         return;
       }
-      if (typeof skillParam !== 'undefined' && skillParam === 'WRITING') {
-        submitExamWritingForGrading();
+      if (typeof skillParam !== 'undefined' && skillParam === 'READING') {
+        checkReadingAnswers();
         return;
       }
-      alert("Bài thi đã được nộp thành công vào hệ thống học thuật!\nSocratic AI đã sẵn sàng phân tích toàn bộ kết quả của bạn.");
+      if (typeof skillParam !== 'undefined' && skillParam === 'WRITING') {
+        if (typeof submitWritingExamForGrading === 'function') {
+          submitWritingExamForGrading();
+        } else {
+          submitExamWritingForGrading();
+        }
+        return;
+      }
+      if (typeof skillParam !== 'undefined' && skillParam === 'SPEAKING') {
+        if (typeof submitSpeakingExam === 'function') {
+          submitSpeakingExam();
+          return;
+        }
+      }
+      if (window.socraticAI && window.socraticAI.showLearningToast) {
+        window.socraticAI.showLearningToast("✅ Bài thi đã được nộp thành công! Hệ thống đang tổng hợp báo cáo năng lực.");
+      }
       setRoomMode('practice');
     }
+    window.submitExam = submitExam;
 
     function submitExamWritingForGrading() {
+      if (typeof window.submitWritingExamForGrading === 'function') {
+        window.submitWritingExamForGrading();
+        return;
+      }
+      if (window.examLockdown && typeof window.examLockdown.releaseExamLockdown === 'function') {
+        window.examLockdown.releaseExamLockdown();
+      }
       const input = document.getElementById('examWritingInput');
       if (!input) return;
       const essay = input.value.trim();
       if (!essay) {
-        alert('Vui lòng viết bài luận trước khi yêu cầu chấm điểm.');
+        if (window.socraticAI && window.socraticAI.showLearningToast) {
+          window.socraticAI.showLearningToast("⚠️ Vui lòng viết bài luận trước khi yêu cầu chấm điểm.");
+        }
         return;
       }
       setRoomMode('practice');
       const promptEl = document.querySelector('.text-sm.font-semibold.text-iot-dark') || document.querySelector('.font-mono.text-iot-primary');
       const promptText = promptEl ? promptEl.innerText.replace(/"/g, '') : 'IELTS Writing Task 2';
-      
+
       const chatMsg = `Chấm điểm bài viết IELTS Writing sau đây theo tiêu chuẩn nghiêm ngặt của cựu giám khảo IDP/BC:\n\n[Đề bài]: ${promptText}\n\n[Bài làm]:\n${essay}`;
       handleIncomingChat(chatMsg);
     }
 
     // ==========================================
-    // CAMBRIDGE IELTS READING ENGINE (PASSAGE 3)
+    // AUTHENTIC CAMBRIDGE 3-PASSAGE READING ENGINE (40 QUESTIONS, 60 MINUTES)
+    // Implemented in reading-engine.js (Passages 1–3, Full Palette, IDP/BC Scorecard)
     // ==========================================
-    const readingCorrectAnswers = {
-      27: "ii",
-      28: "iv",
-      29: "i",
-      30: "v",
-      31: "iii",
-      32: "TRUE",
-      33: "FALSE",
-      34: "NOT GIVEN",
-      35: "FALSE",
-      36: "D",
-      37: "B",
-      38: "F",
-      39: "C",
-      40: "A"
-    };
-
-    let readingUserAnswers = {};
-    let readingCurrentFontSize = 14;
-
-    function initReadingPalette() {
-      const container = document.getElementById('readingPaletteContainer');
-      if (!container) return;
-
-      let html = '';
-      for (let i = 27; i <= 40; i++) {
-        html += `
-          <button id="palette-btn-${i}" onclick="scrollToReadingQuestion(${i})" class="w-7 h-7 rounded-md font-mono text-[11px] font-bold border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-iot-muted hover:border-iot-primary transition-all flex items-center justify-center shrink-0">
-            ${i}
-          </button>
-        `;
-      }
-      container.innerHTML = html;
-      updateReadingProgressUI();
-    }
-
-    function handleAnswerChange(qNum, value) {
-      if (value) {
-        readingUserAnswers[qNum] = value;
-      } else {
-        delete readingUserAnswers[qNum];
-      }
-
-      // Update palette button
-      const btn = document.getElementById(`palette-btn-${qNum}`);
-      if (btn) {
-        if (value) {
-          btn.className = "w-7 h-7 rounded-md font-mono text-[11px] font-bold bg-iot-primary text-white border border-iot-primary shadow-sm flex items-center justify-center shrink-0";
-        } else {
-          btn.className = "w-7 h-7 rounded-md font-mono text-[11px] font-bold border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-iot-muted hover:border-iot-primary transition-all flex items-center justify-center shrink-0";
-        }
-      }
-
-      updateReadingProgressUI();
-    }
-
-    function updateReadingProgressUI() {
-      const answeredCount = Object.keys(readingUserAnswers).length;
-      const counter = document.getElementById('readingProgressCounter');
-      if (counter) {
-        counter.innerText = `Đã làm: ${answeredCount} / 14 câu`;
-      }
-    }
-
-    function scrollToReadingQuestion(qNum) {
-      const card = document.getElementById(`question-card-${qNum}`);
-      const pane = document.getElementById('readingQuestionsContainer');
-      if (card && pane) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        card.classList.add('ring-2', 'ring-iot-primary');
-        setTimeout(() => {
-          card.classList.remove('ring-2', 'ring-iot-primary');
-        }, 1500);
-      }
-    }
-
-    function changeReadingFontSize(delta) {
-      readingCurrentFontSize = Math.max(12, Math.min(18, readingCurrentFontSize + delta));
-      const container = document.getElementById('readingPassageContainer');
-      if (container) {
-        container.style.fontSize = `${readingCurrentFontSize}px`;
-      }
-    }
-
-    function highlightSelection(color) {
-      const selection = window.getSelection();
-      if (!selection.rangeCount || selection.isCollapsed) {
-        alert("Vui lòng dùng chuột bôi đen một đoạn văn bản trong bài đọc trước khi bấm nút highlight!");
-        return;
-      }
-
-      const range = selection.getRangeAt(0);
-      const container = document.getElementById('readingPassageContainer');
-      if (!container.contains(range.commonAncestorContainer)) {
-        alert("Chỉ có thể highlight văn bản bên trong khu vực Bài Đọc Passage 3.");
-        return;
-      }
-
-      const mark = document.createElement('mark');
-      mark.className = color === 'yellow' ? 'bg-amber-200 dark:bg-amber-900/80 rounded px-0.5' : 'bg-cyan-200 dark:bg-cyan-900/80 rounded px-0.5';
-      mark.appendChild(range.extractContents());
-      range.insertNode(mark);
-      selection.removeAllRanges();
-    }
-
-    function clearReadingHighlights() {
-      const container = document.getElementById('readingPassageContainer');
-      if (!container) return;
-      const marks = container.querySelectorAll('mark');
-      marks.forEach(m => {
-        const parent = m.parentNode;
-        while (m.firstChild) parent.insertBefore(m.firstChild, m);
-        parent.removeChild(m);
-      });
-    }
-
-    function checkReadingAnswers() {
-      let score = 0;
-      let wrongList = [];
-
-      for (let i = 27; i <= 40; i++) {
-        const userAns = (readingUserAnswers[i] || '').trim();
-        const correctAns = readingCorrectAnswers[i];
-        const card = document.getElementById(`question-card-${i}`);
-        const paletteBtn = document.getElementById(`palette-btn-${i}`);
-
-        const isCorrect = userAns.toUpperCase() === correctAns.toUpperCase();
-        if (isCorrect) {
-          score++;
-          if (card) {
-            card.classList.add('border-green-500', 'bg-green-50/60', 'dark:bg-green-950/30');
-            card.classList.remove('border-red-500', 'bg-red-50/60', 'dark:bg-red-950/30');
-          }
-          if (paletteBtn) {
-            paletteBtn.className = "w-7 h-7 rounded-md font-mono text-[11px] font-bold bg-green-600 text-white flex items-center justify-center shadow-sm shrink-0";
-          }
-        } else {
-          wrongList.push({ qNum: i, userAns: userAns || "Chưa trả lời", correct: correctAns });
-          if (card) {
-            card.classList.add('border-red-500', 'bg-red-50/60', 'dark:bg-red-950/30');
-            card.classList.remove('border-green-500', 'bg-green-50/60', 'dark:bg-green-950/30');
-          }
-          if (paletteBtn) {
-            paletteBtn.className = "w-7 h-7 rounded-md font-mono text-[11px] font-bold bg-red-600 text-white flex items-center justify-center shadow-sm shrink-0";
-          }
-        }
-      }
-
-      // Band score estimation
-      let estimatedBand = "Band 5.5";
-      if (score >= 13) estimatedBand = "Band 9.0";
-      else if (score >= 11) estimatedBand = "Band 8.5";
-      else if (score >= 9) estimatedBand = "Band 7.5";
-      else if (score >= 7) estimatedBand = "Band 6.5";
-
-      // Trigger Socratic AI Self-Learning & Metric Updates
-      if (window.socraticAI) {
-        const mistakes = wrongList.map(w => {
-          let cat = 'truth_evaluation';
-          if (w.qNum <= 31) cat = 'formal_syntax';
-          else if (w.qNum >= 36) cat = 'lexical_precision';
-          return {
-            qNum: w.qNum,
-            userAns: w.userAns,
-            correctAns: w.correct,
-            category: cat
-          };
-        });
-
-        window.socraticAI.recordTestResult({
-          testId: 'cam-19-t1-reading',
-          title: 'Cambridge 19 - Test 1: Reading Passage 3',
-          skill: 'READING',
-          score: score,
-          total: 14,
-          mistakes: mistakes
-        });
-      }
-
-      const studentName = window.socraticAI ? window.socraticAI.profile.name : 'Bạn';
-
-      alert(`KẾT QUẢ PASSAGE 3 CỦA ${studentName.toUpperCase()}:\n\nĐạt: ${score}/14 câu chính xác (${estimatedBand})!\n\n🧠 Socratic AI vừa hoàn tất chu trình tự học và cập nhật Hồ Sơ Nhận Thức.`);
-
-      // Post comprehensive review to Socratic AI Chatbot
-      const chatContainer = document.getElementById('aiChatBox');
-      if (chatContainer) {
-        let wrongSummaryHtml = '';
-        if (wrongList.length === 0) {
-          wrongSummaryHtml = `<p class="text-iot-green font-bold">Xuất sắc ${studentName}! Bạn đạt điểm tuyệt đối 14/14. Tư duy logic và khả năng phân tích ngôn ngữ học của bạn đạt chuẩn Band 9.0!</p>`;
-        } else {
-          wrongSummaryHtml = `
-            <div class="space-y-1.5 text-[11px]">
-              <span class="font-bold text-red-600 dark:text-red-400">Các bẫy tư duy cần lưu ý:</span>
-              <ul class="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-300 font-mono">
-                ${wrongList.slice(0, 4).map(w => `<li><strong>Câu ${w.qNum}:</strong> Bạn chọn <em>"${w.userAns}"</em> ➔ Đáp án chuẩn: <strong>"${w.correct}"</strong></li>`).join('')}
-              </ul>
-            </div>
-          `;
-        }
-
-        chatContainer.innerHTML += `
-          <div class="p-3.5 rounded-xl bg-emerald-50 dark:bg-[#112444] border border-emerald-300 dark:border-emerald-800 shadow-sm text-xs space-y-3">
-            <div class="flex items-center justify-between font-mono font-bold text-iot-primary dark:text-blue-300">
-              <span>BÁO CÁO HỌC MÁY CHO ${studentName.toUpperCase()}</span>
-              <span class="bg-iot-green text-white px-2 py-0.5 rounded text-[10px]">${score}/14 (${estimatedBand})</span>
-            </div>
-            ${wrongSummaryHtml}
-            <div class="p-2.5 rounded bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-800/80 text-[11px] leading-relaxed text-iot-dark dark:text-slate-200 space-y-1.5">
-              <p class="font-bold text-iot-dark dark:text-white">🧠 Socratic AI đã tự học từ bài làm này:</p>
-              <p class="text-iot-muted dark:text-slate-300">Đã cập nhật vector nhận thức 6 chiều & phát hiện mẫu ngụy biện mới vào hồ sơ cá nhân hóa.</p>
-            </div>
-            <button onclick="window.socraticAI.openCognitiveProfileModal()" class="w-full py-2 rounded-lg bg-iot-primary hover:bg-iot-primaryHover text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm">
-              <i data-lucide="brain" class="w-3.5 h-3.5 text-amber-300"></i>
-              <span>Xem Bảng Phân Tích Nhận Thức AI Chi Tiết</span>
-            </button>
-          </div>
-        `;
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-        lucide.createIcons();
-      }
-    }
-
     // ==========================================
     // EXAM ROOM WRITING PROOFREADING & COUNTER
     // ==========================================
@@ -2115,6 +896,8 @@
         `;
       }).join('');
     }
+    window.renderExamCircularGauges = renderExamCircularGauges;
+    window.setExamScoreMode = setExamScoreMode;
 
     function selectExamIssue(issueNumber) {
       selectedExamIssueNumber = issueNumber;
@@ -2304,4 +1087,5 @@
   </script>
 
 </body>
+
 </html>

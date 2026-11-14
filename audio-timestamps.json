@@ -1,0 +1,126 @@
+{
+  "cam19-test2": {
+    "outputFile": "audio/cam19-test2-full.mp3",
+    "totalDurationSeconds": 1643,
+    "totalDurationFormatted": "27:22",
+    "parts": [
+      {
+        "partNum": 1,
+        "startSec": 0,
+        "startFormatted": "00:00",
+        "durationSec": 440
+      },
+      {
+        "partNum": 2,
+        "startSec": 440,
+        "startFormatted": "07:20",
+        "durationSec": 372
+      },
+      {
+        "partNum": 3,
+        "startSec": 812,
+        "startFormatted": "13:31",
+        "durationSec": 410
+      },
+      {
+        "partNum": 4,
+        "startSec": 1222,
+        "startFormatted": "20:22",
+        "durationSec": 421
+      }
+    ]
+  },
+  "cam19-test3": {
+    "outputFile": "audio/cam19-test3-full.mp3",
+    "totalDurationSeconds": 1536,
+    "totalDurationFormatted": "25:36",
+    "parts": [
+      {
+        "partNum": 1,
+        "startSec": 0,
+        "startFormatted": "00:00",
+        "durationSec": 349
+      },
+      {
+        "partNum": 2,
+        "startSec": 349,
+        "startFormatted": "05:49",
+        "durationSec": 370
+      },
+      {
+        "partNum": 3,
+        "startSec": 719,
+        "startFormatted": "11:58",
+        "durationSec": 422
+      },
+      {
+        "partNum": 4,
+        "startSec": 1141,
+        "startFormatted": "19:00",
+        "durationSec": 395
+      }
+    ]
+  },
+  "cam19-test4": {
+    "outputFile": "audio/cam19-test4-full.mp3",
+    "totalDurationSeconds": 1694,
+    "totalDurationFormatted": "28:14",
+    "parts": [
+      {
+        "partNum": 1,
+        "startSec": 0,
+        "startFormatted": "00:00",
+        "durationSec": 365
+      },
+      {
+        "partNum": 2,
+        "startSec": 365,
+        "startFormatted": "06:04",
+        "durationSec": 385
+      },
+      {
+        "partNum": 3,
+        "startSec": 750,
+        "startFormatted": "12:29",
+        "durationSec": 430
+      },
+      {
+        "partNum": 4,
+        "startSec": 1179,
+        "startFormatted": "19:39",
+        "durationSec": 515
+      }
+    ]
+  },
+  "cam18-test2": {
+    "outputFile": "audio/cam18-test2-full.mp3",
+    "totalDurationSeconds": 1724,
+    "totalDurationFormatted": "28:44",
+    "parts": [
+      {
+        "partNum": 1,
+        "startSec": 0,
+        "startFormatted": "00:00",
+        "durationSec": 433
+      },
+      {
+        "partNum": 2,
+        "startSec": 433,
+        "startFormatted": "07:12",
+        "durationSec": 437
+      },
+      {
+        "partNum": 3,
+        "startSec": 870,
+        "startFormatted": "14:30",
+        "durationSec": 428
+      },
+      {
+        "partNum": 4,
+        "startSec": 1298,
+        "startFormatted": "21:38",
+        "durationSec": 426
+      }
+    ]
+  }
+}

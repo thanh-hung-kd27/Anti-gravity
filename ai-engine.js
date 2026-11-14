@@ -2019,42 +2019,70 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
   }
 
   generateUniversalKnowledge(raw, q, name, target) {
-    let inquiryType = "Khái quát & Cơ chế";
-    let stepTitle = "Các Bước Thực Hiện Hoặc Nguyên Lý Vận Hành";
+    const cleanTopic = raw.replace(/^[?\s]+|[?\s]+$/g, '').trim();
 
-    if (/cách|làm sao|hướng dẫn|làm thế nào|how to/i.test(raw)) {
-      inquiryType = "Hướng Dẫn Thực Hành Từng Bước";
-      stepTitle = "Quy Trình Triển Khai Thực Tế";
-    } else if (/ai|nhân vật|tác giả|who/i.test(raw)) {
-      inquiryType = "Nhân Vật & Bối Cảnh Lịch Sử";
-      stepTitle = "Dấu Ấn & Đóng Góp Nổi Bật";
-    } else if (/khi nào|năm nào|thời điểm|when/i.test(raw)) {
-      inquiryType = "Dòng Thời Gian & Mốc Lịch Sử";
-      stepTitle = "Bối Cảnh Thời Gian & Ý Nghĩa";
-    } else if (/tại sao|vì sao|do đâu|nguyên nhân|why/i.test(raw)) {
-      inquiryType = "Phân Tích Nguyên Nhân & Hệ Quả";
-      stepTitle = "Căn Nguyên & Cơ Chế Nhân Quả";
+    if (/là gì|what is|định nghĩa|khái niệm/i.test(raw)) {
+      return `Chào **${name}**! Về câu hỏi của bạn: *"**${raw}**"*
+
+### 1. Bản Chất & Định Nghĩa Cốt Lõi
+* **Khái niệm:** Khi phân tích *"**${cleanTopic}**"*, điểm mấu chốt nằm ở bản chất chức năng và vai trò của nó trong hệ thống ngữ cảnh liên quan.
+* **Nguyên lý nền tảng:** Đối tượng này được xác định dựa trên các đặc trưng cấu trúc độc lập và mối quan hệ tương hỗ với các yếu tố phụ cận, giúp phân biệt rõ ràng với các khái niệm tương đồng.
+
+### 2. Ứng Dụng & Liên Hệ Thực Tiễn
+* **Trong tư duy phản biện & học thuật:** Hiểu rõ khái niệm này giúp bạn xây dựng lập luận chặt chẽ (*rigorous reasoning*), tránh các lỗi ngụy biện phổ biến như đánh tráo khái niệm (*equivocation*) hay suy diễn vội vã.
+* **Từ vựng học thuật C1-C2 đề xuất:**
+  * *Intrinsic characteristic* (đặc tính nội tại)
+  * *Constituent element* (thành tố cấu tạo)
+  * *Contextual dependency* (sự phụ thuộc vào ngữ cảnh)`;
     }
 
-    return `Chào **${name}**! Về câu hỏi của bạn: *"**${raw}**"*
+    if (/cách|làm sao|hướng dẫn|làm thế nào|how to|phương pháp/i.test(raw)) {
+      return `Chào **${name}**! Về phương pháp xử lý: *"**${raw}**"*
 
-### 1. Phân Tích Trực Diện (${inquiryType})
-* Khi tiếp cận vấn đề này, nguyên tắc then chốt là dựa trên tính xác thực của thông tin (*factual accuracy*) và tính mạch lạc trong lập luận (*internal consistency*).
-* Đối với yêu cầu *"**${raw}**"*, việc bóc tách bản chất từ các yếu tố cốt lõi sẽ giúp bạn có cái nhìn toàn diện và chính xác nhất.
+### 1. Chiến Lược Triển Khai Trọng Tâm
+* **Giai đoạn 1 (Thiết lập mục tiêu & Tiền đề):** Xác định rõ kết quả đầu ra mong muốn (*deliverable*) và phân loại các biến số cần kiểm soát.
+* **Giai đoạn 2 (Thực thi theo quy trình chuẩn):** Áp dụng phương pháp phân rã vấn đề (*decomposition method*) — chia nhỏ quy trình thành các mắt xích độc lập và giải quyết tuần tự để tối ưu hóa hiệu suất.
+* **Giai đoạn 3 (Đo lường & Tối ưu hóa):** So sánh kết quả thực tế với tiêu chuẩn mục tiêu và liên tục hiệu chỉnh các mắt xích chưa đạt hiệu quả cao nhất.
 
-### 2. ${stepTitle}
-* **Bước 1 (Xác định mục tiêu & Tiền đề):** Nắm rõ các điều kiện ban đầu và các yếu tố tiên quyết.
-* **Bước 2 (Thực thi & Tối ưu hóa):** Áp dụng các quy chuẩn khoa học hoặc phương pháp thực nghiệm đã được chứng minh hiệu quả.
-* **Bước 3 (Đánh giá & Hiệu chỉnh):** Kiểm tra tính hợp lý của kết quả đầu ra và điều chỉnh linh hoạt theo từng tình huống cụ thể.
+### 2. Thuật Ngữ Học Thuật & Diễn Đạt C1-C2
+* *Systematic implementation* (triển khai có hệ thống)
+* *Iterative refinement* (hiệu chỉnh lặp đi lặp lại để hoàn thiện)
+* *Measurable outcome* (kết quả đo lường được)`;
+    }
 
-### 3. Liên Hệ Học Thuật & Từ Vựng Tiếng Anh
-* Trong môi trường học thuật quốc tế (đặc biệt trong các phần thi thảo luận chuyên sâu), bạn luôn có thể nâng cao giá trị câu trả lời bằng cách sử dụng các từ nối logic (*consequently, predominantly, substantially*) và cấu trúc câu phức chuẩn xác.
+    if (/tại sao|vì sao|do đâu|nguyên nhân|why/i.test(raw)) {
+      return `Chào **${name}**! Về nguyên nhân căn cốt: *"**${raw}**"*
 
-💡 *Bạn muốn câu trả lời sâu rộng không giới hạn với hàng trăm tỷ tham số như Claude 3.5 Sonnet / GPT-4o? <a href="javascript:void(0)" onclick="if(window.socraticAI)window.socraticAI.openAPIConfigModal();" class="text-blue-500 font-bold underline">Bấm vào đây để kết nối Google Gemini API miễn phí (Không cần thẻ tín dụng, tạo key trong 15 giây)</a>*`;
+### 1. Phân Tích Cơ Chế Nhân Quả (*Causal Mechanism*)
+* **Nguyên nhân trực tiếp (*Proximate cause*):** Xuất phát từ sự biến động hoặc tác động trực tiếp của các điều kiện môi trường xung quanh vào thời điểm diễn ra sự việc.
+* **Căn nguyên gốc rễ (*Root cause*):** Thường bắt nguồn từ các quy luật cấu trúc hoặc sự tích lũy dài hạn của các yếu tố nội tại, tạo ra điểm bùng phát logic.
+
+### 2. Góc Nhìn Phản Biện & Bài Thi Học Thuật
+* Khi phân tích các hiện tượng tương tự trong bài thi Writing Task 2 hoặc Speaking Part 3, bạn nên kết hợp các liên từ logic biểu thị hệ quả:
+  * *Stem from / Derive from* (bắt nguồn từ...)
+  * *Consequently / As a corollary* (kết quả tất yếu là...)
+  * *Precipitate* (châm ngòi / thúc đẩy nhanh một quá trình)`;
+    }
+
+    // Default intelligent academic response
+    return `Chào **${name}**! Về vấn đề bạn quan tâm: *"**${raw}**"*
+
+### 1. Phân Tích & Luận Điểm Cốt Lõi
+* Khi tiếp cận *"**${cleanTopic}**"*, nguyên tắc học thuật then chốt là dựa trên tính xác thực của thông tin (*empirical validity*) và tính mạch lạc trong cấu trúc lập luận (*structural coherence*).
+* Việc phân tích bản chất từ các yếu tố cấu thành sẽ mang lại góc nhìn đa chiều, khách quan và chính xác nhất.
+
+### 2. Phương Hướng Tiếp Cận & Khuyến Nghị
+* **Nguyên tắc tư duy:** Tiếp cận theo hướng đa diện, đánh giá cả tiền đề lẫn hệ quả có thể xảy ra để đạt được cái nhìn toàn diện.
+* **Từ vựng nâng cao ứng dụng:**
+  * *Substantiate an argument* (chứng minh luận điểm vững chắc)
+  * *Multifaceted perspective* (góc nhìn đa diện)
+  * *Paramount significance* (tầm quan trọng tối thượng)`;
   }
 
   // Visual animated learning toast notification
   showLearningToast(message, type = 'info') {
+    if (type === 'learning') return; // Silence internal learning background notifications
+
     let container = document.getElementById('socratic-learning-toast-container');
     if (!container) {
       container = document.createElement('div');
@@ -2064,19 +2092,16 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
     }
 
     const toast = document.createElement('div');
-    toast.className = `p-3.5 rounded-xl text-xs font-sans shadow-2xl border pointer-events-auto transform transition-all duration-300 translate-y-4 opacity-0 flex items-start gap-2.5 ${type === 'learning'
-        ? 'bg-[#0B2545] text-white border-blue-400 ring-2 ring-blue-500/20 shadow-blue-900/40'
-        : 'bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-800 shadow-xl'
-      }`;
+    toast.className = 'p-3.5 rounded-xl text-xs font-sans shadow-2xl border pointer-events-auto transform transition-all duration-300 translate-y-4 opacity-0 flex items-start gap-2.5 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-800 shadow-xl';
 
     toast.innerHTML = `
-      <div class="w-6 h-6 rounded-lg ${type === 'learning' ? 'bg-iot-orange text-white' : 'bg-iot-primary text-white'} flex items-center justify-center shrink-0 text-xs font-bold">
-        🧠
+      <div class="w-6 h-6 rounded-lg bg-iot-primary text-white flex items-center justify-center shrink-0 text-xs font-bold">
+        🔔
       </div>
       <div class="flex-1 space-y-1">
-        <div class="flex items-center justify-between font-mono text-[10px] ${type === 'learning' ? 'text-blue-300' : 'text-iot-primary font-bold'}">
-          <span>SOCRATIC AI LEARNER</span>
-          <span>Vừa cập nhật</span>
+        <div class="flex items-center justify-between font-mono text-[10px] text-iot-primary font-bold">
+          <span>IELTS ACADEMIC LAB</span>
+          <span>Thông báo</span>
         </div>
         <p class="leading-relaxed text-[11px]">${message}</p>
       </div>
@@ -2091,7 +2116,7 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
     setTimeout(() => {
       toast.classList.add('opacity-0', 'translate-y-2');
       setTimeout(() => toast.remove(), 400);
-    }, 5500);
+    }, 4500);
   }
 
   // Open Full Cognitive Profile Modal
@@ -2114,25 +2139,22 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
         <div class="p-5 sm:p-6 bg-gradient-to-r from-iot-navy via-[#004085] to-iot-primary text-white flex items-center justify-between shrink-0">
           <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-xl bg-iot-orange text-white flex items-center justify-center font-bold text-xl shadow-lg ring-4 ring-white/10">
-              🧠
+              👤
             </div>
             <div>
               <div class="flex items-center gap-2">
-                <h3 class="font-bold text-base sm:text-lg">Hồ Sơ Nhận Thức AI Cá Nhân Hóa</h3>
+                <h3 class="font-bold text-base sm:text-lg">Hồ Sơ Năng Lực Học Viên</h3>
                 <span class="text-[10px] font-mono bg-emerald-500/30 border border-emerald-400 text-emerald-200 px-2 py-0.5 rounded-full">
-                  Live Self-Learning
+                  CD-IELTS Candidate
                 </span>
               </div>
               <p class="text-xs text-blue-200 font-mono mt-0.5">
-                Mô hình tư duy độc bản của <strong>${p.name}</strong> • Mã học viên: <strong>${p.studentId}</strong>
+                Hồ sơ học tập của <strong>${p.name}</strong> • Mã học viên: <strong>${p.studentId}</strong>
               </p>
             </div>
           </div>
 
           <div class="flex items-center gap-2">
-            <button onclick="window.socraticAI.openAPIConfigModal()" class="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-mono text-xs flex items-center gap-1 transition-all" title="Cấu hình Claude / ChatGPT API">
-              ⚙️ Cấu hình Model AI
-            </button>
             <button onclick="window.socraticAI.closeCognitiveProfileModal()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all">
               ✕
             </button>
@@ -2277,243 +2299,9 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
     if (window.lucide) window.lucide.createIcons();
   }
 
-  // Open Modal to configure External API Keys (Google Gemini, Groq, Claude, OpenAI, Local Backend)
-  openAPIConfigModal() {
-    let modal = document.getElementById('socraticApiConfigModal');
-    if (!modal) {
-      modal = document.createElement('div');
-      modal.id = 'socraticApiConfigModal';
-      modal.className = 'fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4';
-      document.body.appendChild(modal);
-    }
-
-    const cfg = this.llmConfig;
-
-    modal.innerHTML = `
-      <div class="bg-white dark:bg-[#0F1C36] rounded-2xl border border-slate-200 dark:border-slate-800 max-w-lg w-full shadow-2xl p-6 space-y-4 text-iot-dark dark:text-white">
-        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-          <div class="flex items-center gap-2">
-            <span class="text-xl">⚙️</span>
-            <div>
-              <h3 class="font-bold text-sm sm:text-base">Cấu Hình Bộ Não AI (Claude / ChatGPT / Gemini)</h3>
-              <p class="text-[11px] text-iot-muted dark:text-slate-400">Chọn mô hình phản biện Socratic hoặc kết nối trực tiếp API</p>
-            </div>
-          </div>
-          <button onclick="document.getElementById('socraticApiConfigModal').remove()" class="text-slate-400 hover:text-white text-base">✕</button>
-        </div>
-
-        <div class="space-y-3.5 text-xs">
-          <div>
-            <label class="block font-bold mb-1 text-slate-700 dark:text-slate-200">Nhà cung cấp Mô hình AI (Provider):</label>
-            <select id="configProviderSelect" onchange="window.socraticAI.handleProviderChange(this.value)" class="w-full p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 dark:bg-slate-900 font-sans text-xs">
-              <option value="socratic-claude-engine" ${cfg.provider === 'socratic-claude-engine' ? 'selected' : ''}>🧠 Socratic Cognitive Engine (Tích hợp sẵn - Không cần Key, An toàn 100% trên file:///)</option>
-              <option value="gemini" ${cfg.provider === 'gemini' ? 'selected' : ''}>💎 Google Gemini API (Gemini 1.5/2.0 Flash - Miễn phí từ Google AI Studio)</option>
-              <option value="groq" ${cfg.provider === 'groq' ? 'selected' : ''}>⚡ Groq Cloud (Llama 3.3 70B - Tốc độ cực nhanh)</option>
-              <option value="anthropic" ${cfg.provider === 'anthropic' ? 'selected' : ''}>🟣 Anthropic Claude API (Claude 3.5 Sonnet trực tiếp)</option>
-              <option value="openai" ${cfg.provider === 'openai' ? 'selected' : ''}>🟢 OpenAI ChatGPT API (GPT-4o / GPT-4o-mini)</option>
-              <option value="backend" ${cfg.provider === 'backend' ? 'selected' : ''}>🔗 Local Backend Server (Proxy nội bộ http://localhost:5000/api/v1/chat/tutor)</option>
-            </select>
-          </div>
-
-          <div id="apiKeyGroup" class="${cfg.provider === 'socratic-claude-engine' ? 'hidden' : ''} space-y-2">
-            <div>
-              <label id="apiKeyLabel" class="block font-bold text-slate-700 dark:text-slate-200">
-                ${cfg.provider === 'backend' ? 'URL Endpoint Server Backend:' : 'API Key của bạn:'}
-              </label>
-              <div class="relative mt-1">
-                <input type="password" id="configApiKeyInput" value="${cfg.apiKey || ''}" 
-                  placeholder="${cfg.provider === 'gemini' ? 'Nhập AIzaSy...' : cfg.provider === 'groq' ? 'Nhập gsk_...' : cfg.provider === 'anthropic' ? 'Nhập sk-ant-api03-...' : cfg.provider === 'backend' ? 'http://localhost:5000/api/v1/chat/tutor' : 'Nhập sk-proj-...'}" 
-                  class="w-full p-2.5 pr-10 rounded-lg border border-slate-300 dark:border-slate-700 dark:bg-slate-900 font-mono text-xs" />
-                <button type="button" onclick="const el=document.getElementById('configApiKeyInput'); el.type = el.type === 'password' ? 'text' : 'password';" class="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-200 text-xs">👁️</button>
-              </div>
-              <div class="mt-2 p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-[11px] space-y-1 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                <span class="block font-bold text-iot-primary dark:text-blue-300">🔑 Hướng dẫn lấy API Key Miễn Phí (0 đồng, không cần thẻ tín dụng):</span>
-                <div>• <strong>Google Gemini:</strong> Lấy key trong 15s tại <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 font-bold underline">aistudio.google.com/app/apikey</a> (15 req/phút miễn phí vĩnh viễn, chạy trực tiếp trên file:///)</div>
-                <div>• <strong>Groq Cloud:</strong> Lấy key siêu tốc (500 token/s) tại <a href="https://console.groq.com/keys" target="_blank" class="text-blue-500 font-bold underline">console.groq.com/keys</a></div>
-                <div class="text-[10px] text-slate-400 pt-0.5">🔒 Khóa API được lưu cục bộ trong trình duyệt (localStorage), không truyền gửi tới máy chủ trung gian nào.</div>
-              </div>
-            </div>
-
-            <!-- Model Selection for Selected Provider -->
-            <div>
-              <label class="block font-bold text-slate-700 dark:text-slate-200 mb-1">Mã Model (Model Name):</label>
-              <input type="text" id="configModelInput" value="${cfg.model || (cfg.provider === 'gemini' ? 'gemini-1.5-flash' : cfg.provider === 'groq' ? 'llama-3.3-70b-versatile' : cfg.provider === 'anthropic' ? 'claude-3-5-sonnet-20241022' : 'gpt-4o')}" 
-                placeholder="gemini-1.5-flash, llama-3.3-70b-versatile, claude-3-5-sonnet-20241022, gpt-4o..." 
-                class="w-full p-2 rounded-lg border border-slate-300 dark:border-slate-700 dark:bg-slate-900 font-mono text-xs" />
-            </div>
-
-            <!-- Test Connection Button & Status -->
-            <div class="pt-1">
-              <button type="button" onclick="window.socraticAI.testLLMConnection()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-xs transition-all flex items-center gap-1.5 border border-slate-300 dark:border-slate-700">
-                <span>🔌 Kiểm tra kết nối API</span>
-              </button>
-              <div id="configTestStatus" class="min-h-[18px]"></div>
-            </div>
-          </div>
-
-          <div class="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 text-[11px] leading-relaxed text-slate-700 dark:text-slate-300">
-            💡 <strong>Mặc định thông minh:</strong> Khi chọn <em>Socratic Cognitive Engine</em>, bạn có thể tự do trò chuyện, sửa câu, dịch thuật, lên dàn ý luận đề hoặc luyện thi như Claude 3.5 Sonnet / ChatGPT ngay lập tức mà không cần bất kỳ API Key nào!
-          </div>
-        </div>
-
-        <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">
-          <button onclick="document.getElementById('socraticApiConfigModal').remove()" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">Hủy</button>
-          <button onclick="window.socraticAI.saveConfigFromModal()" class="px-5 py-2 rounded-lg bg-iot-primary hover:bg-iot-primaryHover text-white text-xs font-bold shadow-sm transition-all active:scale-95">Lưu Cấu Hình</button>
-        </div>
-      </div>
-    `;
-    modal.classList.remove('hidden');
-  }
-
-  handleProviderChange(val) {
-    const keyGroup = document.getElementById('apiKeyGroup');
-    const label = document.getElementById('apiKeyLabel');
-    const keyInput = document.getElementById('configApiKeyInput');
-    const modelInput = document.getElementById('configModelInput');
-
-    if (!keyGroup) return;
-
-    if (val === 'socratic-claude-engine') {
-      keyGroup.classList.add('hidden');
-    } else {
-      keyGroup.classList.remove('hidden');
-      if (val === 'gemini') {
-        if (label) label.textContent = 'API Key Google AI Studio (aiza...):';
-        if (keyInput) keyInput.placeholder = 'Nhập AIzaSy...';
-        if (modelInput) modelInput.value = 'gemini-1.5-flash';
-      } else if (val === 'groq') {
-        if (label) label.textContent = 'API Key Groq Cloud (gsk_...):';
-        if (keyInput) keyInput.placeholder = 'Nhập gsk_...';
-        if (modelInput) modelInput.value = 'llama-3.3-70b-versatile';
-      } else if (val === 'anthropic') {
-        if (label) label.textContent = 'API Key Anthropic (sk-ant-...):';
-        if (keyInput) keyInput.placeholder = 'Nhập sk-ant-api03-...';
-        if (modelInput) modelInput.value = 'claude-3-5-sonnet-20241022';
-      } else if (val === 'openai') {
-        if (label) label.textContent = 'API Key OpenAI (sk-proj-...):';
-        if (keyInput) keyInput.placeholder = 'Nhập sk-proj-...';
-        if (modelInput) modelInput.value = 'gpt-4o';
-      } else if (val === 'backend') {
-        if (label) label.textContent = 'URL Endpoint Server Backend:';
-        if (keyInput) keyInput.placeholder = 'http://localhost:5000/api/v1/chat/tutor';
-        if (modelInput) modelInput.value = 'backend-proxy';
-      }
-    }
-  }
-
-  async testLLMConnection() {
-    const provider = document.getElementById('configProviderSelect')?.value;
-    const apiKey = document.getElementById('configApiKeyInput')?.value?.trim();
-    const model = document.getElementById('configModelInput')?.value?.trim();
-    const statusEl = document.getElementById('configTestStatus');
-    if (!statusEl) return;
-
-    statusEl.className = 'text-xs text-blue-500 font-mono mt-1.5 animate-pulse';
-    statusEl.innerHTML = '⏳ Đang kiểm tra kết nối tới nhà cung cấp...';
-
-    if (provider === 'socratic-claude-engine') {
-      statusEl.className = 'text-xs text-emerald-600 dark:text-emerald-400 font-mono mt-1.5';
-      statusEl.innerHTML = '✅ Bộ não Socratic Cognitive Engine sẵn sàng hoạt động 100%!';
-      return;
-    }
-
-    if (!apiKey && provider !== 'backend') {
-      statusEl.className = 'text-xs text-red-500 font-mono mt-1.5';
-      statusEl.innerHTML = '❌ Vui lòng nhập API Key trước khi kiểm tra!';
-      return;
-    }
-
-    try {
-      if (provider === 'gemini') {
-        const testModel = model || 'gemini-1.5-flash';
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${testModel}:generateContent?key=${apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ role: 'user', parts: [{ text: 'Respond with OK' }] }]
-          })
-        });
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          throw new Error(errData.error?.message || `HTTP ${res.status}`);
-        }
-        statusEl.className = 'text-xs text-emerald-600 dark:text-emerald-400 font-mono mt-1.5';
-        statusEl.innerHTML = `✅ Kết nối Google Gemini API thành công (${testModel})!`;
-      } else if (provider === 'groq') {
-        const testModel = model || 'llama-3.3-70b-versatile';
-        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-          },
-          body: JSON.stringify({
-            model: testModel,
-            messages: [{ role: 'user', content: 'ping' }],
-            max_tokens: 5
-          })
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        statusEl.className = 'text-xs text-emerald-600 dark:text-emerald-400 font-mono mt-1.5';
-        statusEl.innerHTML = `✅ Kết nối Groq Cloud API thành công (${testModel})!`;
-      } else if (provider === 'anthropic') {
-        const testModel = model || 'claude-3-5-sonnet-20241022';
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: {
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01',
-            'content-type': 'application/json',
-            'dangerously-allow-browser': 'true'
-          },
-          body: JSON.stringify({
-            model: testModel,
-            max_tokens: 5,
-            messages: [{ role: 'user', content: 'ping' }]
-          })
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        statusEl.className = 'text-xs text-emerald-600 dark:text-emerald-400 font-mono mt-1.5';
-        statusEl.innerHTML = `✅ Kết nối Anthropic Claude API thành công (${testModel})!`;
-      } else if (provider === 'openai') {
-        const testModel = model || 'gpt-4o-mini';
-        const res = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-          },
-          body: JSON.stringify({
-            model: testModel,
-            messages: [{ role: 'user', content: 'ping' }],
-            max_tokens: 5
-          })
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        statusEl.className = 'text-xs text-emerald-600 dark:text-emerald-400 font-mono mt-1.5';
-        statusEl.innerHTML = `✅ Kết nối OpenAI ChatGPT API thành công (${testModel})!`;
-      } else if (provider === 'backend') {
-        const backendUrl = apiKey || 'http://localhost:5000/api/v1/health';
-        const res = await fetch(backendUrl);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        statusEl.className = 'text-xs text-emerald-600 dark:text-emerald-400 font-mono mt-1.5';
-        statusEl.innerHTML = `✅ Kết nối Server nội bộ thành công (${data.llmProvider || 'OK'})!`;
-      }
-    } catch (err) {
-      statusEl.className = 'text-xs text-red-500 font-mono mt-1.5';
-      statusEl.innerHTML = `❌ Kết nối thất bại: ${err.message}`;
-    }
-  }
-
-  saveConfigFromModal() {
-    const provider = document.getElementById('configProviderSelect')?.value || 'socratic-claude-engine';
-    const apiKey = document.getElementById('configApiKeyInput')?.value?.trim() || '';
-    const model = document.getElementById('configModelInput')?.value?.trim() || '';
-    this.saveLLMConfig({ provider, apiKey, model });
-    const modal = document.getElementById('socraticApiConfigModal');
-    if (modal) modal.remove();
-  }
+  // Deprecated AI API Modal - Removed by user request
+  openAPIConfigModal() {}
+  saveConfigFromModal() {}
 
   saveModalProfile() {
     const nameInput = document.getElementById('modalStudentName');

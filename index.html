@@ -128,17 +128,6 @@
 
   <!-- FLOATING QUICK THEME SWITCHER & CLAUDE / SOCRATIC AI FAB BUTTON -->
   <div class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
-
-    <!-- Socratic AI FAB Button -->
-    <button onclick="toggleFloatingHomeChat()"
-      class="flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold shadow-xl transition-all duration-200 bg-gradient-to-r from-amber-600 via-iot-orange to-amber-500 hover:brightness-110 text-white active:scale-95 ring-2 ring-white/20"
-      title="Trò chuyện với Claude / Socratic AI">
-      <span class="w-2 h-2 rounded-full bg-emerald-300 animate-ping"></span>
-      <i data-lucide="sparkles" class="w-4 h-4 text-amber-200"></i>
-      <span class="hidden sm:inline">Trò Chuyện Với AI (Claude)</span>
-      <span class="sm:hidden">Chat AI</span>
-    </button>
-
     <!-- Theme Switcher Toggle -->
     <button onclick="toggleTheme()" id="floatingThemeBtn"
       class="flex items-center gap-2 px-3.5 py-2.5 rounded-full text-xs font-semibold shadow-lg border transition-all duration-200 bg-white border-slate-200 text-iot-dark hover:border-iot-primary hover:text-iot-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:border-blue-400"
@@ -146,113 +135,6 @@
       <i id="floatingThemeIcon" data-lucide="moon" class="w-4 h-4 text-iot-primary dark:text-amber-400"></i>
       <span id="floatingThemeLabel" class="hidden sm:inline">Chế độ: Sáng</span>
     </button>
-  </div>
-
-  <!-- FLOATING CLAUDE / SOCRATIC AI CHAT WINDOW (HOMEPAGE) -->
-  <div id="homeFloatingChatDrawer"
-    class="hidden fixed bottom-20 right-4 sm:right-6 z-50 w-[94vw] sm:w-[420px] max-h-[82vh] h-[580px] bg-white dark:bg-[#0B1528] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden animate-fade-in font-sans">
-
-    <!-- Header -->
-    <div
-      class="p-3.5 bg-gradient-to-r from-iot-navy via-[#0B2545] to-blue-900 text-white flex items-center justify-between shrink-0">
-      <div class="flex items-center gap-2.5">
-        <div
-          class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 via-iot-orange to-amber-400 text-white flex items-center justify-center font-bold text-sm shadow ring-2 ring-white/10">
-          ✦
-        </div>
-        <div>
-          <div class="flex items-center gap-1.5">
-            <h3 class="font-bold text-xs text-white">Claude / Socratic AI Tutor</h3>
-            <span class="text-[9px] font-mono bg-blue-500/40 text-blue-200 px-1.5 py-0.2 rounded font-bold">Claude
-              3.5</span>
-          </div>
-          <p class="text-[10px] text-blue-200 font-mono">
-            Học viên: <strong id="homeChatStudentName">Học viên</strong> • Trợ giảng Trực tuyến
-          </p>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-1.5">
-        <button onclick="if (window.socraticAI) window.socraticAI.openAPIConfigModal();"
-          class="px-2 py-1 rounded-md bg-white/10 hover:bg-white/20 text-white text-[10px] font-mono transition-all flex items-center gap-1"
-          title="Cấu hình Google Gemini / Groq / OpenAI / Claude API">
-          <span>⚙️ API</span>
-        </button>
-        <a href="exam-room.html?skill=READING&title=Cambridge%2019%20-%20Test%201%3A%20Reading%20Passage%203"
-          class="px-2 py-1 rounded-md bg-white/10 hover:bg-white/20 text-white text-[10px] font-mono transition-all flex items-center gap-1"
-          title="Vào phòng thi chia đôi màn hình">
-          <span>Phòng Thi</span>
-          <i data-lucide="external-link" class="w-3 h-3"></i>
-        </a>
-        <button onclick="toggleFloatingHomeChat()"
-          class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all text-sm">
-          ✕
-        </button>
-      </div>
-    </div>
-
-    <!-- Message Stream -->
-    <div id="homeAiChatBox" class="flex-1 p-3.5 overflow-y-auto space-y-3 text-xs leading-relaxed">
-      <!-- Default Greeting -->
-      <div class="flex items-start gap-2.5 my-1">
-        <div
-          class="w-6 h-6 rounded-md bg-iot-orange text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
-          ✦
-        </div>
-        <div
-          class="flex-1 p-3 rounded-2xl rounded-tl-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 space-y-2">
-          <p class="font-bold text-iot-primary dark:text-blue-300">Chào bạn! Tôi là Socratic AI Tutor.</p>
-          <p>Tôi hoạt động với trí tuệ phân tích sắc bén và khả năng đàm thoại như <strong>Claude 3.5 Sonnet / ChatGPT</strong>. Bạn có thể hỏi tôi bất kỳ điều gì:</p>
-          <ul class="list-disc list-inside space-y-0.5 text-[11px] text-iot-muted dark:text-slate-400">
-            <li><strong>Chấm điểm IELTS Writing Task 1 &amp; Task 2</strong> chuẩn cựu giám khảo IDP/BC (4 tiêu chí + JSON Schema)</li>
-            <li>Sửa lỗi ngữ pháp, cấu trúc câu phức, giải nghĩa thì tiếng Anh</li>
-            <li>Dịch thuật &amp; diễn đạt học thuật C1-C2</li>
-            <li>Chiến lược giải đề Cambridge 19 (TFNG vs FALSE, Matching Headings)</li>
-            <li>Khoa học, địa lý thế giới, vũ trụ, lịch sử, toán học</li>
-          </ul>
-          <div class="pt-1">
-            <button onclick="if (window.socraticAI) window.socraticAI.openAPIConfigModal();" class="text-[10px] font-mono bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-300 px-2.5 py-1 rounded-full border border-blue-400/40 inline-flex items-center gap-1 transition-all">
-              <span>⚙️ Kết nối Gemini / Groq API (Miễn phí 100%)</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Quick Chips -->
-    <div
-      class="px-3 py-2 bg-slate-50 dark:bg-slate-900/60 border-t border-slate-100 dark:border-slate-800 flex flex-wrap gap-1 shrink-0 text-[11px]">
-      <button onclick="handleHomeQuickChip('Tại sao câu 34 trong Cambridge 19 là NOT GIVEN chứ không thể là FALSE?')"
-        class="px-2 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:text-iot-primary">
-        ⚖️ NOT GIVEN vs FALSE
-      </button>
-      <button onclick="handleHomeQuickChip('Cho tôi một mở bài Writing Task 2 Band 8.5 về chủ đề AI trong tòa án')"
-        class="px-2 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:text-iot-orange">
-        📝 Mở bài Band 8.5
-      </button>
-      <button
-        onclick="handleHomeQuickChip('Giải thích thuyết Tâm trí mở rộng (Extended Mind) và Epistemic Scaffolding')"
-        class="px-2 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:text-purple-600">
-        💡 Extended Mind
-      </button>
-    </div>
-
-    <!-- Input Form -->
-    <div class="p-3 bg-white dark:bg-[#0B132B] border-t border-slate-200 dark:border-slate-800 shrink-0">
-      <form onsubmit="handleHomeChatSubmit(event)" class="flex items-center gap-2">
-        <input type="text" id="homeUserChatInput" placeholder="Hỏi AI bất kỳ điều gì (như Claude / ChatGPT)..."
-          class="flex-1 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-xs text-iot-dark dark:text-white dark:bg-slate-900 focus:outline-none focus:border-iot-primary" />
-        <button id="homeBtnSend" type="submit"
-          class="p-2 rounded-lg bg-iot-primary hover:bg-iot-primaryHover text-white shadow-sm transition-all active:scale-95">
-          <i data-lucide="send" class="w-3.5 h-3.5"></i>
-        </button>
-        <button id="homeBtnStop" type="button" onclick="stopHomeGenerating()"
-          class="hidden p-2 rounded-lg bg-red-600 hover:bg-red-700 text-white shadow-sm transition-all active:scale-95">
-          <i data-lucide="square" class="w-3.5 h-3.5"></i>
-        </button>
-      </form>
-    </div>
-
   </div>
 
   <!-- TOP BAR: THÔNG BÁO HỌC THUẬT & THANH CÔNG CỤ -->
@@ -265,7 +147,8 @@
           NỀN TẢNG THI THỬ 4 KỸ NĂNG 2026
         </span>
         <span class="text-slate-300 hidden sm:inline">
-          100% Luyện đề thực chiến mô phỏng thi máy (CD-IELTS) • <strong class="text-white">Tích hợp AI Sửa lỗi chính tả &amp; Nâng cao từ vựng</strong>
+          100% Luyện đề thực chiến mô phỏng thi máy (CD-IELTS) • <strong class="text-white">Tích hợp AI Sửa lỗi chính tả
+            &amp; Nâng cao từ vựng</strong>
         </span>
       </div>
 
@@ -277,8 +160,7 @@
           <span>AI Sửa Chính Tả &amp; Từ Vựng</span>
         </a>
         <span class="text-white/20">|</span>
-        <a href="library.html"
-          class="hover:text-white transition-colors flex items-center gap-1 text-slate-200">
+        <a href="library.html" class="hover:text-white transition-colors flex items-center gap-1 text-slate-200">
           <i data-lucide="layers" class="w-3.5 h-3.5 text-blue-400"></i>
           <span>Thư Viện Đề (4 Kỹ Năng)</span>
         </a>
@@ -307,33 +189,40 @@
         </div>
         <div class="flex flex-col">
           <div class="flex items-center gap-1.5">
-            <span class="font-extrabold text-base tracking-tight text-iot-dark dark:text-white">IELTS ACADEMIC LAB</span>
+            <span class="font-extrabold text-base tracking-tight text-iot-dark dark:text-white">IELTS ACADEMIC
+              LAB</span>
             <span class="font-bold text-base tracking-tight text-iot-primary dark:text-blue-400">IELTS</span>
             <span
-              class="text-[10px] bg-green-100 text-green-700 font-bold px-1.5 py-0.5 rounded ml-1 border border-green-200 dark:bg-green-950/60 dark:text-green-300 dark:border-green-800">4 SKILLS</span>
+              class="text-[10px] bg-green-100 text-green-700 font-bold px-1.5 py-0.5 rounded ml-1 border border-green-200 dark:bg-green-950/60 dark:text-green-300 dark:border-green-800">4
+              SKILLS</span>
           </div>
-          <span class="text-[11px] text-iot-muted font-medium dark:text-slate-400">Hệ Thống Luyện Thi Thực Chiến &amp; AI Ngôn Ngữ Học Thuật</span>
+          <span class="text-[11px] text-iot-muted font-medium dark:text-slate-400">Hệ Thống Luyện Thi Thực Chiến &amp;
+            AI Ngôn Ngữ Học Thuật</span>
         </div>
       </a>
 
       <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold text-iot-dark dark:text-slate-200">
         <a href="#overview" class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors">Tổng Quan</a>
-        <a href="#ai-booster" class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors flex items-center gap-1 text-iot-orange font-bold">
+        <a href="#ai-booster"
+          class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors flex items-center gap-1 text-iot-orange font-bold">
           <i data-lucide="spell-check" class="w-4 h-4"></i>
           <span>AI Sửa Chính Tả &amp; Từ Vựng</span>
         </a>
-        <a href="#dictionary-translator" class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors flex items-center gap-1 text-blue-600 dark:text-blue-400 font-bold">
+        <a href="#dictionary-translator"
+          class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors flex items-center gap-1 text-blue-600 dark:text-blue-400 font-bold">
           <i data-lucide="languages" class="w-4 h-4"></i>
           <span>Từ Điển &amp; Dịch Thuật</span>
         </a>
-        <a href="#skills-hub" class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors">4 Kỹ Năng Thi Thử</a>
+        <a href="#skills-hub" class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors">4 Kỹ Năng Thi
+          Thử</a>
         <a href="library.html"
           class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors flex items-center gap-1.5 text-iot-primary dark:text-blue-400 font-bold">
           <i data-lucide="book-open" class="w-4 h-4"></i>
           <span>Thư Viện Đề Thi</span>
           <span class="text-[10px] bg-iot-orange text-white px-1.5 py-0.2 rounded font-mono font-bold">MỚI</span>
         </a>
-        <a href="library.html?filter=READING" class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors">Phòng Thi Máy (CD-IELTS)</a>
+        <a href="library.html?filter=READING"
+          class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors">Phòng Thi Máy (CD-IELTS)</a>
         <a href="#faq" class="hover:text-iot-primary dark:hover:text-blue-400 transition-colors">Hỏi Đáp FAQ</a>
       </nav>
 
@@ -343,7 +232,8 @@
           title="Sổ tay từ vựng học thuật đã lưu">
           <span>⭐</span>
           <span class="hidden sm:inline">Sổ Tay</span>
-          <span class="px-1.5 py-0.2 rounded-full bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-100 font-bold text-[10px] saved-vocab-count-badge">0</span>
+          <span
+            class="px-1.5 py-0.2 rounded-full bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-100 font-bold text-[10px] saved-vocab-count-badge">0</span>
         </button>
 
         <button onclick="window.socraticAI.openCognitiveProfileModal()"
@@ -374,7 +264,8 @@
       <div class="flex items-center gap-2 text-xs text-iot-muted mb-6 dark:text-slate-400">
         <a href="index.html" class="hover:text-iot-primary dark:hover:text-blue-400">Trang chủ</a>
         <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-        <span class="text-iot-primary font-medium dark:text-blue-400">Hệ Thống Luyện Thi IELTS 4 Kỹ Năng &amp; AI Ngôn Ngữ Học Thuật</span>
+        <span class="text-iot-primary font-medium dark:text-blue-400">Hệ Thống Luyện Thi IELTS 4 Kỹ Năng &amp; AI Ngôn
+          Ngữ Học Thuật</span>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
@@ -393,12 +284,17 @@
           <h1
             class="text-3xl sm:text-4xl xl:text-45px font-bold text-iot-dark dark:text-white leading-tight tracking-tight">
             Luyện Thi IELTS 4 Kỹ Năng.<br />
-            <span class="text-iot-primary dark:text-blue-400">Tích Hợp AI Sửa Lỗi Chính Tả</span> &amp; Nâng Cao Từ Vựng.
+            <span class="text-iot-primary dark:text-blue-400">Tích Hợp AI Sửa Lỗi Chính Tả</span> &amp; Nâng Cao Từ
+            Vựng.
           </h1>
 
           <!-- Body Description -->
           <p class="text-base sm:text-lg text-iot-body dark:text-slate-300 leading-relaxed">
-            Nền tảng thi thử trực tuyến độc lập mô phỏng chính xác kỳ thi <strong class="text-iot-dark dark:text-white font-semibold">Computer-delivered IELTS</strong> (Nghe, Nói, Đọc, Viết). Trang bị công cụ <strong class="text-iot-dark dark:text-white font-semibold">AI Sửa Lỗi Chính Tả &amp; Nâng Tầm Từ Vựng</strong> tự động, phát hiện sai sót ngữ pháp và nâng cấp câu văn lên chuẩn học thuật Band 8.0 - 9.0 tức thì.
+            Nền tảng thi thử trực tuyến độc lập mô phỏng chính xác kỳ thi <strong
+              class="text-iot-dark dark:text-white font-semibold">Computer-delivered IELTS</strong> (Nghe, Nói, Đọc,
+            Viết). Trang bị công cụ <strong class="text-iot-dark dark:text-white font-semibold">AI Sửa Lỗi Chính Tả
+              &amp; Nâng Tầm Từ Vựng</strong> tự động, phát hiện sai sót ngữ pháp và nâng cấp câu văn lên chuẩn học
+            thuật Band 8.0 - 9.0 tức thì.
           </p>
 
           <!-- Core Feature Bullets -->
@@ -440,7 +336,8 @@
           <div
             class="pt-4 flex items-center gap-3 text-xs text-iot-muted border-t border-iot-border dark:border-slate-800 dark:text-slate-400">
             <i data-lucide="shield-check" class="w-4 h-4 text-iot-green shrink-0"></i>
-            <span>Nền tảng học thuật mã nguồn mở phi lợi nhuận. Miễn phí hoàn toàn cho cộng đồng thí sinh IELTS Việt Nam.</span>
+            <span>Nền tảng học thuật mã nguồn mở phi lợi nhuận. Miễn phí hoàn toàn cho cộng đồng thí sinh IELTS Việt
+              Nam.</span>
           </div>
 
         </div>
@@ -451,33 +348,41 @@
             class="bg-white border border-iot-border rounded-xl shadow-iot-card overflow-hidden dark:bg-[#111C44] dark:border-slate-700 transition-colors">
 
             <!-- Simulator Header -->
-            <div class="p-4 bg-gradient-to-r from-iot-navy to-iot-primary text-white flex flex-wrap items-center justify-between gap-2 border-b border-iot-border dark:border-slate-800">
+            <div
+              class="p-4 bg-gradient-to-r from-iot-navy to-iot-primary text-white flex flex-wrap items-center justify-between gap-2 border-b border-iot-border dark:border-slate-800">
               <div class="flex items-center gap-2.5">
                 <span class="w-3 h-3 rounded-full bg-iot-green animate-pulse"></span>
                 <div>
-                  <span class="text-[10px] text-slate-300 uppercase tracking-wider font-mono">BỘ MÔ PHỎNG TƯƠNG TÁC</span>
+                  <span class="text-[10px] text-slate-300 uppercase tracking-wider font-mono">BỘ MÔ PHỎNG TƯƠNG
+                    TÁC</span>
                   <h3 class="font-bold text-sm text-white">Cây Cú Pháp Tạo Sinh &amp; Logic Vị Từ (Chomsky Matrix)</h3>
                 </div>
               </div>
-              <span class="text-[11px] bg-blue-600/40 text-blue-200 border border-blue-400/30 px-2 py-0.5 rounded font-mono">
+              <span
+                class="text-[11px] bg-blue-600/40 text-blue-200 border border-blue-400/30 px-2 py-0.5 rounded font-mono">
                 X-bar Matrix
               </span>
             </div>
 
             <!-- Preset Sentence Switcher Tabs -->
-            <div class="px-3 py-2 bg-slate-100 dark:bg-slate-900/90 border-b border-iot-border dark:border-slate-800 flex flex-wrap items-center justify-between gap-1.5 text-xs">
-              <span class="font-mono text-[10px] uppercase font-bold text-iot-muted dark:text-slate-400 flex items-center gap-1">
+            <div
+              class="px-3 py-2 bg-slate-100 dark:bg-slate-900/90 border-b border-iot-border dark:border-slate-800 flex flex-wrap items-center justify-between gap-1.5 text-xs">
+              <span
+                class="font-mono text-[10px] uppercase font-bold text-iot-muted dark:text-slate-400 flex items-center gap-1">
                 <i data-lucide="layers" class="w-3 h-3 text-iot-orange"></i>
                 <span>Cấu trúc mẫu:</span>
               </span>
               <div class="inline-flex rounded-lg p-0.5 bg-slate-200 dark:bg-slate-800 text-[11px] font-mono">
-                <button type="button" id="btnSyntaxPreset-0" onclick="switchSyntaxPreset(0)" class="px-2.5 py-1 rounded-md font-bold transition-all bg-iot-primary text-white shadow-xs">
+                <button type="button" id="btnSyntaxPreset-0" onclick="switchSyntaxPreset(0)"
+                  class="px-2.5 py-1 rounded-md font-bold transition-all bg-iot-primary text-white shadow-xs">
                   #1 Luận điểm C1
                 </button>
-                <button type="button" id="btnSyntaxPreset-1" onclick="switchSyntaxPreset(1)" class="px-2.5 py-1 rounded-md font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-iot-primary">
+                <button type="button" id="btnSyntaxPreset-1" onclick="switchSyntaxPreset(1)"
+                  class="px-2.5 py-1 rounded-md font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-iot-primary">
                   #2 Đảo ngữ 8.5
                 </button>
-                <button type="button" id="btnSyntaxPreset-2" onclick="switchSyntaxPreset(2)" class="px-2.5 py-1 rounded-md font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-iot-primary">
+                <button type="button" id="btnSyntaxPreset-2" onclick="switchSyntaxPreset(2)"
+                  class="px-2.5 py-1 rounded-md font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-iot-primary">
                   #3 Danh từ hóa C2
                 </button>
               </div>
@@ -630,15 +535,19 @@
           AI Sửa Lỗi Chính Tả &amp; Nâng Cao Từ Vựng Học Thuật
         </h2>
         <p class="text-iot-body dark:text-slate-300 text-base leading-relaxed">
-          Dán câu văn hoặc bài viết IELTS của bạn vào bên dưới. AI sẽ tự động rà soát từng lỗi chính tả (spelling &amp; typos), đồng thời gợi ý thay thế các từ vựng đơn giản bằng cụm từ học thuật C1-C2 (Academic Collocations) chuẩn Band 8.0 - 9.0.
+          Dán câu văn hoặc bài viết IELTS của bạn vào bên dưới. AI sẽ tự động rà soát từng lỗi chính tả (spelling &amp;
+          typos), đồng thời gợi ý thay thế các từ vựng đơn giản bằng cụm từ học thuật C1-C2 (Academic Collocations)
+          chuẩn Band 8.0 - 9.0.
         </p>
       </div>
 
       <!-- Studio Container -->
-      <div class="bg-iot-bgLight dark:bg-[#111C44] rounded-2xl border border-iot-border dark:border-slate-700 shadow-xl overflow-hidden">
+      <div
+        class="bg-iot-bgLight dark:bg-[#111C44] rounded-2xl border border-iot-border dark:border-slate-700 shadow-xl overflow-hidden">
 
         <!-- Top Control Bar -->
-        <div class="p-4 sm:p-5 bg-white dark:bg-slate-900 border-b border-iot-border dark:border-slate-800 flex flex-wrap items-center justify-between gap-4">
+        <div
+          class="p-4 sm:p-5 bg-white dark:bg-slate-900 border-b border-iot-border dark:border-slate-800 flex flex-wrap items-center justify-between gap-4">
           <div class="flex items-center gap-2 flex-wrap">
             <span class="text-xs font-bold text-iot-dark dark:text-slate-300 font-mono">Thử bài mẫu:</span>
             <button onclick="loadBoosterSample(1)"
@@ -668,7 +577,8 @@
         </div>
 
         <!-- CIRCULAR SCORECARD (4 TIÊU CHÍ IELTS - VÒNG TRÒN 9.0 TOÀN PHẦN) -->
-        <div class="p-5 sm:p-6 bg-gradient-to-r from-blue-50/70 via-white to-slate-50 dark:from-[#0B1536] dark:via-[#111C44] dark:to-[#0D183A] border-b border-iot-border dark:border-slate-800">
+        <div
+          class="p-5 sm:p-6 bg-gradient-to-r from-blue-50/70 via-white to-slate-50 dark:from-[#0B1536] dark:via-[#111C44] dark:to-[#0D183A] border-b border-iot-border dark:border-slate-800">
           <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mb-5">
             <div class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-iot-orange animate-pulse"></span>
@@ -678,7 +588,8 @@
             </div>
 
             <!-- Score View Toggle Button -->
-            <div class="flex items-center gap-1 bg-white dark:bg-slate-800 p-1 rounded-xl border border-iot-border dark:border-slate-700 text-xs shadow-xs">
+            <div
+              class="flex items-center gap-1 bg-white dark:bg-slate-800 p-1 rounded-xl border border-iot-border dark:border-slate-700 text-xs shadow-xs">
               <button onclick="toggleScoreView('original')" id="btnScoreViewOrig"
                 class="px-3 py-1 rounded-lg font-bold transition-all bg-iot-primary text-white shadow-xs">
                 ⦿ Điểm bài gốc
@@ -694,92 +605,112 @@
           <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 items-center justify-items-center">
 
             <!-- GAUGE 1: OVERALL BAND (Central Big Gauge) -->
-            <div class="col-span-2 sm:col-span-1 flex flex-col items-center text-center p-3 rounded-2xl bg-white dark:bg-slate-900/90 border border-blue-200 dark:border-blue-900/60 shadow-sm w-full">
+            <div
+              class="col-span-2 sm:col-span-1 flex flex-col items-center text-center p-3 rounded-2xl bg-white dark:bg-slate-900/90 border border-blue-200 dark:border-blue-900/60 shadow-sm w-full">
               <div class="relative w-24 h-24 flex items-center justify-center">
                 <svg class="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="7" class="text-slate-100 dark:text-slate-800" fill="transparent" />
-                  <circle id="gaugeRingOverall" cx="50" cy="50" r="40" stroke="currentColor" stroke-width="7" stroke-linecap="round"
-                    class="text-iot-primary transition-all duration-700 ease-out" fill="transparent"
-                    stroke-dasharray="251.3" stroke-dashoffset="97.7" />
+                  <circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="7"
+                    class="text-slate-100 dark:text-slate-800" fill="transparent" />
+                  <circle id="gaugeRingOverall" cx="50" cy="50" r="40" stroke="currentColor" stroke-width="7"
+                    stroke-linecap="round" class="text-iot-primary transition-all duration-700 ease-out"
+                    fill="transparent" stroke-dasharray="251.3" stroke-dashoffset="97.7" />
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                  <span id="gaugeValOverall" class="text-2xl font-black text-iot-dark dark:text-white font-mono leading-none">6.0</span>
+                  <span id="gaugeValOverall"
+                    class="text-2xl font-black text-iot-dark dark:text-white font-mono leading-none">6.0</span>
                   <span class="text-[10px] text-iot-muted font-mono mt-0.5">/ 9.0</span>
                 </div>
               </div>
-              <span class="text-xs font-extrabold text-iot-primary dark:text-blue-400 font-mono uppercase mt-2">OVERALL BAND</span>
+              <span class="text-xs font-extrabold text-iot-primary dark:text-blue-400 font-mono uppercase mt-2">OVERALL
+                BAND</span>
               <span id="gaugeLabelOverall" class="text-[10px] text-slate-500 font-medium">Competent User</span>
             </div>
 
             <!-- GAUGE 2: LEXICAL RESOURCE (LR) -->
-            <div class="flex flex-col items-center text-center p-3 rounded-xl bg-white/70 dark:bg-slate-800/60 border border-iot-border dark:border-slate-700 w-full">
+            <div
+              class="flex flex-col items-center text-center p-3 rounded-xl bg-white/70 dark:bg-slate-800/60 border border-iot-border dark:border-slate-700 w-full">
               <div class="relative w-20 h-20 flex items-center justify-center">
                 <svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7" class="text-slate-100 dark:text-slate-800" fill="transparent" />
-                  <circle id="gaugeRingLR" cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7" stroke-linecap="round"
-                    class="text-blue-600 transition-all duration-700 ease-out" fill="transparent"
+                  <circle cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7"
+                    class="text-slate-100 dark:text-slate-800" fill="transparent" />
+                  <circle id="gaugeRingLR" cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7"
+                    stroke-linecap="round" class="text-blue-600 transition-all duration-700 ease-out" fill="transparent"
                     stroke-dasharray="226.2" stroke-dashoffset="88.0" />
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                  <span id="gaugeValLR" class="text-lg font-black text-iot-dark dark:text-white font-mono leading-none">5.5</span>
+                  <span id="gaugeValLR"
+                    class="text-lg font-black text-iot-dark dark:text-white font-mono leading-none">5.5</span>
                   <span class="text-[9px] text-iot-muted font-mono">/ 9.0</span>
                 </div>
               </div>
-              <span class="text-xs font-bold text-iot-dark dark:text-slate-200 font-mono uppercase mt-2">Lexical (LR)</span>
+              <span class="text-xs font-bold text-iot-dark dark:text-slate-200 font-mono uppercase mt-2">Lexical
+                (LR)</span>
               <span class="text-[10px] text-slate-400">Từ vựng &amp; Collocations</span>
             </div>
 
             <!-- GAUGE 3: GRAMMATICAL RANGE & ACCURACY (GRA) -->
-            <div class="flex flex-col items-center text-center p-3 rounded-xl bg-white/70 dark:bg-slate-800/60 border border-iot-border dark:border-slate-700 w-full">
+            <div
+              class="flex flex-col items-center text-center p-3 rounded-xl bg-white/70 dark:bg-slate-800/60 border border-iot-border dark:border-slate-700 w-full">
               <div class="relative w-20 h-20 flex items-center justify-center">
                 <svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7" class="text-slate-100 dark:text-slate-800" fill="transparent" />
-                  <circle id="gaugeRingGRA" cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7" stroke-linecap="round"
-                    class="text-amber-500 transition-all duration-700 ease-out" fill="transparent"
-                    stroke-dasharray="226.2" stroke-dashoffset="88.0" />
+                  <circle cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7"
+                    class="text-slate-100 dark:text-slate-800" fill="transparent" />
+                  <circle id="gaugeRingGRA" cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7"
+                    stroke-linecap="round" class="text-amber-500 transition-all duration-700 ease-out"
+                    fill="transparent" stroke-dasharray="226.2" stroke-dashoffset="88.0" />
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                  <span id="gaugeValGRA" class="text-lg font-black text-iot-dark dark:text-white font-mono leading-none">5.5</span>
+                  <span id="gaugeValGRA"
+                    class="text-lg font-black text-iot-dark dark:text-white font-mono leading-none">5.5</span>
                   <span class="text-[9px] text-iot-muted font-mono">/ 9.0</span>
                 </div>
               </div>
-              <span class="text-xs font-bold text-iot-dark dark:text-slate-200 font-mono uppercase mt-2">Grammar (GRA)</span>
+              <span class="text-xs font-bold text-iot-dark dark:text-slate-200 font-mono uppercase mt-2">Grammar
+                (GRA)</span>
               <span class="text-[10px] text-slate-400">Chính tả &amp; Cú pháp</span>
             </div>
 
             <!-- GAUGE 4: COHERENCE & COHESION (CC) -->
-            <div class="flex flex-col items-center text-center p-3 rounded-xl bg-white/70 dark:bg-slate-800/60 border border-iot-border dark:border-slate-700 w-full">
+            <div
+              class="flex flex-col items-center text-center p-3 rounded-xl bg-white/70 dark:bg-slate-800/60 border border-iot-border dark:border-slate-700 w-full">
               <div class="relative w-20 h-20 flex items-center justify-center">
                 <svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7" class="text-slate-100 dark:text-slate-800" fill="transparent" />
-                  <circle id="gaugeRingCC" cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7" stroke-linecap="round"
-                    class="text-purple-500 transition-all duration-700 ease-out" fill="transparent"
-                    stroke-dasharray="226.2" stroke-dashoffset="75.4" />
+                  <circle cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7"
+                    class="text-slate-100 dark:text-slate-800" fill="transparent" />
+                  <circle id="gaugeRingCC" cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7"
+                    stroke-linecap="round" class="text-purple-500 transition-all duration-700 ease-out"
+                    fill="transparent" stroke-dasharray="226.2" stroke-dashoffset="75.4" />
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                  <span id="gaugeValCC" class="text-lg font-black text-iot-dark dark:text-white font-mono leading-none">6.0</span>
+                  <span id="gaugeValCC"
+                    class="text-lg font-black text-iot-dark dark:text-white font-mono leading-none">6.0</span>
                   <span class="text-[9px] text-iot-muted font-mono">/ 9.0</span>
                 </div>
               </div>
-              <span class="text-xs font-bold text-iot-dark dark:text-slate-200 font-mono uppercase mt-2">Coherence (CC)</span>
+              <span class="text-xs font-bold text-iot-dark dark:text-slate-200 font-mono uppercase mt-2">Coherence
+                (CC)</span>
               <span class="text-[10px] text-slate-400">Mạch lạc liên kết</span>
             </div>
 
             <!-- GAUGE 5: TASK RESPONSE (TR) -->
-            <div class="flex flex-col items-center text-center p-3 rounded-xl bg-white/70 dark:bg-slate-800/60 border border-iot-border dark:border-slate-700 w-full">
+            <div
+              class="flex flex-col items-center text-center p-3 rounded-xl bg-white/70 dark:bg-slate-800/60 border border-iot-border dark:border-slate-700 w-full">
               <div class="relative w-20 h-20 flex items-center justify-center">
                 <svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7" class="text-slate-100 dark:text-slate-800" fill="transparent" />
-                  <circle id="gaugeRingTR" cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7" stroke-linecap="round"
-                    class="text-emerald-500 transition-all duration-700 ease-out" fill="transparent"
-                    stroke-dasharray="226.2" stroke-dashoffset="75.4" />
+                  <circle cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7"
+                    class="text-slate-100 dark:text-slate-800" fill="transparent" />
+                  <circle id="gaugeRingTR" cx="50" cy="50" r="36" stroke="currentColor" stroke-width="7"
+                    stroke-linecap="round" class="text-emerald-500 transition-all duration-700 ease-out"
+                    fill="transparent" stroke-dasharray="226.2" stroke-dashoffset="75.4" />
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                  <span id="gaugeValTR" class="text-lg font-black text-iot-dark dark:text-white font-mono leading-none">6.0</span>
+                  <span id="gaugeValTR"
+                    class="text-lg font-black text-iot-dark dark:text-white font-mono leading-none">6.0</span>
                   <span class="text-[9px] text-iot-muted font-mono">/ 9.0</span>
                 </div>
               </div>
-              <span class="text-xs font-bold text-iot-dark dark:text-slate-200 font-mono uppercase mt-2">Response (TR)</span>
+              <span class="text-xs font-bold text-iot-dark dark:text-slate-200 font-mono uppercase mt-2">Response
+                (TR)</span>
               <span class="text-[10px] text-slate-400">Độ sâu luận điểm</span>
             </div>
 
@@ -787,7 +718,8 @@
         </div>
 
         <!-- Studio Main Workspace: Grid 2 Columns -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-iot-border dark:divide-slate-800">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-iot-border dark:divide-slate-800">
 
           <!-- Left Column: Input Textarea (5 Cols) -->
           <div class="lg:col-span-5 p-5 sm:p-6 flex flex-col justify-between space-y-4">
@@ -822,10 +754,12 @@
           </div>
 
           <!-- Right Column: In-Situ Diagnostic & Deep Rationale (7 Cols) -->
-          <div class="lg:col-span-7 p-5 sm:p-6 bg-slate-50/60 dark:bg-slate-900/40 flex flex-col justify-between space-y-4">
+          <div
+            class="lg:col-span-7 p-5 sm:p-6 bg-slate-50/60 dark:bg-slate-900/40 flex flex-col justify-between space-y-4">
 
             <!-- View Modes Tabs -->
-            <div class="flex items-center justify-between border-b border-iot-border dark:border-slate-800 text-xs font-semibold gap-2 overflow-x-auto pb-1">
+            <div
+              class="flex items-center justify-between border-b border-iot-border dark:border-slate-800 text-xs font-semibold gap-2 overflow-x-auto pb-1">
               <div class="flex items-center gap-1 shrink-0">
                 <button onclick="switchBoosterTab('highlight')" id="tabBtnHighlight"
                   class="px-3 py-2 border-b-2 border-iot-primary text-iot-primary dark:text-blue-400 font-bold flex items-center gap-1.5 transition-all">
@@ -850,11 +784,13 @@
             </div>
 
             <!-- Tab Content Viewports -->
-            <div class="min-h-[300px] max-h-[360px] overflow-y-auto p-4 rounded-xl bg-white dark:bg-slate-900 border border-iot-border dark:border-slate-800 text-sm leading-relaxed">
-              
+            <div
+              class="min-h-[300px] max-h-[360px] overflow-y-auto p-4 rounded-xl bg-white dark:bg-slate-900 border border-iot-border dark:border-slate-800 text-sm leading-relaxed">
+
               <!-- TAB 1: IN-SITU ANNOTATED ORIGINAL TEXT -->
               <div id="viewBoosterHighlight" class="space-y-4">
-                <div class="text-xs text-iot-muted dark:text-slate-400 flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg bg-blue-50/50 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-900/40">
+                <div
+                  class="text-xs text-iot-muted dark:text-slate-400 flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg bg-blue-50/50 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-900/40">
                   <div class="flex items-center gap-3">
                     <span class="inline-flex items-center gap-1 text-red-600 font-semibold">
                       <span class="w-2 h-2 rounded-full bg-red-500"></span> Gạch đỏ: Sai chính tả
@@ -866,12 +802,15 @@
                   <span class="font-mono text-[11px]">👉 Bấm vào từng huy hiệu số để xem phân tích</span>
                 </div>
 
-                <div id="boosterHighlightedText" class="text-sm font-sans text-iot-dark dark:text-slate-100 leading-loose">
-                  <em>Chưa có văn bản nào được phân tích. Hãy nhập văn bản hoặc chọn một bài mẫu bên trên và bấm "PHÂN TÍCH TỪNG ĐIỂM NÂNG CẤP".</em>
+                <div id="boosterHighlightedText"
+                  class="text-sm font-sans text-iot-dark dark:text-slate-100 leading-loose">
+                  <em>Chưa có văn bản nào được phân tích. Hãy nhập văn bản hoặc chọn một bài mẫu bên trên và bấm "PHÂN
+                    TÍCH TỪNG ĐIỂM NÂNG CẤP".</em>
                 </div>
 
                 <!-- Active In-Situ Selected Card Preview -->
-                <div id="activeIssuePreviewCard" class="hidden p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/80 space-y-2 animate-fade-in text-xs">
+                <div id="activeIssuePreviewCard"
+                  class="hidden p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/80 space-y-2 animate-fade-in text-xs">
                   <!-- Rendered dynamically on badge click -->
                 </div>
               </div>
@@ -890,11 +829,13 @@
                     <i data-lucide="check-circle" class="w-4 h-4"></i>
                     <span>BẢN HỌC THUẬT HOÀN THIỆN BAND 8.5 - 9.0</span>
                   </span>
-                  <button onclick="copyPolishedText()" class="hover:underline flex items-center gap-1 text-iot-primary dark:text-blue-400 font-bold">
+                  <button onclick="copyPolishedText()"
+                    class="hover:underline flex items-center gap-1 text-iot-primary dark:text-blue-400 font-bold">
                     <i data-lucide="copy" class="w-3.5 h-3.5"></i> Sao chép văn bản
                   </button>
                 </div>
-                <div id="boosterPolishedText" class="text-sm font-sans text-iot-dark dark:text-slate-100 leading-relaxed p-4 bg-emerald-50/50 dark:bg-emerald-950/30 rounded-xl border border-emerald-200 dark:border-emerald-900 select-all shadow-inner">
+                <div id="boosterPolishedText"
+                  class="text-sm font-sans text-iot-dark dark:text-slate-100 leading-relaxed p-4 bg-emerald-50/50 dark:bg-emerald-950/30 rounded-xl border border-emerald-200 dark:border-emerald-900 select-all shadow-inner">
                   <em>Bản văn hoàn thiện sẽ xuất hiện tại đây...</em>
                 </div>
               </div>
@@ -907,8 +848,9 @@
                 <i data-lucide="shield-check" class="w-3.5 h-3.5 text-iot-green"></i>
                 <span>Phân tích chuẩn ngữ pháp X-bar &amp; Collocations Cambridge</span>
               </span>
-              <a href="exam-room.html?skill=WRITING" class="text-iot-orange font-bold hover:underline flex items-center gap-1">
-                <span>Chuyển vào phòng thi Writing Task 2</span>
+              <a href="exam-room.html?id=cam19-wri-t1&skill=WRITING&title=Cambridge%2019%20-%20Test%201%3A%20Academic%20Writing%20(Tasks%201%20%26%202)"
+                class="text-iot-orange font-bold hover:underline flex items-center gap-1">
+                <span>Chuyển vào phòng thi Writing (Task 1 &amp; 2)</span>
                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </a>
             </div>
@@ -918,32 +860,34 @@
         </div>
 
       </div>
-              <span class="flex items-center gap-1">
-                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-iot-green"></i>
-                <span>Tự động tối ưu theo tiêu chí Lexical Resource &amp; GRA</span>
-              </span>
-              <a href="exam-room.html?skill=WRITING" class="text-iot-orange font-bold hover:underline flex items-center gap-1">
-                <span>Chuyển vào phòng thi Writing Task 2</span>
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-              </a>
-            </div>
+      <span class="flex items-center gap-1">
+        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-iot-green"></i>
+        <span>Tự động tối ưu theo tiêu chí Lexical Resource &amp; GRA</span>
+      </span>
+      <a href="exam-room.html?id=cam19-wri-t1&skill=WRITING&title=Cambridge%2019%20-%20Test%201%3A%20Academic%20Writing%20(Tasks%201%20%26%202)" class="text-iot-orange font-bold hover:underline flex items-center gap-1">
+        <span>Chuyển vào phòng thi Writing (Task 1 &amp; 2)</span>
+        <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+      </a>
+    </div>
 
-          </div>
+    </div>
 
-        </div>
+    </div>
 
-      </div>
+    </div>
 
     </div>
   </section>
 
   <!-- 3.5. ACADEMIC DICTIONARY & MULTI-TIER TRANSLATOR SUITE (TỪ ĐIỂN & DỊCH THUẬT HỌC THUẬT C1-C2) -->
-  <section id="dictionary-translator" class="py-16 bg-white border-b border-iot-border dark:bg-[#081226] dark:border-slate-800 transition-colors">
+  <section id="dictionary-translator"
+    class="py-16 bg-white border-b border-iot-border dark:bg-[#081226] dark:border-slate-800 transition-colors">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
 
       <!-- Section Header -->
       <div class="text-center max-w-3xl mx-auto mb-10 space-y-3">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100 text-iot-primary dark:bg-blue-950/80 dark:text-blue-300 text-xs font-mono font-bold tracking-wide border border-blue-200 dark:border-blue-900">
+        <div
+          class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100 text-iot-primary dark:bg-blue-950/80 dark:text-blue-300 text-xs font-mono font-bold tracking-wide border border-blue-200 dark:border-blue-900">
           <i data-lucide="languages" class="w-4 h-4 text-iot-orange"></i>
           <span>IELTS ACADEMIC LEXICAL &amp; TRANSLATION SUITE (BAND 7.0 - 9.0)</span>
         </div>
@@ -951,28 +895,39 @@
           Từ Điển Học Thuật Chuyên Sâu &amp; Dịch Thuật Đa Tầng 2 Chiều
         </h2>
         <p class="text-sm sm:text-base text-iot-body dark:text-slate-300 leading-relaxed font-sans">
-          Bóc tách toàn diện họ từ (<strong class="text-iot-primary dark:text-blue-400 font-semibold">Word Family</strong>), cụm cố định <strong class="text-iot-primary dark:text-blue-400 font-semibold">Academic Collocations C1-C2</strong>, phát âm Audio chuẩn Anh/Mỹ, và dịch thuật chuyển ngữ 3 cấp độ (<span class="font-bold text-slate-700 dark:text-slate-200">Band 6.0</span> ➔ <span class="font-bold text-blue-600 dark:text-blue-400">Band 7.5</span> ➔ <span class="font-bold text-iot-orange">Band 8.5+ Danh từ hóa</span>).
+          Bóc tách toàn diện họ từ (<strong class="text-iot-primary dark:text-blue-400 font-semibold">Word
+            Family</strong>), cụm cố định <strong class="text-iot-primary dark:text-blue-400 font-semibold">Academic
+            Collocations C1-C2</strong>, phát âm Audio chuẩn Anh/Mỹ, và dịch thuật chuyển ngữ 3 cấp độ (<span
+            class="font-bold text-slate-700 dark:text-slate-200">Band 6.0</span> ➔ <span
+            class="font-bold text-blue-600 dark:text-blue-400">Band 7.5</span> ➔ <span
+            class="font-bold text-iot-orange">Band 8.5+ Danh từ hóa</span>).
         </p>
       </div>
 
       <!-- Main Workbench Container -->
-      <div class="bg-slate-50 dark:bg-[#0B1528] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden transition-colors">
+      <div
+        class="bg-slate-50 dark:bg-[#0B1528] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden transition-colors">
 
         <!-- Top Tab Bar & Quick Notebook Action -->
-        <div class="bg-white dark:bg-[#0E1A33] border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3">
+        <div
+          class="bg-white dark:bg-[#0E1A33] border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-2">
-            <button id="tabBtnDict" class="flex items-center gap-2 px-5 py-3.5 border-b-2 border-iot-orange text-iot-orange font-bold text-sm transition-all">
+            <button id="tabBtnDict"
+              class="flex items-center gap-2 px-5 py-3.5 border-b-2 border-iot-orange text-iot-orange font-bold text-sm transition-all">
               <i data-lucide="book-marked" class="w-4 h-4"></i>
               <span>📖 Tra Cứu Từ Điển Học Thuật</span>
             </button>
-            <button id="tabBtnTrans" class="flex items-center gap-2 px-5 py-3.5 border-b-2 border-transparent text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white font-medium text-sm transition-all">
+            <button id="tabBtnTrans"
+              class="flex items-center gap-2 px-5 py-3.5 border-b-2 border-transparent text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white font-medium text-sm transition-all">
               <i data-lucide="languages" class="w-4 h-4"></i>
               <span>🌐 Dịch Thuật Đa Tầng 2 Chiều</span>
             </button>
           </div>
 
           <div class="flex items-center gap-2.5 py-2">
-            <button onclick="window.academicDictionary.openSavedNotebookModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-xs font-mono text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 transition-all shadow-xs" title="Xem sổ tay từ vựng đã lưu">
+            <button onclick="window.academicDictionary.openSavedNotebookModal()"
+              class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-xs font-mono text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 transition-all shadow-xs"
+              title="Xem sổ tay từ vựng đã lưu">
               ⭐ <span>Sổ tay từ vựng:</span> <strong class="saved-vocab-count-badge font-bold">0</strong> từ
             </button>
           </div>
@@ -982,18 +937,23 @@
         <div id="tabContentDict" class="p-4 sm:p-6 space-y-6">
 
           <!-- Search Bar & Controls -->
-          <div class="bg-white dark:bg-[#111F3C] p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+          <div
+            class="bg-white dark:bg-[#111F3C] p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
               <div class="relative flex-1">
                 <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-                <input id="landingDictInput" type="text" value="mitigate" placeholder="Nhập từ học thuật (vd: mitigate, ubiquitous, paradox, proliferation, exacerbate...)"
+                <input id="landingDictInput" type="text" value="mitigate"
+                  placeholder="Nhập từ học thuật (vd: mitigate, ubiquitous, paradox, proliferation, exacerbate...)"
                   class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700 text-sm font-mono text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-iot-orange transition-all" />
               </div>
-              <button id="btnLandingDictSearch" class="px-5 py-2.5 rounded-lg bg-iot-orange hover:bg-iot-orangeHover text-white font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95">
+              <button id="btnLandingDictSearch"
+                class="px-5 py-2.5 rounded-lg bg-iot-orange hover:bg-iot-orangeHover text-white font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95">
                 <i data-lucide="search" class="w-4 h-4"></i>
                 <span>Tra Cứu</span>
               </button>
-              <button id="btnLandingRandomWord" class="px-3.5 py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-mono text-xs border border-slate-200 dark:border-slate-700 transition-all flex items-center justify-center gap-1" title="Xem ngẫu nhiên một từ Band 8.0+">
+              <button id="btnLandingRandomWord"
+                class="px-3.5 py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-mono text-xs border border-slate-200 dark:border-slate-700 transition-all flex items-center justify-center gap-1"
+                title="Xem ngẫu nhiên một từ Band 8.0+">
                 🎲 <span>Ngẫu nhiên Band 8+</span>
               </button>
             </div>
@@ -1001,17 +961,39 @@
             <!-- High-Frequency Academic Pills -->
             <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center flex-wrap gap-1.5">
               <span class="text-[11px] font-mono text-slate-400 uppercase mr-1">Gợi ý từ Band 7.5 - 9.0:</span>
-              <button onclick="document.getElementById('landingDictInput').value='mitigate'; window.academicDictionary.renderLandingDictionary('mitigate');" class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">mitigate</button>
-              <button onclick="document.getElementById('landingDictInput').value='ubiquitous'; window.academicDictionary.renderLandingDictionary('ubiquitous');" class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">ubiquitous</button>
-              <button onclick="document.getElementById('landingDictInput').value='paradox'; window.academicDictionary.renderLandingDictionary('paradox');" class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">paradox</button>
-              <button onclick="document.getElementById('landingDictInput').value='proliferation'; window.academicDictionary.renderLandingDictionary('proliferation');" class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">proliferation</button>
-              <button onclick="document.getElementById('landingDictInput').value='scrutinize'; window.academicDictionary.renderLandingDictionary('scrutinize');" class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">scrutinize</button>
-              <button onclick="document.getElementById('landingDictInput').value='exacerbate'; window.academicDictionary.renderLandingDictionary('exacerbate');" class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">exacerbate</button>
-              <button onclick="document.getElementById('landingDictInput').value='feasible'; window.academicDictionary.renderLandingDictionary('feasible');" class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">feasible</button>
-              <button onclick="document.getElementById('landingDictInput').value='resilient'; window.academicDictionary.renderLandingDictionary('resilient');" class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">resilient</button>
-              <button onclick="document.getElementById('landingDictInput').value='paramount'; window.academicDictionary.renderLandingDictionary('paramount');" class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">paramount</button>
-              <button onclick="document.getElementById('landingDictInput').value='profound'; window.academicDictionary.renderLandingDictionary('profound');" class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">profound</button>
-              <button onclick="document.getElementById('landingDictInput').value='pragmatic'; window.academicDictionary.renderLandingDictionary('pragmatic');" class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">pragmatic</button>
+              <button
+                onclick="document.getElementById('landingDictInput').value='mitigate'; window.academicDictionary.renderLandingDictionary('mitigate');"
+                class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">mitigate</button>
+              <button
+                onclick="document.getElementById('landingDictInput').value='ubiquitous'; window.academicDictionary.renderLandingDictionary('ubiquitous');"
+                class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">ubiquitous</button>
+              <button
+                onclick="document.getElementById('landingDictInput').value='paradox'; window.academicDictionary.renderLandingDictionary('paradox');"
+                class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">paradox</button>
+              <button
+                onclick="document.getElementById('landingDictInput').value='proliferation'; window.academicDictionary.renderLandingDictionary('proliferation');"
+                class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">proliferation</button>
+              <button
+                onclick="document.getElementById('landingDictInput').value='scrutinize'; window.academicDictionary.renderLandingDictionary('scrutinize');"
+                class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">scrutinize</button>
+              <button
+                onclick="document.getElementById('landingDictInput').value='exacerbate'; window.academicDictionary.renderLandingDictionary('exacerbate');"
+                class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">exacerbate</button>
+              <button
+                onclick="document.getElementById('landingDictInput').value='feasible'; window.academicDictionary.renderLandingDictionary('feasible');"
+                class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">feasible</button>
+              <button
+                onclick="document.getElementById('landingDictInput').value='resilient'; window.academicDictionary.renderLandingDictionary('resilient');"
+                class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">resilient</button>
+              <button
+                onclick="document.getElementById('landingDictInput').value='paramount'; window.academicDictionary.renderLandingDictionary('paramount');"
+                class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">paramount</button>
+              <button
+                onclick="document.getElementById('landingDictInput').value='profound'; window.academicDictionary.renderLandingDictionary('profound');"
+                class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">profound</button>
+              <button
+                onclick="document.getElementById('landingDictInput').value='pragmatic'; window.academicDictionary.renderLandingDictionary('pragmatic');"
+                class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900">pragmatic</button>
             </div>
           </div>
 
@@ -1026,18 +1008,23 @@
         <div id="tabContentTrans" class="hidden p-4 sm:p-6 space-y-6">
 
           <!-- Translation Controls -->
-          <div class="bg-white dark:bg-[#111F3C] p-4 sm:p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-4">
-            
+          <div
+            class="bg-white dark:bg-[#111F3C] p-4 sm:p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-4">
+
             <!-- Direction Selector -->
-            <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div
+              class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
               <span class="text-xs font-bold font-mono uppercase text-slate-500">Hướng Dịch Thuật:</span>
               <div class="flex items-center gap-3 text-xs font-mono">
                 <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                  <input type="radio" name="landingTransDir" value="vi-en" checked class="text-iot-orange focus:ring-iot-orange" />
-                  <span class="font-bold text-iot-dark dark:text-white">Tiếng Việt ➔ Academic English (Band 6.0 ➔ 8.5+)</span>
+                  <input type="radio" name="landingTransDir" value="vi-en" checked
+                    class="text-iot-orange focus:ring-iot-orange" />
+                  <span class="font-bold text-iot-dark dark:text-white">Tiếng Việt ➔ Academic English (Band 6.0 ➔
+                    8.5+)</span>
                 </label>
                 <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                  <input type="radio" name="landingTransDir" value="en-vi" class="text-iot-orange focus:ring-iot-orange" />
+                  <input type="radio" name="landingTransDir" value="en-vi"
+                    class="text-iot-orange focus:ring-iot-orange" />
                   <span class="text-slate-600 dark:text-slate-300">English ➔ Tiếng Việt Chuẩn Học Thuật</span>
                 </label>
               </div>
@@ -1045,15 +1032,22 @@
 
             <!-- Preset Sentence Chips -->
             <div class="space-y-1.5">
-              <span class="text-[11px] font-mono text-slate-400 uppercase block">Câu mẫu IELTS Writing Task 2 kinh điển:</span>
+              <span class="text-[11px] font-mono text-slate-400 uppercase block">Câu mẫu IELTS Writing Task 2 kinh
+                điển:</span>
               <div class="flex flex-wrap gap-2">
-                <button type="button" onclick="document.getElementById('landingTransInput').value='Chính phủ cần ban hành các chính sách nghiêm ngặt nhằm giảm thiểu tác động tiêu cực của ô nhiễm không khí đối với sức khỏe cộng đồng.'; document.querySelector('input[name=landingTransDir][value=vi-en]').checked=true;" class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-sans text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-left line-clamp-1">
+                <button type="button"
+                  onclick="document.getElementById('landingTransInput').value='Chính phủ cần ban hành các chính sách nghiêm ngặt nhằm giảm thiểu tác động tiêu cực của ô nhiễm không khí đối với sức khỏe cộng đồng.'; document.querySelector('input[name=landingTransDir][value=vi-en]').checked=true;"
+                  class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-sans text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-left line-clamp-1">
                   1. Chính phủ giảm thiểu ô nhiễm không khí
                 </button>
-                <button type="button" onclick="document.getElementById('landingTransInput').value='Sự gia tăng đột biến của phương tiện giao thông cá nhân đã làm trầm trọng thêm vấn đề ùn tắc đô thị và suy thoái môi trường.'; document.querySelector('input[name=landingTransDir][value=vi-en]').checked=true;" class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-sans text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-left line-clamp-1">
+                <button type="button"
+                  onclick="document.getElementById('landingTransInput').value='Sự gia tăng đột biến của phương tiện giao thông cá nhân đã làm trầm trọng thêm vấn đề ùn tắc đô thị và suy thoái môi trường.'; document.querySelector('input[name=landingTransDir][value=vi-en]').checked=true;"
+                  class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-sans text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-left line-clamp-1">
                   2. Phương tiện cá nhân &amp; ùn tắc đô thị
                 </button>
-                <button type="button" onclick="document.getElementById('landingTransInput').value='The widespread proliferation of digital technologies has fundamentally transformed contemporary pedagogical paradigms.'; document.querySelector('input[name=landingTransDir][value=en-vi]').checked=true;" class="px-2.5 py-1 rounded bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900 text-left line-clamp-1">
+                <button type="button"
+                  onclick="document.getElementById('landingTransInput').value='The widespread proliferation of digital technologies has fundamentally transformed contemporary pedagogical paradigms.'; document.querySelector('input[name=landingTransDir][value=en-vi]').checked=true;"
+                  class="px-2.5 py-1 rounded bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 hover:bg-blue-100 text-xs font-mono border border-blue-200 dark:border-blue-900 text-left line-clamp-1">
                   3. The proliferation of digital technologies (EN ➔ VI)
                 </button>
               </div>
@@ -1061,12 +1055,15 @@
 
             <!-- Input Textarea -->
             <div class="space-y-2">
-              <textarea id="landingTransInput" rows="3" placeholder="Nhập câu tiếng Việt hoặc tiếng Anh cần dịch thuật học thuật..."
+              <textarea id="landingTransInput" rows="3"
+                placeholder="Nhập câu tiếng Việt hoặc tiếng Anh cần dịch thuật học thuật..."
                 class="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700 text-sm font-sans text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-iot-orange leading-relaxed transition-all">Chính phủ cần ban hành các chính sách nghiêm ngặt nhằm giảm thiểu tác động tiêu cực của ô nhiễm không khí đối với sức khỏe cộng đồng.</textarea>
-              
+
               <div class="flex items-center justify-between">
-                <button type="button" onclick="document.getElementById('landingTransInput').value='';" class="text-xs text-slate-400 hover:text-rose-500 font-mono">Xóa nội dung</button>
-                <button id="btnLandingTranslate" class="px-6 py-2.5 rounded-lg bg-iot-orange hover:bg-iot-orangeHover text-white font-bold text-sm shadow-sm transition-all flex items-center gap-1.5 active:scale-95">
+                <button type="button" onclick="document.getElementById('landingTransInput').value='';"
+                  class="text-xs text-slate-400 hover:text-rose-500 font-mono">Xóa nội dung</button>
+                <button id="btnLandingTranslate"
+                  class="px-6 py-2.5 rounded-lg bg-iot-orange hover:bg-iot-orangeHover text-white font-bold text-sm shadow-sm transition-all flex items-center gap-1.5 active:scale-95">
                   <i data-lucide="sparkles" class="w-4 h-4"></i>
                   <span>Dịch Thuật Chuyên Sâu (Band 6.0 ➔ 8.5+)</span>
                 </button>
@@ -1089,7 +1086,6 @@
     </div>
   </section>
 
-  <!-- 4. 4-SKILLS PRACTICE HUB (TRUNG TÂM LUYỆN THI 4 KỸ NĂNG) -->
   <section id="skills-hub"
     class="py-16 bg-iot-bgLight border-b border-iot-border dark:bg-[#071326] dark:border-slate-800 transition-colors">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
@@ -1104,7 +1100,8 @@
           Luyện Thi 4 Kỹ Năng Chuẩn Computer-Delivered IELTS
         </h2>
         <p class="text-iot-body dark:text-slate-300 text-base leading-relaxed">
-          Không cần cài đặt thêm phần mềm. Mỗi phòng thi đều mô phỏng 100% không gian và áp lực phòng thi thật của IDP &amp; British Council, tích hợp AI phản biện hỗ trợ giải mã câu hỏi.
+          Không cần cài đặt thêm phần mềm. Mỗi phòng thi đều mô phỏng 100% không gian và áp lực phòng thi thật của IDP
+          &amp; British Council, tích hợp AI phản biện hỗ trợ giải mã câu hỏi.
         </p>
       </div>
 
@@ -1141,7 +1138,7 @@
           </div>
 
           <div class="p-5 pt-0">
-            <a href="library.html?filter=LISTENING"
+            <a href="exam-room.html?id=cam19-t1&skill=LISTENING&title=Cambridge%2019%20-%20Test%201%3A%20Listening"
               class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wide transition-all flex items-center justify-center gap-1.5 shadow-sm">
               <span>Vào Thi Listening</span>
               <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
@@ -1152,7 +1149,8 @@
         <!-- SKILL 2: READING -->
         <div
           class="bg-white rounded-2xl border-2 border-iot-primary shadow-iot-card hover:shadow-iot-hover transition-all duration-300 flex flex-col justify-between overflow-hidden dark:bg-[#111C44] dark:border-blue-500 group hover:-translate-y-1 relative">
-          <div class="absolute top-2 right-2 bg-iot-orange text-white text-[10px] font-bold px-2 py-0.5 rounded-full font-mono uppercase tracking-wider">
+          <div
+            class="absolute top-2 right-2 bg-iot-orange text-white text-[10px] font-bold px-2 py-0.5 rounded-full font-mono uppercase tracking-wider">
             CD-IELTS Chuẩn
           </div>
           <div>
@@ -1182,7 +1180,7 @@
           </div>
 
           <div class="p-5 pt-0">
-            <a href="library.html?filter=READING"
+            <a href="exam-room.html?skill=READING&title=Cambridge%2019%20-%20Test%201%3A%20Academic%20Reading"
               class="w-full py-2.5 rounded-xl bg-iot-primary hover:bg-iot-primaryHover text-white font-bold text-xs uppercase tracking-wide transition-all flex items-center justify-center gap-1.5 shadow-sm">
               <span>Vào Thi Reading Chuẩn Máy</span>
               <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
@@ -1220,7 +1218,7 @@
           </div>
 
           <div class="p-5 pt-0">
-            <a href="library.html?filter=WRITING"
+            <a href="exam-room.html?id=cam19-wri-t1&skill=WRITING&title=Cambridge%2019%20-%20Test%201%3A%20Academic%20Writing%20(Tasks%201%20%26%202)"
               class="w-full py-2.5 rounded-xl bg-iot-orange hover:bg-iot-orangeHover text-white font-bold text-xs uppercase tracking-wide transition-all flex items-center justify-center gap-1.5 shadow-sm">
               <span>Vào Luyện Viết Writing</span>
               <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
@@ -1244,21 +1242,22 @@
             <div class="p-5 space-y-3.5 text-xs text-iot-body dark:text-slate-300">
               <div class="flex items-start gap-2">
                 <i data-lucide="check" class="w-4 h-4 text-purple-500 shrink-0 mt-0.5"></i>
-                <span>Mô phỏng phòng thi phỏng vấn trực tiếp với Giám khảo AI</span>
+                <span>Trọn vẹn 3 Parts (11–14 phút): Part 1 Phỏng vấn, Part 2 Cue Card (1p nháp + 2p nói), Part 3 Thảo
+                  luận</span>
               </div>
               <div class="flex items-start gap-2">
                 <i data-lucide="check" class="w-4 h-4 text-purple-500 shrink-0 mt-0.5"></i>
-                <span>Gợi ý collocations và cấu trúc đảo ngữ trả lời tức thì</span>
+                <span>Ghi âm nhận diện giọng nói thực tế, đếm thời gian và gợi ý collocations Band 8.5+</span>
               </div>
               <div class="flex items-start gap-2">
                 <i data-lucide="check" class="w-4 h-4 text-purple-500 shrink-0 mt-0.5"></i>
-                <span>Rèn luyện tư duy phản biện Part 3 theo phương pháp Socratic</span>
+                <span>Chấm điểm 4 tiêu chí IDP/BC (FC, LR, GRA, P) kèm Bảng điểm chính thức CD-IELTS</span>
               </div>
             </div>
           </div>
 
           <div class="p-5 pt-0">
-            <a href="library.html?filter=SPEAKING"
+            <a href="exam-room.html?skill=SPEAKING&title=Cambridge%2019%20-%20Test%201%3A%20Speaking%20Interview"
               class="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs uppercase tracking-wide transition-all flex items-center justify-center gap-1.5 shadow-sm">
               <span>Bắt Đầu Luyện Speaking</span>
               <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
@@ -1298,10 +1297,12 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
         <!-- Test 1: Reading -->
-        <div class="p-5 rounded-2xl bg-iot-bgLight dark:bg-[#111C44] border border-iot-border dark:border-slate-700 hover:shadow-iot-hover transition-all flex flex-col justify-between group">
+        <div
+          class="p-5 rounded-2xl bg-iot-bgLight dark:bg-[#111C44] border border-iot-border dark:border-slate-700 hover:shadow-iot-hover transition-all flex flex-col justify-between group">
           <div class="space-y-3">
             <div class="flex items-center justify-between text-[11px] font-mono">
-              <span class="px-2 py-0.5 rounded bg-blue-100 text-iot-primary dark:bg-blue-900/60 dark:text-blue-300 font-bold">READING</span>
+              <span
+                class="px-2 py-0.5 rounded bg-blue-100 text-iot-primary dark:bg-blue-900/60 dark:text-blue-300 font-bold">READING</span>
               <span class="text-slate-400">60 Phút</span>
             </div>
             <h3 class="font-bold text-sm text-iot-dark dark:text-white group-hover:text-iot-primary transition-colors">
@@ -1315,17 +1316,20 @@
             <span class="text-[11px] font-mono text-iot-green font-bold flex items-center gap-1">
               <i data-lucide="check" class="w-3.5 h-3.5"></i> CD-IELTS 50/50
             </span>
-            <a href="library.html?filter=READING" class="text-xs font-bold text-iot-primary dark:text-blue-400 hover:underline">
+            <a href="exam-room.html?skill=READING&title=Cambridge%2019%20-%20Test%201%3A%20Academic%20Reading"
+              class="text-xs font-bold text-iot-primary dark:text-blue-400 hover:underline">
               Vào thi ➔
             </a>
           </div>
         </div>
 
         <!-- Test 2: Listening -->
-        <div class="p-5 rounded-2xl bg-iot-bgLight dark:bg-[#111C44] border border-iot-border dark:border-slate-700 hover:shadow-iot-hover transition-all flex flex-col justify-between group">
+        <div
+          class="p-5 rounded-2xl bg-iot-bgLight dark:bg-[#111C44] border border-iot-border dark:border-slate-700 hover:shadow-iot-hover transition-all flex flex-col justify-between group">
           <div class="space-y-3">
             <div class="flex items-center justify-between text-[11px] font-mono">
-              <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 font-bold">LISTENING</span>
+              <span
+                class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 font-bold">LISTENING</span>
               <span class="text-slate-400">30 Phút</span>
             </div>
             <h3 class="font-bold text-sm text-iot-dark dark:text-white group-hover:text-emerald-600 transition-colors">
@@ -1339,17 +1343,20 @@
             <span class="text-[11px] font-mono text-emerald-600 font-bold flex items-center gap-1">
               <i data-lucide="headphones" class="w-3.5 h-3.5"></i> Audio Track
             </span>
-            <a href="library.html?filter=LISTENING" class="text-xs font-bold text-emerald-600 hover:underline">
+            <a href="exam-room.html?id=cam19-t1&skill=LISTENING&title=Cambridge%2019%20-%20Test%201%3A%20Listening"
+              class="text-xs font-bold text-emerald-600 hover:underline">
               Vào thi ➔
             </a>
           </div>
         </div>
 
         <!-- Test 3: Writing -->
-        <div class="p-5 rounded-2xl bg-iot-bgLight dark:bg-[#111C44] border border-iot-border dark:border-slate-700 hover:shadow-iot-hover transition-all flex flex-col justify-between group">
+        <div
+          class="p-5 rounded-2xl bg-iot-bgLight dark:bg-[#111C44] border border-iot-border dark:border-slate-700 hover:shadow-iot-hover transition-all flex flex-col justify-between group">
           <div class="space-y-3">
             <div class="flex items-center justify-between text-[11px] font-mono">
-              <span class="px-2 py-0.5 rounded bg-amber-100 text-iot-orange dark:bg-amber-950/60 dark:text-amber-300 font-bold">WRITING</span>
+              <span
+                class="px-2 py-0.5 rounded bg-amber-100 text-iot-orange dark:bg-amber-950/60 dark:text-amber-300 font-bold">WRITING</span>
               <span class="text-slate-400">40 Phút</span>
             </div>
             <h3 class="font-bold text-sm text-iot-dark dark:text-white group-hover:text-iot-orange transition-colors">
@@ -1370,24 +1377,28 @@
         </div>
 
         <!-- Test 4: Speaking -->
-        <div class="p-5 rounded-2xl bg-iot-bgLight dark:bg-[#111C44] border border-iot-border dark:border-slate-700 hover:shadow-iot-hover transition-all flex flex-col justify-between group">
+        <div
+          class="p-5 rounded-2xl bg-iot-bgLight dark:bg-[#111C44] border border-iot-border dark:border-slate-700 hover:shadow-iot-hover transition-all flex flex-col justify-between group">
           <div class="space-y-3">
             <div class="flex items-center justify-between text-[11px] font-mono">
-              <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 font-bold">SPEAKING</span>
+              <span
+                class="px-2 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 font-bold">SPEAKING</span>
               <span class="text-slate-400">14 Phút</span>
             </div>
             <h3 class="font-bold text-sm text-iot-dark dark:text-white group-hover:text-purple-600 transition-colors">
-              Speaking Part 3: Ephemeral Happiness &amp; Society
+              Cambridge 19 - Test 1: Full Speaking Interview (Parts 1–3)
             </h3>
             <p class="text-xs text-iot-muted dark:text-slate-400 leading-relaxed">
-              Đối thoại trực tiếp với Giám khảo AI mô phỏng phỏng vấn thật. Gợi ý cấu trúc lập luận và sửa phát âm.
+              Trọn bộ 3 Parts chuẩn IDP/BC (11–14 phút): Part 1 Phỏng vấn quen thuộc, Part 2 Cue Card (1p nháp + 2p
+              nói), Part 3 Thảo luận chuyên sâu 2 chiều.
             </p>
           </div>
           <div class="pt-4 mt-4 border-t border-iot-border dark:border-slate-700 flex items-center justify-between">
             <span class="text-[11px] font-mono text-purple-600 font-bold flex items-center gap-1">
-              <i data-lucide="mic" class="w-3.5 h-3.5"></i> AI Examiner
+              <i data-lucide="mic" class="w-3.5 h-3.5"></i> 3 Parts Full
             </span>
-            <a href="exam-room.html?skill=SPEAKING" class="text-xs font-bold text-purple-600 hover:underline">
+            <a href="exam-room.html?id=cam19-spk-t1&skill=SPEAKING&title=Cambridge%2019%20-%20Test%201%3A%20Speaking%20Interview"
+              class="text-xs font-bold text-purple-600 hover:underline">
               Vào thi ➔
             </a>
           </div>
@@ -1427,7 +1438,10 @@
           </button>
           <div id="faqContent-1"
             class="hidden px-5 pb-5 text-sm text-iot-body dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-700 pt-3">
-            <strong class="text-iot-dark dark:text-white">Hoàn toàn không.</strong> IELTS Academic được định vị là nền tảng học thuật mở chuyên luyện thi IELTS 4 kỹ năng (Listening, Reading, Writing, Speaking). Chúng tôi không bán bất kỳ khóa học, gói trả phí hay thu học phí nào. Toàn bộ kho đề thi, phòng thi chuẩn máy và công cụ AI đều sẵn sàng phục vụ cộng đồng thí sinh.
+            <strong class="text-iot-dark dark:text-white">Hoàn toàn không.</strong> IELTS Academic được định vị là nền
+            tảng học thuật mở chuyên luyện thi IELTS 4 kỹ năng (Listening, Reading, Writing, Speaking). Chúng tôi không
+            bán bất kỳ khóa học, gói trả phí hay thu học phí nào. Toàn bộ kho đề thi, phòng thi chuẩn máy và công cụ AI
+            đều sẵn sàng phục vụ cộng đồng thí sinh.
           </div>
         </div>
 
@@ -1436,13 +1450,17 @@
           class="bg-white rounded-lg border border-iot-border overflow-hidden shadow-sm dark:bg-[#111C44] dark:border-slate-700">
           <button onclick="toggleFaqItem(2)"
             class="w-full p-5 flex items-center justify-between text-left font-bold text-sm sm:text-base text-iot-dark dark:text-white hover:text-iot-primary dark:hover:text-blue-400 transition-colors">
-            <span>2. Giao diện phòng thi Reading có mô phỏng chính xác kỳ thi Computer-delivered IELTS (IDP/BC) không?</span>
+            <span>2. Giao diện phòng thi Reading có mô phỏng chính xác kỳ thi Computer-delivered IELTS (IDP/BC)
+              không?</span>
             <i id="faqIcon-2" data-lucide="plus"
               class="w-4 h-4 text-iot-primary dark:text-blue-400 transition-transform duration-200"></i>
           </button>
           <div id="faqContent-2"
             class="hidden px-5 pb-5 text-sm text-iot-body dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-700 pt-3">
-            <strong>Chính xác 100%.</strong> Giao diện thi Reading được thiết kế full-screen chia đôi màn hình 50/50: bên trái là bài đọc dài, bên phải là 40 câu hỏi cuộn độc lập. Hệ thống hỗ trợ đầy đủ tính năng: bôi đen highlight 3 màu (vàng, xanh, hồng), đồng hồ đếm ngược 60 phút font monospace, bảng Question Palette 1-40 cập nhật trạng thái làm bài và nút Flag câu hỏi y hệt phần mềm thi chính thức.
+            <strong>Chính xác 100%.</strong> Giao diện thi Reading được thiết kế full-screen chia đôi màn hình 50/50:
+            bên trái là bài đọc dài, bên phải là 40 câu hỏi cuộn độc lập. Hệ thống hỗ trợ đầy đủ tính năng: bôi đen
+            highlight 3 màu (vàng, xanh, hồng), đồng hồ đếm ngược 60 phút font monospace, bảng Question Palette 1-40 cập
+            nhật trạng thái làm bài và nút Flag câu hỏi y hệt phần mềm thi chính thức.
           </div>
         </div>
 
@@ -1458,8 +1476,13 @@
           <div id="faqContent-3"
             class="hidden px-5 pb-5 text-sm text-iot-body dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-700 pt-3">
             <strong>Hệ thống tích hợp thuật toán phân tích ngôn ngữ học kép:</strong><br />
-            • <em>Rà soát chính tả (Spelling &amp; Typos):</em> Quét từng từ theo cơ sở dữ liệu hơn 120+ từ vựng IELTS thí sinh hay viết sai nhất (như <code>government</code>, <code>environment</code>, <code>accommodation</code>, <code>necessary</code>...), hiển thị mẹo ghi nhớ để bạn không tái phạm.<br />
-            • <em>Nâng cấp từ vựng học thuật (Band 8.0 - 9.0):</em> Phát hiện các từ ngữ bình dân, đơn giản (như <code>very big</code>, <code>I think</code>, <code>good thing</code>) và đề xuất các cụm collocations C1-C2 trang trọng (như <code>colossal</code>, <code>it is demonstrable that</code>, <code>salutary development</code>) giúp tối ưu điểm tiêu chí Lexical Resource.
+            • <em>Rà soát chính tả (Spelling &amp; Typos):</em> Quét từng từ theo cơ sở dữ liệu hơn 120+ từ vựng IELTS
+            thí sinh hay viết sai nhất (như <code>government</code>, <code>environment</code>,
+            <code>accommodation</code>, <code>necessary</code>...), hiển thị mẹo ghi nhớ để bạn không tái phạm.<br />
+            • <em>Nâng cấp từ vựng học thuật (Band 8.0 - 9.0):</em> Phát hiện các từ ngữ bình dân, đơn giản (như
+            <code>very big</code>, <code>I think</code>, <code>good thing</code>) và đề xuất các cụm collocations C1-C2
+            trang trọng (như <code>colossal</code>, <code>it is demonstrable that</code>,
+            <code>salutary development</code>) giúp tối ưu điểm tiêu chí Lexical Resource.
           </div>
         </div>
 
@@ -1468,13 +1491,17 @@
           class="bg-white rounded-lg border border-iot-border overflow-hidden shadow-sm dark:bg-[#111C44] dark:border-slate-700">
           <button onclick="toggleFaqItem(4)"
             class="w-full p-5 flex items-center justify-between text-left font-bold text-sm sm:text-base text-iot-dark dark:text-white hover:text-iot-primary dark:hover:text-blue-400 transition-colors">
-            <span>4. Trợ giảng Socratic AI Tutor có giải thích được bẫy đề thi và các câu True/False/Not Given không?</span>
+            <span>4. Trợ giảng Socratic AI Tutor có giải thích được bẫy đề thi và các câu True/False/Not Given
+              không?</span>
             <i id="faqIcon-4" data-lucide="plus"
               class="w-4 h-4 text-iot-primary dark:text-blue-400 transition-transform duration-200"></i>
           </button>
           <div id="faqContent-4"
             class="hidden px-5 pb-5 text-sm text-iot-body dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-700 pt-3">
-            <strong>Có, đây là thế mạnh vượt trội của Socratic AI.</strong> Thay vì chỉ đưa ra đáp án cụt lủn (A, B, C, D), AI sẽ đặt câu hỏi dẫn dắt từng bước để bạn tự nhận diện xem thông tin trong câu hỏi có thực sự tương đương ngữ nghĩa với văn bản hay chỉ là suy đoán võ đoán. Bạn có thể mở khung chat với AI ở bất kỳ trang nào bằng cách bấm vào biểu tượng Robot ở góc màn hình.
+            <strong>Có, đây là thế mạnh vượt trội của Socratic AI.</strong> Thay vì chỉ đưa ra đáp án cụt lủn (A, B, C,
+            D), AI sẽ đặt câu hỏi dẫn dắt từng bước để bạn tự nhận diện xem thông tin trong câu hỏi có thực sự tương
+            đương ngữ nghĩa với văn bản hay chỉ là suy đoán võ đoán. Bạn có thể mở khung chat với AI ở bất kỳ trang nào
+            bằng cách bấm vào biểu tượng Robot ở góc màn hình.
           </div>
         </div>
 
@@ -1484,12 +1511,15 @@
   </section>
 
   <!-- 7. PRACTICE CALL TO ACTION (THAY THẾ FORM BÁN KHÓA HỌC) -->
-  <section id="start-practice" class="py-16 bg-white dark:bg-[#0B132B] transition-colors border-b border-iot-border dark:border-slate-800">
+  <section id="start-practice"
+    class="py-16 bg-white dark:bg-[#0B132B] transition-colors border-b border-iot-border dark:border-slate-800">
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
 
-      <div class="bg-gradient-to-r from-iot-navy via-[#0B2545] to-iot-primary rounded-2xl p-8 sm:p-12 text-white shadow-xl text-center space-y-6 relative overflow-hidden">
-        
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-white/10 border border-white/20 text-xs font-mono font-bold tracking-wide">
+      <div
+        class="bg-gradient-to-r from-iot-navy via-[#0B2545] to-iot-primary rounded-2xl p-8 sm:p-12 text-white shadow-xl text-center space-y-6 relative overflow-hidden">
+
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 rounded bg-white/10 border border-white/20 text-xs font-mono font-bold tracking-wide">
           <span class="w-2 h-2 rounded-full bg-iot-green animate-pulse"></span>
           <span>100% MIỄN PHÍ • KHÔNG BÁN KHÓA HỌC • MỞ CỬA 24/7</span>
         </div>
@@ -1499,7 +1529,8 @@
         </h2>
 
         <p class="text-sm sm:text-base text-blue-100 max-w-xl mx-auto leading-relaxed">
-          Bước vào phòng thi mô phỏng chuẩn Computer-delivered IELTS ngay bây giờ hoặc sử dụng AI để kiểm tra và sửa lỗi bài viết của bạn chỉ với một cú nhấp chuột.
+          Bước vào phòng thi mô phỏng chuẩn Computer-delivered IELTS ngay bây giờ hoặc sử dụng AI để kiểm tra và sửa lỗi
+          bài viết của bạn chỉ với một cú nhấp chuột.
         </p>
 
         <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -1534,7 +1565,9 @@
           <span class="font-bold text-white text-base">IELTS ACADEMIC LAB IELTS • LAB 4 KỸ NĂNG</span>
         </div>
         <p class="text-slate-400 text-xs leading-relaxed max-w-md">
-          Hệ thống luyện thi IELTS học thuật 100% mở và phi lợi nhuận. Tích hợp phòng thi thử Computer-delivered IELTS (Listening, Reading, Writing, Speaking), công cụ AI sửa lỗi chính tả &amp; nâng cấp từ vựng Band 8.0 - 9.0, cùng Trợ giảng Socratic AI phản biện logic.
+          Hệ thống luyện thi IELTS học thuật 100% mở và phi lợi nhuận. Tích hợp phòng thi thử Computer-delivered IELTS
+          (Listening, Reading, Writing, Speaking), công cụ AI sửa lỗi chính tả &amp; nâng cấp từ vựng Band 8.0 - 9.0,
+          cùng Trợ giảng Socratic AI phản biện logic.
         </p>
         <div class="text-[11px] text-slate-400">
           © 2026 IELTS Academic IELTS Academic Platform. Free &amp; Open for all learners.
@@ -1544,21 +1577,28 @@
       <div class="space-y-2">
         <div class="font-bold text-white uppercase text-xs tracking-wider mb-2">4 Kỹ Năng Luyện Thi</div>
         <ul class="space-y-1.5">
-          <li><a href="library.html?filter=LISTENING" class="hover:text-white transition-colors">IELTS Listening (Audio Player)</a></li>
-          <li><a href="library.html?filter=READING" class="hover:text-white transition-colors">IELTS Reading (CD-IELTS 50/50)</a></li>
-          <li><a href="library.html?filter=WRITING" class="hover:text-white transition-colors">IELTS Writing (AI Chấm Chữa)</a></li>
-          <li><a href="library.html?filter=SPEAKING" class="hover:text-white transition-colors">IELTS Speaking (AI Examiner)</a></li>
+          <li><a href="library.html?filter=LISTENING" class="hover:text-white transition-colors">IELTS Listening (Audio
+              Player)</a></li>
+          <li><a href="library.html?filter=READING" class="hover:text-white transition-colors">IELTS Reading (CD-IELTS
+              50/50)</a></li>
+          <li><a href="library.html?filter=WRITING" class="hover:text-white transition-colors">IELTS Writing (AI Chấm
+              Chữa)</a></li>
+          <li><a href="library.html?filter=SPEAKING" class="hover:text-white transition-colors">IELTS Speaking (AI
+              Examiner)</a></li>
         </ul>
       </div>
 
       <div class="space-y-2">
         <div class="font-bold text-white uppercase text-xs tracking-wider mb-2">Công Cụ AI Học Thuật</div>
         <ul class="space-y-1.5">
-          <li><a href="#ai-booster" class="hover:text-white transition-colors text-amber-300 font-semibold">AI Sửa Chính Tả &amp; Từ Vựng</a></li>
-          <li><a href="#dictionary-translator" class="hover:text-white transition-colors text-blue-300 font-semibold">Từ Điển &amp; Dịch Thuật Học Thuật</a></li>
+          <li><a href="#ai-booster" class="hover:text-white transition-colors text-amber-300 font-semibold">AI Sửa Chính
+              Tả &amp; Từ Vựng</a></li>
+          <li><a href="#dictionary-translator" class="hover:text-white transition-colors text-blue-300 font-semibold">Từ
+              Điển &amp; Dịch Thuật Học Thuật</a></li>
           <li><a href="library.html" class="hover:text-white transition-colors">Thư Viện Đề Thi Cambridge 15-19</a></li>
           <li><a href="#faq" class="hover:text-white transition-colors">Giải Đáp Thắc Mắc (FAQ)</a></li>
-          <li><button onclick="window.socraticAI.openCognitiveProfileModal()" class="hover:text-white transition-colors text-left">Hồ Sơ Nhận Thức AI Của Bạn</button></li>
+          <li><button onclick="window.socraticAI.openCognitiveProfileModal()"
+              class="hover:text-white transition-colors text-left">Hồ Sơ Nhận Thức AI Của Bạn</button></li>
         </ul>
       </div>
 
@@ -2017,8 +2057,8 @@
       if (valOverall) valOverall.innerText = overallVal.toFixed(1);
       if (labelOverall) {
         labelOverall.innerText = overallVal >= 8.5 ? 'Very Good / Expert User (C2)' :
-                                 overallVal >= 7.5 ? 'Good User (C1 Academic)' :
-                                 overallVal >= 6.5 ? 'Competent User (B2)' : 'Modest User (B1)';
+          overallVal >= 7.5 ? 'Good User (C1 Academic)' :
+            overallVal >= 6.5 ? 'Competent User (B2)' : 'Modest User (B1)';
       }
 
       // 2. Helper for Criteria Rings (Radius 36, Circumference 226.2)
