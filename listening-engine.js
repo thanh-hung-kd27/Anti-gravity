@@ -819,17 +819,19 @@ function renderActivePartQuestions() {
   if (!container) return;
 
   const test = LISTENING_TESTS[currentListeningTestId];
+  if (!test || !test.parts) return;
   const part = test.parts.find(p => p.partNum === currentListeningPartNum) || test.parts[0];
+  if (!part) return;
 
   let html = `
     <!-- Part Instructions Header -->
     <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-iot-border dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 shadow-xs">
       <div>
         <h2 class="font-bold text-sm text-iot-dark dark:text-white uppercase tracking-wide">
-          ${part.instructions}
+          ${part.instructions || 'Answer all questions.'}
         </h2>
         <p class="text-xs text-iot-muted dark:text-slate-400 mt-0.5">
-          ${part.context}
+          ${part.context || ''}
         </p>
       </div>
       <span class="text-xs font-mono bg-blue-100 text-iot-primary dark:bg-blue-900/60 dark:text-blue-300 px-3 py-1 rounded font-bold shrink-0">
@@ -839,19 +841,30 @@ function renderActivePartQuestions() {
   `;
 
   // Render each section in the Part
-  part.sections.forEach(sec => {
-    if (sec.type === 'notes') {
-      html += renderNotesSection(sec, part.formTitle);
-    } else if (sec.type === 'multiple-choice') {
-      html += renderMultipleChoiceSection(sec);
-    } else if (sec.type === 'map-labelling') {
-      html += renderMapLabellingSection(sec);
-    } else if (sec.type === 'choose-two') {
-      html += renderChooseTwoSection(sec);
-    } else if (sec.type === 'matching') {
-      html += renderMatchingSection(sec);
-    }
-  });
+  if (Array.isArray(part.sections)) {
+    part.sections.forEach(sec => {
+      try {
+        if (sec.type === 'notes') {
+          html += renderNotesSection(sec, part.formTitle);
+        } else if (sec.type === 'table') {
+          html += renderTableSection(sec);
+        } else if (sec.type === 'multiple-choice') {
+          html += renderMultipleChoiceSection(sec);
+        } else if (sec.type === 'map-labelling') {
+          html += renderMapLabellingSection(sec);
+        } else if (sec.type === 'choose-two') {
+          html += renderChooseTwoSection(sec);
+        } else if (sec.type === 'matching') {
+          html += renderMatchingSection(sec);
+        } else {
+          // Default fallback
+          html += renderNotesSection(sec, part.formTitle);
+        }
+      } catch (err) {
+        console.error('Error rendering section:', sec, err);
+      }
+    });
+  }
 
   // Next / Previous Part Navigation Bar
   html += `
@@ -880,6 +893,24 @@ function renderActivePartQuestions() {
 // SECTION RENDERERS
 // ------------------------------------------
 
+function normalizeOption(opt) {
+  if (typeof opt === 'object' && opt !== null && opt.key) {
+    return { key: String(opt.key).toUpperCase().trim(), text: opt.text || '' };
+  }
+  if (typeof opt === 'string') {
+    const match = opt.match(/^([A-Z])[\.\:\s\)\-]+(.*)$/);
+    if (match) {
+      return { key: match[1].trim().toUpperCase(), text: match[2].trim() };
+    }
+    const clean = opt.trim();
+    if (clean.length > 0 && /^[A-Z]$/i.test(clean.charAt(0))) {
+      return { key: clean.charAt(0).toUpperCase(), text: clean.length > 1 ? clean.substring(1).trim() : clean };
+    }
+    return { key: clean, text: clean };
+  }
+  return { key: String(opt || ''), text: String(opt || '') };
+}
+
 function renderNotesSection(sec, formTitle) {
   return `
     <div class="p-6 bg-white dark:bg-slate-900/90 rounded-2xl border border-iot-border dark:border-slate-800 shadow-sm space-y-4">
@@ -893,9 +924,11 @@ function renderNotesSection(sec, formTitle) {
       ${sec.heading && formTitle ? `<div class="font-bold text-xs text-iot-primary dark:text-blue-400 uppercase font-mono">${sec.heading}</div>` : ''}
 
       <div class="grid grid-cols-1 gap-3.5 text-xs sm:text-sm">
-        ${sec.questions.map(q => {
+        ${(sec.questions || []).map(q => {
           const val = listeningUserAnswers[q.num] || '';
           const res = isListeningSubmitted && listeningGradingResults ? listeningGradingResults.details[q.num] : null;
+          const displayAns = q.display || (q.expected ? q.expected[0] : (q.correctAnswer || ''));
+          const trapText = q.trap || q.explanation || '';
           let borderState = 'border-slate-300 dark:border-slate-600 dark:bg-slate-900';
           let feedbackHtml = '';
 
@@ -907,8 +940,8 @@ function renderNotesSection(sec, formTitle) {
               borderState = 'border-red-500 bg-red-50 dark:bg-red-950/40 text-red-900 dark:text-red-200';
               feedbackHtml = `
                 <div class="mt-1 text-[11px] space-y-0.5">
-                  <span class="text-red-600 font-bold">✗ Đáp án đúng: <strong>"${q.display}"</strong></span>
-                  <p class="text-iot-muted italic">${q.trap}</p>
+                  <span class="text-red-600 font-bold">✗ Đáp án đúng: <strong>"${displayAns}"</strong></span>
+                  ${trapText ? `<p class="text-iot-muted italic">${trapText}</p>` : ''}
                 </div>
               `;
             }
@@ -919,11 +952,11 @@ function renderNotesSection(sec, formTitle) {
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <span class="font-semibold text-iot-dark dark:text-slate-200">
                   <span class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-iot-primary dark:text-blue-300 inline-flex items-center justify-center font-mono font-bold text-xs mr-1.5">${q.num}</span>
-                  ${q.label}
+                  ${q.label || ''}
                 </span>
                 <div class="flex items-center gap-1.5">
                   ${q.prefix ? `<span class="font-bold text-iot-dark dark:text-white font-mono">${q.prefix}</span>` : ''}
-                  <input type="text" id="q_input_${q.num}" value="${val}" oninput="handleListeningAnswer(${q.num}, this.value)" onkeydown="handleQuestionInputKeydown(event, ${q.num})" placeholder="${q.placeholder}" class="px-3 py-1.5 rounded-lg border text-xs w-44 sm:w-52 font-mono focus:border-iot-primary focus:outline-none transition-colors ${borderState}" />
+                  <input type="text" id="q_input_${q.num}" value="${val}" oninput="handleListeningAnswer(${q.num}, this.value)" onkeydown="handleQuestionInputKeydown(event, ${q.num})" placeholder="${q.placeholder || 'Từ điền...'}" class="px-3 py-1.5 rounded-lg border text-xs w-44 sm:w-52 font-mono focus:border-iot-primary focus:outline-none transition-colors ${borderState}" />
                   ${q.suffix ? `<span class="text-[11px] text-iot-muted">${q.suffix}</span>` : ''}
                 </div>
               </div>
@@ -936,30 +969,130 @@ function renderNotesSection(sec, formTitle) {
   `;
 }
 
+function renderTableSection(sec) {
+  if (!sec.tableData) {
+    return renderNotesSection(sec);
+  }
+  const headers = sec.tableData.headers || [];
+  const rows = sec.tableData.rows || [];
+
+  return `
+    <div class="p-6 bg-white dark:bg-slate-900/90 rounded-2xl border border-iot-border dark:border-slate-800 shadow-sm space-y-4">
+      <div class="border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center justify-between">
+        <h3 class="font-bold text-sm sm:text-base text-iot-dark dark:text-white uppercase tracking-wider font-mono">
+          ${sec.heading || 'TABLE COMPLETION'}
+        </h3>
+        <span class="text-[11px] font-mono text-iot-muted">Write ONE WORD ONLY for each answer</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs text-left border-collapse border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden font-sans">
+          <thead>
+            <tr class="bg-slate-100 dark:bg-slate-800 text-iot-dark dark:text-white font-mono text-xs font-bold border-b border-slate-200 dark:border-slate-700">
+              ${headers.map(h => `<th class="p-3 border-r border-slate-200 dark:border-slate-700 last:border-r-0">${h}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200 dark:divide-slate-700 bg-white dark:bg-slate-900">
+            ${rows.map(row => `
+              <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
+                ${row.map(cell => {
+                  let cellHtml = cell;
+                  const qMatch = cell.match(/\[Q(\d+)\]/);
+                  if (qMatch) {
+                    const qNum = parseInt(qMatch[1], 10);
+                    const qObj = (sec.questions || []).find(q => q.num === qNum);
+                    const val = listeningUserAnswers[qNum] || '';
+                    const res = isListeningSubmitted && listeningGradingResults ? listeningGradingResults.details[qNum] : null;
+                    const displayAns = qObj ? (qObj.display || (qObj.expected ? qObj.expected[0] : (qObj.correctAnswer || ''))) : '';
+
+                    let borderClass = 'border-slate-300 dark:border-slate-600 dark:bg-slate-900';
+                    let feedbackHtml = '';
+                    if (res) {
+                      if (res.isCorrect) {
+                        borderClass = 'border-green-500 bg-green-50 dark:bg-green-950/40 text-green-900 dark:text-green-200';
+                        feedbackHtml = `<span class="text-[11px] font-mono text-green-600 font-bold ml-1.5">✓</span>`;
+                      } else {
+                        borderClass = 'border-red-500 bg-red-50 dark:bg-red-950/40 text-red-900 dark:text-red-200';
+                        feedbackHtml = `<div class="mt-1 text-[11px] text-red-500 font-mono font-bold">✗ Đáp án: "${displayAns}"</div>`;
+                      }
+                    }
+
+                    const inputEl = `
+                      <div id="q_card_${qNum}" class="my-1.5 p-1.5 rounded-lg bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-900/40 inline-flex flex-col gap-1">
+                        <div class="flex items-center gap-1.5">
+                          <span class="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900 text-iot-primary dark:text-blue-300 inline-flex items-center justify-center font-mono font-bold text-[11px] shrink-0">${qNum}</span>
+                          <input type="text" id="q_input_${qNum}" value="${val}" oninput="handleListeningAnswer(${qNum}, this.value)" onkeydown="handleQuestionInputKeydown(event, ${qNum})" placeholder="${qObj ? (qObj.placeholder || 'Từ điền...') : 'Điền từ...'}" class="px-2.5 py-1 text-xs font-mono font-bold rounded border w-36 sm:w-44 focus:border-iot-primary focus:outline-none transition-colors ${borderClass}" />
+                          ${feedbackHtml}
+                        </div>
+                      </div>
+                    `;
+                    cellHtml = cell.replace(/\[Q\d+\]/, inputEl);
+                  }
+                  return `<td class="p-3 border-r border-slate-200 dark:border-slate-700 last:border-r-0 align-top">${cellHtml}</td>`;
+                }).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Additional Detailed Inputs List for Clear Mobile Navigation -->
+      ${sec.questions && sec.questions.length > 0 ? `
+        <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
+          <div class="font-bold text-xs text-iot-muted uppercase tracking-wider font-mono">Danh sách câu hỏi bảng (Questions ${sec.questions[0].num}–${sec.questions[sec.questions.length - 1].num}):</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            ${sec.questions.map(q => {
+              const val = listeningUserAnswers[q.num] || '';
+              const res = isListeningSubmitted && listeningGradingResults ? listeningGradingResults.details[q.num] : null;
+              const displayAns = q.display || (q.expected ? q.expected[0] : (q.correctAnswer || ''));
+              return `
+                <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800 flex items-center justify-between gap-2">
+                  <span class="text-xs font-semibold text-iot-dark dark:text-slate-200 flex items-center gap-1.5">
+                    <span class="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900 text-iot-primary dark:text-blue-300 inline-flex items-center justify-center font-mono font-bold text-xs">${q.num}</span>
+                    <span>${q.label || ''}</span>
+                  </span>
+                  <div class="flex items-center gap-1">
+                    <input type="text" value="${val}" oninput="handleListeningAnswer(${q.num}, this.value)" class="px-2 py-1 text-xs rounded border border-slate-300 dark:border-slate-600 dark:bg-slate-900 w-28 sm:w-32 font-mono" placeholder="${q.placeholder || 'Từ điền...'}" />
+                    ${res ? (res.isCorrect ? `<span class="text-green-600 font-bold font-mono text-xs">✓</span>` : `<span class="text-red-500 font-bold font-mono text-xs">✗ ${displayAns}</span>`) : ''}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
 function renderMultipleChoiceSection(sec) {
   return `
     <div class="p-6 bg-white dark:bg-slate-900/90 rounded-2xl border border-iot-border dark:border-slate-800 shadow-sm space-y-5">
       <div class="border-b border-slate-100 dark:border-slate-800 pb-2">
         <h3 class="font-bold text-sm sm:text-base text-iot-dark dark:text-white uppercase tracking-wider font-mono">
-          ${sec.heading}
+          ${sec.heading || 'MULTIPLE CHOICE'}
         </h3>
-        <p class="text-xs text-iot-muted mt-0.5">${sec.subInstructions}</p>
+        <p class="text-xs text-iot-muted mt-0.5">${sec.subInstructions || sec.instructions || 'Choose the correct letter, A, B, or C.'}</p>
       </div>
 
       <div class="space-y-4">
-        ${sec.questions.map(q => {
+        ${(sec.questions || []).map(q => {
           const selectedKey = listeningUserAnswers[q.num] || '';
           const res = isListeningSubmitted && listeningGradingResults ? listeningGradingResults.details[q.num] : null;
+          const expectedKey = q.correctAnswer || (q.expected && q.expected[0]) || q.display || '';
+          const trapText = q.trap || q.explanation || '';
+          const rawOptions = q.options || sec.options || [];
 
           return `
             <div id="q_card_${q.num}" class="p-4 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200/80 dark:border-slate-800 space-y-3">
               <div class="font-semibold text-xs sm:text-sm text-iot-dark dark:text-slate-200 flex items-start gap-2">
                 <span class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-iot-primary dark:text-blue-300 inline-flex items-center justify-center font-mono font-bold text-xs shrink-0">${q.num}</span>
-                <span>${q.prompt}</span>
+                <span>${q.prompt || q.label || ''}</span>
               </div>
 
               <div class="grid grid-cols-1 gap-2 pt-1">
-                ${q.options.map(opt => {
+                ${rawOptions.map(rawOpt => {
+                  const opt = normalizeOption(rawOpt);
                   const isChecked = selectedKey === opt.key;
                   let optStyle = 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-iot-primary';
                   if (isChecked) {
@@ -976,11 +1109,11 @@ function renderMultipleChoiceSection(sec) {
               </div>
 
               ${res ? (res.isCorrect ? `
-                <div class="text-[11px] font-mono text-green-600 font-bold">✓ Chính xác (Lựa chọn ${q.display})</div>
+                <div class="text-[11px] font-mono text-green-600 font-bold">✓ Chính xác (Lựa chọn ${expectedKey})</div>
               ` : `
                 <div class="text-[11px] p-2 rounded bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 space-y-0.5">
-                  <span class="text-red-600 font-bold">✗ Đáp án đúng: <strong>Lựa chọn ${q.display}</strong></span>
-                  <p class="text-iot-muted">${q.trap}</p>
+                  <span class="text-red-600 font-bold">✗ Đáp án đúng: <strong>Lựa chọn ${expectedKey}</strong></span>
+                  ${trapText ? `<p class="text-iot-muted">${trapText}</p>` : ''}
                 </div>
               `) : ''}
             </div>
@@ -1081,14 +1214,20 @@ function renderMapLabellingSection(sec) {
         </div>
 
         <!-- Legend / List of Locations -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-mono text-slate-600 dark:text-slate-300 pt-1">
-          ${sec.mapLegend.map(item => `
-            <div class="p-1.5 rounded bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5">
-              <span class="w-4 h-4 rounded bg-iot-primary text-white inline-flex items-center justify-center font-bold text-[10px]">${item.letter}</span>
-              <span class="truncate">${item.label}</span>
+        ${(() => {
+          const legendList = sec.mapLegend || (sec.mapOptions ? sec.mapOptions.map(o => ({ letter: o.key, label: o.label || o.text })) : []);
+          if (!legendList || legendList.length === 0) return '';
+          return `
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-mono text-slate-600 dark:text-slate-300 pt-1">
+              ${legendList.map(item => `
+                <div class="p-1.5 rounded bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5">
+                  <span class="w-4 h-4 rounded bg-iot-primary text-white inline-flex items-center justify-center font-bold text-[10px]">${item.letter}</span>
+                  <span class="truncate">${item.label}</span>
+                </div>
+              `).join('')}
             </div>
-          `).join('')}
-        </div>
+          `;
+        })()}
       </div>
 
       <!-- Map Questions 16-20 -->
@@ -1130,75 +1269,138 @@ function renderMapLabellingSection(sec) {
 }
 
 function renderChooseTwoSection(sec) {
-  const qNum1 = sec.pairQuestions[0].num;
-  const qNum2 = sec.pairQuestions[1].num;
-  const selectedA = listeningUserAnswers[qNum1] || '';
-  const selectedB = listeningUserAnswers[qNum2] || '';
-  const selectedList = [selectedA, selectedB].filter(Boolean);
+  let pairs = [];
 
-  const res1 = isListeningSubmitted && listeningGradingResults ? listeningGradingResults.details[qNum1] : null;
-  const res2 = isListeningSubmitted && listeningGradingResults ? listeningGradingResults.details[qNum2] : null;
+  if (Array.isArray(sec.pairQuestions) && sec.pairQuestions.length >= 2) {
+    const q1 = sec.pairQuestions[0].num;
+    const q2 = sec.pairQuestions[1].num;
+    pairs.push({
+      q1,
+      q2,
+      prompt: sec.subInstructions || sec.heading || `Questions ${q1} & ${q2}: Choose TWO letters`,
+      options: (sec.options || []).map(normalizeOption),
+      expectedDisplay: sec.pairQuestions.map(q => q.display || q.expected).flat().join(', '),
+      trap: sec.pairQuestions[0].trap || ''
+    });
+  } else if (Array.isArray(sec.questions)) {
+    sec.questions.forEach(item => {
+      const q1 = item.num;
+      const q2 = item.pairNum || (item.num + 1);
+      const opts = (item.options || sec.options || []).map(normalizeOption);
+      const exp = item.correctAnswers || item.expected || [];
+      pairs.push({
+        q1,
+        q2,
+        prompt: item.prompt || sec.heading || `Questions ${q1} & ${q2}: Choose TWO letters`,
+        options: opts,
+        expectedDisplay: Array.isArray(exp) ? exp.join(', ') : String(exp),
+        trap: item.explanation || item.trap || ''
+      });
+    });
+  }
 
   return `
-    <div class="p-6 bg-white dark:bg-slate-900/90 rounded-2xl border border-iot-border dark:border-slate-800 shadow-sm space-y-4">
+    <div class="p-6 bg-white dark:bg-slate-900/90 rounded-2xl border border-iot-border dark:border-slate-800 shadow-sm space-y-6">
       <div class="border-b border-slate-100 dark:border-slate-800 pb-2">
         <h3 class="font-bold text-sm sm:text-base text-iot-dark dark:text-white uppercase tracking-wider font-mono">
-          ${sec.heading}
+          ${sec.heading || 'CHOOSE TWO LETTERS'}
         </h3>
-        <p class="text-xs text-iot-muted mt-0.5">${sec.subInstructions}</p>
+        <p class="text-xs text-iot-muted mt-0.5">${sec.subInstructions || sec.instructions || 'Choose TWO letters for each pair of questions.'}</p>
       </div>
 
-      <!-- Option Cards (Choose 2) -->
-      <div class="grid grid-cols-1 gap-2.5">
-        ${sec.options.map(opt => {
-          const isChecked = selectedList.includes(opt.key);
-          let cardStyle = 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300';
-          if (isChecked) {
-            cardStyle = 'border-iot-primary bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 font-semibold ring-1 ring-iot-primary';
-          }
+      ${pairs.map(pair => {
+        const qNum1 = pair.q1;
+        const qNum2 = pair.q2;
+        const selectedA = listeningUserAnswers[qNum1] || '';
+        const selectedB = listeningUserAnswers[qNum2] || '';
+        const selectedList = [selectedA, selectedB].filter(Boolean);
 
-          return `
-            <label onclick="handleChooseTwoToggle(${qNum1}, ${qNum2}, '${opt.key}')" class="p-3 rounded-xl border cursor-pointer flex items-center gap-3 transition-all ${cardStyle}">
-              <input type="checkbox" ${isChecked ? 'checked' : ''} class="w-4 h-4 text-iot-primary rounded" onclick="event.stopPropagation(); handleChooseTwoToggle(${qNum1}, ${qNum2}, '${opt.key}');" />
-              <span class="font-mono font-bold text-xs w-6 text-center">${opt.key}.</span>
-              <span class="text-xs sm:text-sm">${opt.text}</span>
-            </label>
-          `;
-        }).join('')}
-      </div>
+        const res1 = isListeningSubmitted && listeningGradingResults ? listeningGradingResults.details[qNum1] : null;
+        const res2 = isListeningSubmitted && listeningGradingResults ? listeningGradingResults.details[qNum2] : null;
 
-      <!-- Feedback for Pair Questions -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-        <div id="q_card_${qNum1}" class="p-3 rounded-lg bg-slate-100 dark:bg-slate-800/70 text-xs">
-          <div class="font-bold font-mono">Câu ${qNum1}: Đã chọn <span class="text-iot-primary">${selectedA || 'Chưa chọn'}</span></div>
-          ${res1 ? (res1.isCorrect ? `<span class="text-green-600 font-bold font-mono">✓ Đúng (+1đ)</span>` : `<span class="text-red-500 font-bold font-mono">✗ Đáp án: ${sec.pairQuestions[0].display}</span>`) : ''}
-        </div>
-        <div id="q_card_${qNum2}" class="p-3 rounded-lg bg-slate-100 dark:bg-slate-800/70 text-xs">
-          <div class="font-bold font-mono">Câu ${qNum2}: Đã chọn <span class="text-iot-primary">${selectedB || 'Chưa chọn'}</span></div>
-          ${res2 ? (res2.isCorrect ? `<span class="text-green-600 font-bold font-mono">✓ Đúng (+1đ)</span>` : `<span class="text-red-500 font-bold font-mono">✗ Đáp án: ${sec.pairQuestions[1].display}</span>`) : ''}
-        </div>
-      </div>
+        return `
+          <div class="p-4 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200/80 dark:border-slate-800 space-y-3">
+            <div class="font-semibold text-xs sm:text-sm text-iot-dark dark:text-slate-200 flex items-start gap-2">
+              <span class="w-12 h-6 rounded-lg bg-blue-100 dark:bg-blue-900 text-iot-primary dark:text-blue-300 inline-flex items-center justify-center font-mono font-bold text-xs shrink-0">
+                ${qNum1} &amp; ${qNum2}
+              </span>
+              <span>${pair.prompt}</span>
+            </div>
+
+            <!-- Option Cards (Choose 2) -->
+            <div class="grid grid-cols-1 gap-2 pt-1">
+              ${pair.options.map(opt => {
+                const isChecked = selectedList.includes(opt.key);
+                let cardStyle = 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-iot-primary';
+                if (isChecked) {
+                  cardStyle = 'border-iot-primary bg-blue-50 dark:bg-blue-950/60 text-iot-primary dark:text-blue-300 font-semibold ring-1 ring-iot-primary';
+                }
+
+                return `
+                  <label onclick="handleChooseTwoToggle(${qNum1}, ${qNum2}, '${opt.key}')" class="p-2.5 rounded-lg border cursor-pointer flex items-center gap-3 transition-all ${cardStyle}">
+                    <input type="checkbox" ${isChecked ? 'checked' : ''} class="w-4 h-4 text-iot-primary rounded" onclick="event.stopPropagation(); handleChooseTwoToggle(${qNum1}, ${qNum2}, '${opt.key}');" />
+                    <span class="font-mono font-bold text-xs w-6 text-center">${opt.key}.</span>
+                    <span class="text-xs sm:text-sm">${opt.text}</span>
+                  </label>
+                `;
+              }).join('')}
+            </div>
+
+            <!-- Feedback for Pair Questions -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <div id="q_card_${qNum1}" class="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
+                <div class="font-bold font-mono">Câu ${qNum1}: Đã chọn <span class="text-iot-primary">${selectedA || 'Chưa chọn'}</span></div>
+                ${res1 ? (res1.isCorrect ? `<span class="text-green-600 font-bold font-mono">✓ Đúng (+1đ)</span>` : `<span class="text-red-500 font-bold font-mono">✗ Đáp án: ${pair.expectedDisplay}</span>`) : ''}
+              </div>
+              <div id="q_card_${qNum2}" class="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
+                <div class="font-bold font-mono">Câu ${qNum2}: Đã chọn <span class="text-iot-primary">${selectedB || 'Chưa chọn'}</span></div>
+                ${res2 ? (res2.isCorrect ? `<span class="text-green-600 font-bold font-mono">✓ Đúng (+1đ)</span>` : `<span class="text-red-500 font-bold font-mono">✗ Đáp án: ${pair.expectedDisplay}</span>`) : ''}
+              </div>
+            </div>
+            ${pair.trap && isListeningSubmitted ? `
+              <div class="text-[11px] p-2 rounded bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 text-amber-900 dark:text-amber-200">
+                💡 <em>${pair.trap}</em>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('')}
     </div>
   `;
 }
 
 function renderMatchingSection(sec) {
+  let matchOptions = [];
+  if (Array.isArray(sec.matchOptions) && sec.matchOptions.length > 0) {
+    matchOptions = sec.matchOptions.map(normalizeOption);
+  } else if (Array.isArray(sec.options) && sec.options.length > 0) {
+    matchOptions = sec.options.map(normalizeOption);
+  } else {
+    const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+    matchOptions = letters.map(letter => ({
+      key: letter,
+      text: `Vị trí / Lựa chọn ${letter}`
+    }));
+  }
+
+  const lastKey = matchOptions[matchOptions.length - 1].key;
+
   return `
     <div class="p-6 bg-white dark:bg-slate-900/90 rounded-2xl border border-iot-border dark:border-slate-800 shadow-sm space-y-4">
       <div class="border-b border-slate-100 dark:border-slate-800 pb-2">
         <h3 class="font-bold text-sm sm:text-base text-iot-dark dark:text-white uppercase tracking-wider font-mono">
-          ${sec.heading}
+          ${sec.heading || 'MATCHING'}
         </h3>
-        <p class="text-xs text-iot-muted mt-0.5">${sec.subInstructions}</p>
+        <p class="text-xs text-iot-muted mt-0.5">${sec.subInstructions || sec.instructions || 'Match the correct letter to each item.'}</p>
       </div>
 
       <!-- Match Options Box -->
       <div class="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 text-xs space-y-2">
         <div class="font-bold font-mono text-iot-primary dark:text-blue-300 uppercase tracking-wide">
-          BẢNG Ý KIẾN / TIÊU CHÍ (OPTIONS A–${sec.matchOptions[sec.matchOptions.length - 1].key}):
+          BẢNG Ý KIẾN / TIÊU CHÍ (OPTIONS A–${lastKey}):
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 font-mono">
-          ${sec.matchOptions.map(opt => `
+          ${matchOptions.map(opt => `
             <div class="flex items-start gap-2 p-1.5 bg-white dark:bg-slate-900 rounded border border-slate-200/60 dark:border-slate-800">
               <span class="font-bold text-iot-primary dark:text-blue-400 shrink-0">${opt.key}.</span>
               <span class="text-slate-700 dark:text-slate-300 text-[11px] font-sans">${opt.text}</span>
@@ -1209,21 +1411,24 @@ function renderMatchingSection(sec) {
 
       <!-- Matching Question Items -->
       <div class="space-y-2.5 pt-2">
-        ${sec.questions.map(q => {
+        ${(sec.questions || []).map(q => {
           const selectedVal = listeningUserAnswers[q.num] || '';
           const res = isListeningSubmitted && listeningGradingResults ? listeningGradingResults.details[q.num] : null;
+          const displayAns = q.display || (q.expected ? q.expected[0] : (q.correctAnswer || ''));
+          const trapText = q.trap || q.explanation || '';
+          const qText = q.item || q.label || (`Câu ${q.num}`);
 
           return `
             <div id="q_card_${q.num}" class="p-3 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200/80 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
               <span class="font-semibold text-xs sm:text-sm text-iot-dark dark:text-slate-200">
                 <span class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-iot-primary dark:text-blue-300 inline-flex items-center justify-center font-mono font-bold text-xs mr-1">${q.num}</span>
-                ${q.item}
+                ${qText}
               </span>
 
               <div class="flex items-center gap-2">
                 <select id="q_input_${q.num}" onchange="handleListeningAnswer(${q.num}, this.value)" onkeydown="handleQuestionInputKeydown(event, ${q.num})" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-900 font-mono font-bold text-xs text-iot-primary dark:text-blue-300 focus:border-iot-primary focus:outline-none">
-                  <option value="">Chọn A–${sec.matchOptions[sec.matchOptions.length - 1].key}...</option>
-                  ${sec.matchOptions.map(opt => `
+                  <option value="">Chọn A–${lastKey}...</option>
+                  ${matchOptions.map(opt => `
                     <option value="${opt.key}" ${selectedVal === opt.key ? 'selected' : ''}>${opt.key} - ${opt.text.substring(0, 32)}...</option>
                   `).join('')}
                 </select>
@@ -1231,9 +1436,14 @@ function renderMatchingSection(sec) {
                 ${res ? (res.isCorrect ? `
                   <span class="text-green-600 font-bold font-mono text-xs">✓ Đúng</span>
                 ` : `
-                  <span class="text-red-500 font-bold font-mono text-xs">✗ Đúng: ${q.display}</span>
+                  <span class="text-red-500 font-bold font-mono text-xs">✗ Đúng: ${displayAns}</span>
                 `) : ''}
               </div>
+              ${res && !res.isCorrect && trapText ? `
+                <div class="w-full text-[11px] text-iot-muted italic pl-8">
+                  ${trapText}
+                </div>
+              ` : ''}
             </div>
           `;
         }).join('')}
@@ -1293,7 +1503,7 @@ function switchListeningPart(partNum) {
 
   // Smooth scroll to top of viewport
   const viewport = document.getElementById('activePartViewport');
-  if (viewport) {
+  if (viewport && typeof viewport.scrollIntoView === 'function') {
     viewport.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
@@ -1447,66 +1657,105 @@ function checkListeningAnswers() {
   const mistakes = [];
 
   test.parts.forEach(part => {
-    part.sections.forEach(sec => {
-      // Notes & Single Questions
-      if (sec.questions) {
+    (part.sections || []).forEach(sec => {
+      // 1. Choose Two Questions
+      if (sec.type === 'choose-two') {
+        if (Array.isArray(sec.pairQuestions) && sec.pairQuestions.length >= 2) {
+          const q1 = sec.pairQuestions[0];
+          const q2 = sec.pairQuestions[1];
+          const userAns1 = (listeningUserAnswers[q1.num] || '').trim().toUpperCase();
+          const userAns2 = (listeningUserAnswers[q2.num] || '').trim().toUpperCase();
+
+          const validPair = (q1.expected || []).map(a => String(a).toUpperCase());
+          const displayStr = q1.display || validPair.join(', ');
+
+          const q1Correct = validPair.includes(userAns1) && userAns1 !== '';
+          if (q1Correct) {
+            totalScore++;
+            partScores[part.partNum]++;
+            details[q1.num] = { isCorrect: true, userAns: userAns1, correctAns: displayStr, trap: q1.trap };
+          } else {
+            details[q1.num] = { isCorrect: false, userAns: userAns1 || "Chưa chọn", correctAns: displayStr, trap: q1.trap };
+            mistakes.push({ qNum: q1.num, partNum: part.partNum, userAns: userAns1 || "Chưa chọn", correctAns: displayStr, trap: q1.trap });
+          }
+
+          const q2Correct = validPair.includes(userAns2) && userAns2 !== userAns1 && userAns2 !== '';
+          if (q2Correct) {
+            totalScore++;
+            partScores[part.partNum]++;
+            details[q2.num] = { isCorrect: true, userAns: userAns2, correctAns: displayStr, trap: q2.trap };
+          } else {
+            details[q2.num] = { isCorrect: false, userAns: userAns2 || "Chưa chọn", correctAns: displayStr, trap: q2.trap };
+            mistakes.push({ qNum: q2.num, partNum: part.partNum, userAns: userAns2 || "Chưa chọn", correctAns: displayStr, trap: q2.trap });
+          }
+        } else if (Array.isArray(sec.questions)) {
+          sec.questions.forEach(item => {
+            const num1 = item.num;
+            const num2 = item.pairNum || (item.num + 1);
+            const userAns1 = (listeningUserAnswers[num1] || '').trim().toUpperCase();
+            const userAns2 = (listeningUserAnswers[num2] || '').trim().toUpperCase();
+
+            const rawExp = item.correctAnswers || item.expected || [];
+            const validPair = (Array.isArray(rawExp) ? rawExp : [rawExp]).map(a => String(a).toUpperCase());
+            const displayStr = validPair.join(', ');
+            const trapText = item.explanation || item.trap || '';
+
+            const q1Correct = validPair.includes(userAns1) && userAns1 !== '';
+            if (q1Correct) {
+              totalScore++;
+              partScores[part.partNum]++;
+              details[num1] = { isCorrect: true, userAns: userAns1, correctAns: displayStr, trap: trapText };
+            } else {
+              details[num1] = { isCorrect: false, userAns: userAns1 || "Chưa chọn", correctAns: displayStr, trap: trapText };
+              mistakes.push({ qNum: num1, partNum: part.partNum, userAns: userAns1 || "Chưa chọn", correctAns: displayStr, trap: trapText });
+            }
+
+            const q2Correct = validPair.includes(userAns2) && userAns2 !== userAns1 && userAns2 !== '';
+            if (q2Correct) {
+              totalScore++;
+              partScores[part.partNum]++;
+              details[num2] = { isCorrect: true, userAns: userAns2, correctAns: displayStr, trap: trapText };
+            } else {
+              details[num2] = { isCorrect: false, userAns: userAns2 || "Chưa chọn", correctAns: displayStr, trap: trapText };
+              mistakes.push({ qNum: num2, partNum: part.partNum, userAns: userAns2 || "Chưa chọn", correctAns: displayStr, trap: trapText });
+            }
+          });
+        }
+      } else if (Array.isArray(sec.questions)) {
+        // Notes, Table, Multiple-Choice, Map-Labelling, Matching
         sec.questions.forEach(q => {
           const userAns = (listeningUserAnswers[q.num] || '').trim();
           const cleanUser = userAns.toLowerCase().replace(/[.,!?;:()]/g, '').trim();
 
-          const isCorrect = q.expected.some(exp => {
-            const cleanExp = exp.toLowerCase().replace(/[.,!?;:()]/g, '').trim();
-            return cleanUser === cleanExp || cleanUser === exp.toLowerCase().trim();
+          let expList = [];
+          if (Array.isArray(q.expected)) expList = q.expected;
+          else if (typeof q.expected === 'string') expList = [q.expected];
+          else if (q.correctAnswer) expList = [q.correctAnswer];
+          else if (Array.isArray(q.correctAnswers)) expList = q.correctAnswers;
+
+          const displayAns = q.display || (q.correctAnswer ? String(q.correctAnswer) : (expList[0] || ''));
+          const trapText = q.trap || q.explanation || '';
+
+          const isCorrect = expList.some(exp => {
+            const cleanExp = String(exp).toLowerCase().replace(/[.,!?;:()]/g, '').trim();
+            return cleanUser === cleanExp || cleanUser === String(exp).toLowerCase().trim();
           });
 
           if (isCorrect && cleanUser.length > 0) {
             totalScore++;
             partScores[part.partNum]++;
-            details[q.num] = { isCorrect: true, userAns, correctAns: q.display, trap: q.trap };
+            details[q.num] = { isCorrect: true, userAns, correctAns: displayAns, trap: trapText };
           } else {
-            details[q.num] = { isCorrect: false, userAns: userAns || "Chưa điền", correctAns: q.display, trap: q.trap };
+            details[q.num] = { isCorrect: false, userAns: userAns || "Chưa điền", correctAns: displayAns, trap: trapText };
             mistakes.push({
               qNum: q.num,
               partNum: part.partNum,
               userAns: userAns || "Chưa điền",
-              correctAns: q.display,
-              trap: q.trap
+              correctAns: displayAns,
+              trap: trapText
             });
           }
         });
-      }
-
-      // Choose Two Questions (e.g. Q21 & Q22)
-      if (sec.pairQuestions) {
-        const q1 = sec.pairQuestions[0];
-        const q2 = sec.pairQuestions[1];
-        const userAns1 = (listeningUserAnswers[q1.num] || '').trim().toUpperCase();
-        const userAns2 = (listeningUserAnswers[q2.num] || '').trim().toUpperCase();
-
-        const validPair = q1.expected; // ['B', 'D']
-        const userPair = [userAns1, userAns2].filter(Boolean);
-
-        // Score Q1
-        const q1Correct = validPair.includes(userAns1) && userAns1 !== '';
-        if (q1Correct) {
-          totalScore++;
-          partScores[part.partNum]++;
-          details[q1.num] = { isCorrect: true, userAns: userAns1, correctAns: q1.display, trap: q1.trap };
-        } else {
-          details[q1.num] = { isCorrect: false, userAns: userAns1 || "Chưa chọn", correctAns: q1.display, trap: q1.trap };
-          mistakes.push({ qNum: q1.num, partNum: part.partNum, userAns: userAns1 || "Chưa chọn", correctAns: q1.display, trap: q1.trap });
-        }
-
-        // Score Q2 (must be valid and distinct from Q1)
-        const q2Correct = validPair.includes(userAns2) && userAns2 !== userAns1 && userAns2 !== '';
-        if (q2Correct) {
-          totalScore++;
-          partScores[part.partNum]++;
-          details[q2.num] = { isCorrect: true, userAns: userAns2, correctAns: q2.display, trap: q2.trap };
-        } else {
-          details[q2.num] = { isCorrect: false, userAns: userAns2 || "Chưa chọn", correctAns: q2.display, trap: q2.trap };
-          mistakes.push({ qNum: q2.num, partNum: part.partNum, userAns: userAns2 || "Chưa chọn", correctAns: q2.display, trap: q2.trap });
-        }
       }
     });
   });
@@ -1522,6 +1771,9 @@ function checkListeningAnswers() {
     details,
     mistakes
   };
+  if (typeof window !== 'undefined') {
+    window.listeningGradingResults = listeningGradingResults;
+  }
 
   // Update all palette buttons to reflect green/red results
   for (let i = 1; i <= 40; i++) {
