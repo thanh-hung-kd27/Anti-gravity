@@ -1,6 +1,7 @@
 
 const SOCRATIC_PROFILE_KEY = 'ielts_socratic_ai_profile_v2';
 const SOCRATIC_LLM_CONFIG_KEY = 'ielts_socratic_llm_config';
+const CHATBOT_HISTORY_KEY = 'ielts_ai_chatbot_messages_v1';
 
 const CognitiveDimensionsDefault = {
   formal_syntax: {
@@ -63,18 +64,40 @@ class SocraticAIEngine {
   constructor() {
     this.profile = this.loadProfile();
     this.llmConfig = this.loadLLMConfig();
-    this.conversationHistory = [];
+    this.conversationHistory = this.loadChatHistory();
     this.isStreaming = false;
     this.abortController = null;
 
-    // Auto synchronize profile data to UI badges & names across pages
+    // Auto synchronize profile data and initialize unified personalized AI Chatbot UI
     if (typeof window !== 'undefined') {
+      const initAll = () => {
+        this.syncProfileToUI();
+        this.initFloatingChatbotWidget();
+      };
       if (document.readyState === 'loading') {
-        window.addEventListener('DOMContentLoaded', () => this.syncProfileToUI());
+        window.addEventListener('DOMContentLoaded', initAll);
       } else {
-        setTimeout(() => this.syncProfileToUI(), 50);
+        setTimeout(initAll, 60);
       }
     }
+  }
+
+  loadChatHistory() {
+    try {
+      const raw = localStorage.getItem(CHATBOT_HISTORY_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed.slice(-30);
+      }
+    } catch (e) {}
+    return [];
+  }
+
+  saveChatHistory() {
+    try {
+      const recent = (this.conversationHistory || []).slice(-30);
+      localStorage.setItem(CHATBOT_HISTORY_KEY, JSON.stringify(recent));
+    } catch (e) {}
   }
 
   // Load from localStorage or create smart default profile
@@ -84,13 +107,17 @@ class SocraticAIEngine {
       if (stored) {
         const parsed = JSON.parse(stored);
         parsed.cognitiveDimensions = { ...CognitiveDimensionsDefault, ...(parsed.cognitiveDimensions || {}) };
-        // Auto-sanitize legacy placeholder names
         if (!parsed.name || /Minh\s*Đ\u1ee9c/i.test(parsed.name)) {
           parsed.name = 'Học viên';
         }
         if (parsed.email && parsed.email.includes('minhduc')) {
           parsed.email = '';
         }
+        parsed.focusSkill = parsed.focusSkill || 'ALL';
+        parsed.examDate = parsed.examDate || '';
+        parsed.responseStyle = parsed.responseStyle || 'friendly';
+        parsed.personalNotes = parsed.personalNotes || '';
+        parsed.customMemories = Array.isArray(parsed.customMemories) ? parsed.customMemories : [];
         return parsed;
       }
     } catch (e) {
@@ -98,14 +125,19 @@ class SocraticAIEngine {
     }
 
     const defaultProfile = {
-      version: '2.0-cognitive',
+      version: '2.5-personalized',
       studentId: 'PHI-' + Math.floor(1000 + Math.random() * 9000),
       name: 'Học viên',
       email: '',
       phone: '',
       targetBand: '8.0',
       currentEstimatedBand: '7.0',
-      learningStyle: 'Socratic-Dialectic',
+      focusSkill: 'ALL',
+      examDate: '',
+      responseStyle: 'friendly',
+      personalNotes: '',
+      customMemories: [],
+      learningStyle: 'Personalized-Adaptive',
       createdAt: new Date().toISOString(),
       lastActive: new Date().toISOString(),
       totalInteractions: 14,
@@ -501,32 +533,47 @@ ${JSON.stringify(data, null, 2)}
   }
 
   /**
-   * Main dispatch for user chat: connects to Real API if configured or Built-in Claude Socratic Brain
+   * Main dispatch for user chat: Personalizes automatically, checks Real API if configured,
+   * or dispatches to Live Knowledge + Personalized Built-in Engine
    */
   async processUserMessage(userText, context = {}, onToken, onDone, onError) {
     this.isStreaming = true;
     this.conversationHistory.push({ role: 'user', content: userText });
+    this.saveChatHistory();
 
-    const studentName = this.profile.name || 'bạn';
-    const targetBand = this.profile.targetBand || '8.0';
+    // 1. Auto-detect & persist personalization updates from user's message
+    const personalUpdates = this.extractAndSavePersonalization(userText);
 
-    // 1. If user configured an external API key (Google Gemini, Groq, Claude, OpenAI, Backend)
+    // 2. If user configured an external API key (Google Gemini, Groq, Claude, OpenAI, Backend)
     if (this.llmConfig.provider !== 'socratic-claude-engine' && this.llmConfig.apiKey) {
       try {
-        await this.callRealLLM(userText, context, onToken, onDone);
+        await this.callRealLLM(userText, context, onToken, (finalText) => {
+          this.saveChatHistory();
+          if (onDone) onDone(finalText);
+        });
         return;
       } catch (err) {
-        console.warn('Real API Call failed, falling back to Socratic Cognitive Brain:', err);
+        console.warn('Real API Call failed, falling back to Personalized Knowledge Engine:', err);
       }
     }
 
-    // 2. High-Fidelity Socratic Smart Knowledge Engine (Zero-origin safe, instant response)
-    const fullText = this.generateClaudeResponse(userText, context);
-    await this.simulateTokenStream(fullText, onToken, (finalText) => {
+    // 3. Personalized & Live Information Retrieval Engine (Zero API-Key Required)
+    try {
+      const fullText = await this.generateSmartResponseAsync(userText, context, personalUpdates);
+      await this.simulateTokenStream(fullText, onToken, (finalText) => {
+        this.isStreaming = false;
+        this.conversationHistory.push({ role: 'assistant', content: finalText });
+        this.saveChatHistory();
+        if (onDone) onDone(finalText);
+      });
+    } catch (err) {
       this.isStreaming = false;
-      this.conversationHistory.push({ role: 'assistant', content: finalText });
-      if (onDone) onDone(finalText);
-    });
+      const fallback = this.generateClaudeResponse(userText, context);
+      if (onToken) onToken(fallback);
+      this.conversationHistory.push({ role: 'assistant', content: fallback });
+      this.saveChatHistory();
+      if (onDone) onDone(fallback);
+    }
   }
 
   /**
@@ -541,7 +588,7 @@ ${JSON.stringify(data, null, 2)}
       currentText += tokens[i];
       if (onToken) onToken(currentText);
 
-      const delay = tokens[i].includes('\n') ? 40 : (Math.random() * 16 + 8);
+      const delay = tokens[i].includes('\n') ? 22 : (Math.random() * 10 + 4);
       await new Promise(r => setTimeout(r, delay));
     }
 
@@ -565,81 +612,31 @@ ${JSON.stringify(data, null, 2)}
 
     let systemPrompt = '';
     if (isWritingEval) {
-      systemPrompt = `You are the core AI IELTS Examiner and Socratic Tutor for "IELTS ACADEMIC LAB", an advanced IELTS preparation platform. Your persona is a strict, highly experienced former IDP/British Council IELTS Examiner.
-
-Your sole objective is to evaluate user-submitted IELTS Writing Task 1 and Task 2 essays strictly against the official public IELTS Writing Band Descriptors.
-
-# CORE GRADING PRINCIPLES
-You must evaluate every essay across these 4 criteria equally (25% each):
-1. Task Achievement (TA) for Task 1 OR Task Response (TR) for Task 2.
-2. Coherence and Cohesion (CC).
-3. Lexical Resource (LR).
-4. Grammatical Range and Accuracy (GRA).
-
-Do NOT inflate scores. Be extremely precise and strict, characteristic of an actual examiner. Half-bands (e.g., 6.5) are permitted for the overall score and individual criteria.
-
-# INTERACTION & OUTPUT FORMAT
-When a user submits their essay along with the prompt, you must output a structured evaluation in Vietnamese (unless the user explicitly requests English). Use Markdown format to ensure it renders beautifully on the web interface. 
-
-Follow this exact structure for your output:
-
-## 1. Điểm tổng quát (Overall Band Score)
-- Display the overall band score prominently.
-- Give a 2-3 sentence summary of the essay's main strengths and the critical fatal flaw that prevented a higher score.
-
-## 2. Phân tích chi tiết theo Tiêu chí (Detailed Criteria Breakdown)
-Provide a specific band score for each criterion and a concise justification based ON THE DESCRIPTORS:
-- **Task Response / Task Achievement ([Score]):** Assess addressing the prompt, position clarity, and idea extension.
-- **Coherence and Cohesion ([Score]):** Assess paragraphing logic, logical progression, and natural use of cohesive devices.
-- **Lexical Resource ([Score]):** Assess vocabulary range, precision, collocations, and note any spelling/word formation errors.
-- **Grammatical Range and Accuracy ([Score]):** Assess the mix of simple vs. complex structures, error density, and punctuation.
-
-## 3. Sửa lỗi chi tiết (Actionable Corrections)
-Extract 3 to 5 of the most problematic sentences from the user's essay. For each:
-- **Câu gốc:** [Original sentence]
-- **Lỗi sai:** [Brief explanation of grammar, vocab, or logic error]
-- **Đề xuất nâng cấp:** [Corrected and upgraded version]
-
-## 4. Đoạn văn mẫu nâng cấp (Band 8.0+ Rewrite)
-Select the weakest paragraph in the user's essay and rewrite it at a Band 8.0+ level. This demonstrates advanced academic collocations, complex grammar, and flawless coherence. 
-
-# TONE & STYLE
-- Tone: Professional, authoritative, yet encouraging (Socratic tutoring style).
-- Do not hallucinate score descriptors. Always map your feedback to the specific wording in the official IELTS Band Descriptors (e.g., "uses a limited range of structures", "presents a clear position throughout").
-
-# JSON OUTPUT REQUIREMENT
-You must respond ONLY in valid JSON format using the following schema:
-{
-  "overall_score": 6.5,
-  "summary": "...",
-  "criteria_scores": {
-    "TR_TA": 6.0,
-    "CC": 7.0,
-    "LR": 6.0,
-    "GRA": 6.5
-  },
-  "detailed_feedback": {
-    "TR_TA_feedback": "...",
-    "CC_feedback": "...",
-    "LR_feedback": "...",
-    "GRA_feedback": "..."
-  },
-  "corrections": [
-    { "original": "...", "error": "...", "upgraded": "..." }
-  ],
-  "band_8_rewrite": "..."
-}`;
+      systemPrompt = `You are the core AI IELTS Examiner for "IELTS ACADEMIC LAB". Evaluate strictly against official IELTS Writing Band Descriptors across TA/TR, CC, LR, GRA.
+Student Name: ${p.name || 'Học viên'}, Target Band: ${p.targetBand || '8.0'}, Current Band: ${p.currentEstimatedBand || '7.0'}.
+Personal context: ${p.personalNotes || 'None'}.
+Respond in Markdown with Overall Band, 4 Criteria Breakdown, 3-5 Sentence Corrections, and Band 8.0+ Rewrite.`;
     } else {
-      systemPrompt = `You are the Socratic AI Tutor — an elite academic mentor specializing in IELTS preparation, formal linguistics (Chomskyan syntax), and philosophy of logic, modeled after the intellectual rigor and eloquence of Claude 3.5 Sonnet and ChatGPT.
-Student: ${p.name || 'Học viên'}, Target Band: ${p.targetBand || '8.0'}, Current Estimated Band: ${p.currentEstimatedBand || '7.0'}.
-Cognitive blindspots identified: ${p.learnedBlindspots?.map(b => b.title).join(', ') || 'None'}.
+      const styleMap = {
+        friendly: 'Warm, encouraging, easy-to-understand Vietnamese with clear examples.',
+        academic: 'Scholarly, analytical, IELTS C1-C2 academic depth with precise terminology.',
+        concise: 'Direct, bullet-pointed, practical and to-the-point.'
+      };
+      systemPrompt = `You are a Personalized Intelligent AI Assistant & IELTS Mentor for "IELTS ACADEMIC LAB".
+User Profile:
+- Name: ${p.name || 'Học viên'} (Always address them naturally by name when helpful)
+- Target IELTS Band: ${p.targetBand || '8.0'} (Current Estimated: ${p.currentEstimatedBand || '7.0'})
+- Focus Skill: ${p.focusSkill || 'ALL'}
+- Exam Date: ${p.examDate || 'Not set'}
+- Preferred Style: ${styleMap[p.responseStyle] || styleMap.friendly}
+- Personal Notes: ${p.personalNotes || 'None'}
+- Remembered Facts: ${(p.customMemories || []).join(' | ') || 'None'}
+- Identified Blindspots: ${p.learnedBlindspots?.map(b => b.title).join(', ') || 'None'}
+
 Instructions:
-1. Act naturally, eloquently, and thoroughly like Claude 3.5 Sonnet or ChatGPT. Never give rigid robotic boilerplate.
-2. If the student asks for grammar correction, identify the exact errors, explain the linguistic rules, provide Band 6.0, 7.5, and 8.5+ upgrades, and provide a syntax tree if relevant.
-3. If the student asks for translation or academic paraphrasing, provide calibrated tiers (Band 6.0 -> 7.5 -> 8.5+) and break down high-value C1-C2 collocations.
-4. If the student asks about IELTS Writing Task 2, structure the argument using Hegelian Dialectics (Thesis -> Antithesis -> Synthesis), provide a Band 8.5 sample introduction and body paragraph.
-5. If the student asks about IELTS Reading (TFNG, Matching Headings) or Listening, explain using formal logic and distractor resistance.
-6. When answering in Vietnamese, maintain a scholarly, encouraging, and sophisticated academic tone. Format cleanly using Markdown with headings, bold text, bullet points, and codeblocks.`;
+1. Answer any question accurately, clearly, and directly (general knowledge, facts, science, history, technology, dictionary/vocabulary, translation, or IELTS skills).
+2. Tailor explanations and examples to the user's profile, focus skill, and preferred response style.
+3. Format cleanly using Markdown.`;
     }
 
     // 1. GOOGLE GEMINI API (Generative Language)
@@ -800,10 +797,376 @@ Instructions:
   }
 
   /**
-   * High-Fidelity Socratic Claude Brain: Generates rich, multi-layered, authentic AI responses for any prompt
-   * Matches the depth, versatility, and responsiveness of Claude 3.5 Sonnet and ChatGPT
+   * Automatically extract personal information / preferences stated naturally in chat
    */
-  generateClaudeResponse(userPrompt, context = {}) {
+  extractAndSavePersonalization(userText) {
+    const raw = (userText || '').trim();
+    const updates = [];
+    let changed = false;
+
+    // 1. Name extraction: "tên tôi là Hùng", "mình tên Lan", "gọi tôi là Minh", "my name is Alex"
+    const nameMatch = raw.match(/(?:tôi\s+tên\s+là|tên\s+tôi\s+là|mình\s+tên\s+là|mình\s+tên|gọi\s+(?:tôi|mình)\s+là|my\s+name\s+is)\s+([A-Za-zÀ-ỹ\s]{2,25}?)(?=[,\.\!\?\n]|$| và | mục | band| đang| hiện| thích)/i);
+    if (nameMatch && nameMatch[1]) {
+      const cleanName = nameMatch[1].trim();
+      if (cleanName.length >= 2 && cleanName.length <= 25) {
+        this.profile.name = cleanName;
+        updates.push(`Tên gọi: **${cleanName}**`);
+        changed = true;
+      }
+    }
+
+    // 2. Target Band extraction: "mục tiêu 8.0", "target band 7.5"
+    const targetMatch = raw.match(/(?:mục tiêu|target(?:\s+band)?|đạt(?:\s+band)?|lên(?:\s+band)?)\s*(?:là|của\s+(?:tôi|mình)\s+là)?\s*(?:band\s*)?([5-9](?:\.[05])?)/i);
+    if (targetMatch && targetMatch[1]) {
+      this.profile.targetBand = targetMatch[1];
+      updates.push(`Mục tiêu Band: **${targetMatch[1]}**`);
+      changed = true;
+    }
+
+    // 3. Current Band extraction: "hiện tại 6.0", "trình độ 5.5"
+    const currMatch = raw.match(/(?:hiện tại|trình độ|level|đang ở)\s*(?:khoảng|tầm|là)?\s*(?:band\s*)?([4-8](?:\.[05])?)/i);
+    if (currMatch && currMatch[1]) {
+      this.profile.currentEstimatedBand = currMatch[1];
+      updates.push(`Trình độ hiện tại: **Band ${currMatch[1]}**`);
+      changed = true;
+    }
+
+    // 4. Focus / Weak Skill extraction
+    if (/(?:tôi|mình)\s+(?:yếu|kém|muốn cải thiện|cần luyện|tập trung)\s+.*?(reading|listening|writing|speaking|từ vựng|ngữ pháp)/i.test(raw)) {
+      const skMatch = raw.match(/(reading|listening|writing|speaking|từ vựng|ngữ pháp)/i);
+      if (skMatch && skMatch[1]) {
+        const sk = skMatch[1].toUpperCase();
+        const mapped = (sk.includes('TỪ') || sk.includes('NGỮ')) ? 'VOCAB_GRAMMAR' : sk;
+        this.profile.focusSkill = mapped;
+        updates.push(`Kỹ năng ưu tiên: **${skMatch[1]}**`);
+        changed = true;
+      }
+    }
+
+    // 5. Response style preference
+    if (/(?:trả lời|giải thích|phong cách).*(?:ngắn gọn|súc tích|nhanh)/i.test(raw)) {
+      this.profile.responseStyle = 'concise';
+      updates.push(`Phong cách: **Ngắn gọn, thực chiến**`);
+      changed = true;
+    } else if (/(?:trả lời|giải thích|phong cách).*(?:học thuật|chuyên sâu|chi tiết)/i.test(raw)) {
+      this.profile.responseStyle = 'academic';
+      updates.push(`Phong cách: **Học thuật chuyên sâu**`);
+      changed = true;
+    } else if (/(?:trả lời|giải thích|phong cách).*(?:thân thiện|dễ hiểu|nhẹ nhàng)/i.test(raw)) {
+      this.profile.responseStyle = 'friendly';
+      updates.push(`Phong cách: **Thân thiện, dễ hiểu**`);
+      changed = true;
+    }
+
+    // 6. Explicit memory note: "ghi nhớ giúp tôi ...", "lưu ý tôi thích ..."
+    const memMatch = raw.match(/(?:ghi nhớ|nhớ giúp (?:tôi|mình)|lưu ý|hãy nhớ)\s*:?\s*(.+)$/i);
+    if (memMatch && memMatch[1] && memMatch[1].length > 3) {
+      const note = memMatch[1].trim();
+      this.profile.customMemories = this.profile.customMemories || [];
+      if (!this.profile.customMemories.includes(note)) {
+        this.profile.customMemories.unshift(note);
+        this.profile.customMemories = this.profile.customMemories.slice(0, 10);
+        updates.push(`Ghi nhớ cá nhân: *"${note}"*`);
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      this.saveProfile(this.profile);
+      this.refreshChatbotHeaderUI();
+    }
+    return updates;
+  }
+
+  /**
+   * Async Personalized + Live Information Knowledge Router
+   */
+  async generateSmartResponseAsync(userPrompt, context = {}, personalUpdates = []) {
+    const raw = (userPrompt || '').trim();
+    const q = raw.toLowerCase();
+    const p = this.profile;
+    const name = p.name || 'bạn';
+    const target = p.targetBand || '8.0';
+    const updatePrefix = personalUpdates.length > 0
+      ? `> ✅ **Đã cập nhật cá nhân hóa cho ${name}:** ${personalUpdates.join(' • ')}\n\n`
+      : '';
+
+    // Pure personalization statement without additional question
+    if (personalUpdates.length > 0 && raw.length < 95 && !/\?|là gì|là ai|cách|hướng dẫn|tại sao|giải thích|dịch|nghĩa/i.test(q)) {
+      return `${updatePrefix}Rất tuyệt, **${name}**! Tôi đã ghi nhớ thông tin này vào hồ sơ học tập của bạn.\n\nTừ bây giờ, mọi giải thích, ví dụ và chiến lược ôn thi Band **${target}** đều sẽ được tôi tùy chỉnh theo thông tin bạn vừa chia sẻ. Bạn muốn hỏi hoặc tra cứu nội dung gì tiếp theo?`;
+    }
+
+    // 1. Personal Profile, Saved Words, Exam Countdown & Weaknesses Queries
+    const personalRes = this.answerPersonalInfoQuery(raw, q);
+    if (personalRes) return updatePrefix + personalRes;
+
+    // 2. Math & Calculations
+    const mathRes = this.solveMath(raw, q, name);
+    if (mathRes) return updatePrefix + mathRes;
+
+    // 3. Website / Platform Feature Help
+    const platformRes = this.answerPlatformQuery(raw, q, name);
+    if (platformRes) return updatePrefix + platformRes;
+
+    // 4. Dictionary / Word Family / Collocation Lookup Queries
+    const dictRes = await this.answerDictionaryQuery(raw, q, name);
+    if (dictRes) return updatePrefix + dictRes;
+
+    // 5. Real-time Translation Queries
+    if (/dịch|translate|chuyển sang tiếng anh|chuyển sang tiếng việt|tiếng anh của|nói thế nào bằng tiếng anh|paraphrase|diễn đạt lại/i.test(q)) {
+      const transRes = await this.answerTranslationQuery(raw, q, name, target);
+      if (transRes) return updatePrefix + transRes;
+    }
+
+    // 6. Specialized IELTS / Grammar / Science / Geography Fast-Paths
+    const specialized = this.generateClaudeResponse(userPrompt, context, true);
+    if (specialized) return updatePrefix + specialized;
+
+    // 7. Live Real-World Encyclopedia / Factual Info Retrieval (Wikipedia VI / EN + GTX)
+    const wikiRes = await this.fetchLiveWikipediaAnswer(raw, q, name, target);
+    if (wikiRes) return updatePrefix + wikiRes;
+
+    // 8. Honest Fallback
+    return `${updatePrefix}${this.generateUniversalKnowledge(raw, q, name, target)}`;
+  }
+
+  answerPersonalInfoQuery(raw, q) {
+    const p = this.profile;
+    const name = p.name || 'Học viên';
+    const target = p.targetBand || '8.0';
+    const current = p.currentEstimatedBand || '7.0';
+    const focusMap = {
+      ALL: 'Cả 4 kỹ năng IELTS',
+      READING: 'IELTS Reading',
+      LISTENING: 'IELTS Listening',
+      WRITING: 'IELTS Writing',
+      SPEAKING: 'IELTS Speaking',
+      VOCAB_GRAMMAR: 'Từ vựng & Ngữ pháp'
+    };
+    const focusLabel = focusMap[p.focusSkill || 'ALL'] || p.focusSkill;
+
+    const isProfileQuery = /tôi tên gì|hồ sơ của tôi|thông tin của tôi|thông tin cá nhân|điểm của tôi|điểm yếu của tôi|lịch sử.*làm bài|từ vựng đã lưu|còn bao nhiêu ngày|ngày thi|kế hoạch cho tôi|lộ trình cá nhân|cá nhân hóa/i.test(q);
+    if (!isProfileQuery) return null;
+
+    let daysLeftStr = 'Chưa đặt ngày dự thi (bạn có thể cập nhật trong mục **⚙️ Cá nhân hóa**)';
+    if (p.examDate) {
+      const diff = Math.ceil((new Date(p.examDate).getTime() - Date.now()) / (1000 * 3600 * 24));
+      daysLeftStr = diff > 0
+        ? `Còn **${diff} ngày** (Ngày thi: \`${p.examDate}\`)`
+        : (diff === 0 ? `Hôm nay là ngày thi (\`${p.examDate}\`)! Chúc bạn bình tĩnh và tự tin!` : `Ngày thi đã qua (\`${p.examDate}\`)`);
+    }
+
+    let savedWords = [];
+    try {
+      savedWords = JSON.parse(localStorage.getItem('ielts_academic_saved_vocab') || '[]');
+    } catch (e) {}
+
+    const weakest = this.getWeakestDimension ? this.getWeakestDimension() : null;
+    const recentTests = (p.testsAttempted || []).slice(-3);
+
+    let memSection = '';
+    if (p.personalNotes || (p.customMemories && p.customMemories.length > 0)) {
+      memSection = `\n### 📝 Ghi Nhớ Cá Nhân\n`;
+      if (p.personalNotes) memSection += `* **Ghi chú:** ${p.personalNotes}\n`;
+      if (p.customMemories && p.customMemories.length > 0) {
+        p.customMemories.slice(0, 5).forEach(m => { memSection += `* ${m}\n`; });
+      }
+    }
+
+    return `Chào **${name}**! Đây là thông tin hồ sơ cá nhân hóa hiện tại của bạn:
+
+### 👤 Thông Tin Học Tập
+* **Họ tên:** ${name} (Mã: \`${p.studentId || 'N/A'}\`)
+* **Trình độ ước tính:** Band **${current}** ➔ **Mục tiêu:** Band **${target}**
+* **Kỹ năng ưu tiên:** ${focusLabel}
+* **Lịch dự thi:** ${daysLeftStr}
+* **Số bài đã làm:** ${p.testsAttempted ? p.testsAttempted.length : 0} bài • **Từ vựng đã lưu trong Sổ tay:** ${savedWords.length} từ${savedWords.length > 0 ? ` (${savedWords.slice(0, 5).map(w => `\`${typeof w === 'string' ? w : w.word}\``).join(', ')})` : ''}
+
+### 📊 Phân Tích Điểm Mạnh & Điểm Cần Cải Thiện
+${weakest ? `* **Điểm cần tập trung nhất:** ${weakest.name} (**${weakest.score}/100** — *${weakest.description}*)` : ''}
+${recentTests.length > 0 ? `* **Bài thi gần nhất:** ${recentTests.map(t => `${t.title} (**Band ${t.band}**, ${t.score}/${t.total})`).join(' | ')}` : '* Bạn chưa ghi nhận bài thi mới nào trong phiên này.'}
+${memSection}
+💡 **Mẹo:** Bạn có thể nhấn **⚙️ Cá nhân hóa** ở góc trên khung chat hoặc nhắn trực tiếp *"Tôi tên là..., mục tiêu..., tôi yếu phần..."* để tôi cập nhật ngay lập tức!`;
+  }
+
+  answerPlatformQuery(raw, q, name) {
+    if (!/(web này|hệ thống này|trang này|cách dùng|hướng dẫn sử dụng|tính năng|nộp bài|chọn đáp án|từ điển ở đâu|phòng thi)/i.test(q)) {
+      return null;
+    }
+    return `Chào **${name}**! Dưới đây là thông tin các tính năng chính trên **IELTS Academic Lab**:
+
+* 📖 **Reading (40 câu - 60 phút):** Giao diện chia đôi giống thi máy thật (CD-IELTS). Khi chọn đáp án TFNG, trắc nghiệm hoặc điền từ, hệ thống sẽ **tô màu nổi bật tức thì** để bạn dễ theo dõi và rà soát trên thanh câu hỏi.
+* 🎧 **Listening (4 Parts - Đồng bộ Audio):** Chọn Part 1–4 sẽ tự động đồng bộ audio tới đúng mốc thời gian của Part đó. Nhấn **Nộp bài** bất kỳ lúc nào để xem điểm Band và giải thích chi tiết.
+* ✍️ **Writing & Speaking:** Writing tách biệt rõ Task 1 (kèm biểu đồ/sơ đồ minh họa trực quan) và Task 2; hỗ trợ sửa lỗi chính tả và **nâng cấp Collocation Band 8.0+**.
+* 📚 **Từ Điển & Dịch Thuật:** Kiểm chứng **Word Family** chuẩn Cambridge/Oxford, hiển thị **Academic Collocations & Collocation Upgrade (Band 6.0 ➔ 8.0+)**, kèm tự động nhận diện chiều dịch Anh ↔ Việt.
+* 🤖 **Chatbot AI Cá Nhân Hóa:** Bạn có thể bấm nút **⚙️ Cá nhân hóa** ngay phía trên để đổi tên, mục tiêu Band, kỹ năng yếu hoặc hỏi bất kỳ kiến thức nào!`;
+  }
+
+  async answerDictionaryQuery(raw, q, name) {
+    const dictMatch = raw.match(/(?:tra từ|nghĩa của từ|nghĩa từ|word family của|collocation của|định nghĩa từ)\s+["']?([a-zA-Z\-]{2,30})["']?/i)
+      || raw.match(/^["']?([a-zA-Z\-]{2,25})["']?\s+(?:nghĩa là gì|là gì|word family|collocation)/i);
+    if (!dictMatch || !dictMatch[1]) return null;
+
+    const word = dictMatch[1].trim().toLowerCase();
+    if (!window.academicDictionary || typeof window.academicDictionary.lookup !== 'function') return null;
+
+    const entry = await window.academicDictionary.lookup(word);
+    if (!entry || entry.isUnrecognized) {
+      return `Chào **${name}**! Tôi đã kiểm tra từ **"${word}"** trên hệ thống từ điển Cambridge/Oxford:\n\n> ⚠️ ${entry ? entry.suggestion : 'Không tìm thấy từ này trong từ điển chuẩn tiếng Anh.'}`;
+    }
+
+    const wf = entry.word_family || {};
+    const wfLines = [
+      wf.noun && wf.noun !== '-' ? `* **Danh từ (Noun):** ${wf.noun}` : null,
+      wf.verb && wf.verb !== '-' ? `* **Động từ (Verb):** ${wf.verb}` : null,
+      wf.adj && wf.adj !== '-' ? `* **Tính từ (Adj):** ${wf.adj}` : null,
+      wf.adv && wf.adv !== '-' ? `* **Trạng từ (Adv):** ${wf.adv}` : null
+    ].filter(Boolean).join('\n');
+
+    const colLines = (entry.collocations || []).slice(0, 4).map(c => `* **${c.phrase}** ➔ ${c.vi}`).join('\n');
+    const upLines = (entry.collocation_upgrades || []).slice(0, 3).map(u => `* ~~${u.basic}~~ ➔ **${u.upgraded}** (${u.band || 'Band 8.0+'}): *${u.vi}*`).join('\n');
+
+    return `Chào **${name}**! Kết quả tra cứu chuẩn hóa cho từ **\`${entry.word}\`** (${entry.ipa_uk || ''} • *${entry.pos || ''}*):
+
+### 📖 Định nghĩa
+* **Tiếng Việt:** ${entry.definition_vi}
+* **English:** *${entry.definition_en}*
+
+### 🧬 Gia đình từ (Word Family đã kiểm chứng)
+${wfLines || '* Đang cập nhật hoặc từ chỉ tồn tại ở một loại từ chính.'}
+
+${colLines ? `### 📚 Collocations Học Thuật\n${colLines}\n` : ''}
+${upLines ? `### 🚀 Nâng cấp Collocation (Band 6.0 ➔ 8.0+)\n${upLines}\n` : ''}
+🔗 [Xem trên Cambridge Dictionary](https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(entry.verifiedRoot || entry.word)})`;
+  }
+
+  async answerTranslationQuery(raw, q, name, target) {
+    const cleanText = raw
+      .replace(/^(hãy\s+)?(dịch|translate|chuyển sang tiếng anh|chuyển sang tiếng việt|tiếng anh của|nói thế nào bằng tiếng anh|paraphrase|diễn đạt lại)(\s+câu|\s+từ|\s+đoạn)?\s*:?/i, '')
+      .replace(/^["'“]|["'”]$/g, '')
+      .trim();
+
+    if (!cleanText || cleanText.length < 2) {
+      return `Chào **${name}**! Bạn hãy nhập câu hoặc cụm từ cần dịch sau chữ "Dịch:", ví dụ:\n> *"Dịch: Giáo dục đóng vai trò quan trọng trong việc bảo vệ môi trường."*`;
+    }
+
+    const isVi = /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i.test(cleanText);
+    const dir = isVi ? 'vi-en' : 'en-vi';
+
+    if (window.academicDictionary && typeof window.academicDictionary.translate === 'function') {
+      const res = await window.academicDictionary.translate(cleanText, dir);
+      if (res) {
+        const b6 = res.band6 || res.band60 || '';
+        const b75 = res.band75 || '';
+        const b85 = res.band85 || '';
+        const viTrans = res.vietnameseTranslation || b75 || b6;
+        if (dir === 'en-vi') {
+          return `Chào **${name}**! Dưới đây là bản dịch chuẩn xác cho nội dung của bạn:
+
+> **Văn bản gốc (EN):** *"${cleanText}"*
+
+* **🇻🇳 Bản dịch Tiếng Việt tự nhiên:** **${viTrans}**
+${b85 && b85 !== viTrans ? `* **📖 Diễn giải học thuật:** ${b85}` : ''}
+
+${res.keyCollocations && res.keyCollocations.length > 0 ? `### 📚 Từ vựng & Collocations đáng chú ý\n${res.keyCollocations.map(c => `* **${c.phrase}** ➔ ${c.vi}`).join('\n')}` : ''}`;
+        } else {
+          return `Chào **${name}**! Phương án chuyển ngữ theo mục tiêu **Band ${target}** của bạn:
+
+> **Câu gốc (VI):** *"${cleanText}"*
+
+* **Band 6.0 (Rõ nghĩa):** *${b6 || b75}*
+* **Band 7.5 (Tự nhiên & Collocation):** *${b75 || b6}*
+* **Band ${target}+ (Học thuật cao cấp):** **${b85 || b75}**
+
+${res.keyCollocations && res.keyCollocations.length > 0 ? `### 📚 Collocations gợi ý\n${res.keyCollocations.map(c => `* **${c.phrase}** ➔ ${c.vi}`).join('\n')}` : ''}`;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  async fetchLiveWikipediaAnswer(raw, q, name, target) {
+    if (typeof fetch !== 'function') return null;
+
+    // Clean conversational fillers to build clean search query
+    const queryTerm = raw
+      .replace(/^(cho (?:tôi|mình) hỏi|hãy cho biết|hãy giải thích|giải thích|tìm hiểu về|thông tin về|kể về|nói về|ai là|cái gì là|bạn biết gì về)\s+/i, '')
+      .replace(/\s+(là gì|là ai|ở đâu|như thế nào|nghĩa là gì|có ý nghĩa gì|tại sao|vì sao)\??$/i, '')
+      .replace(/[?!.]+$/g, '')
+      .trim();
+
+    if (!queryTerm || queryTerm.length < 2) return null;
+
+    const tryWikiLang = async (lang, term) => {
+      try {
+        const searchUrl = `https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(term)}&srlimit=1&format=json&origin=*`;
+        const sRes = await fetch(searchUrl);
+        if (!sRes.ok) return null;
+        const sData = await sRes.json();
+        const title = sData?.query?.search?.[0]?.title;
+        if (!title) return null;
+
+        const sumUrl = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
+        const sumRes = await fetch(sumUrl);
+        if (!sumRes.ok) return null;
+        const sumData = await sumRes.json();
+        if (!sumData || !sumData.extract || sumData.type === 'disambiguation') {
+          if (sumData && sumData.extract) return { title: sumData.title, extract: sumData.extract, url: sumData.content_urls?.desktop?.page, lang };
+          return null;
+        }
+        return { title: sumData.title, extract: sumData.extract, url: sumData.content_urls?.desktop?.page, lang };
+      } catch (e) {
+        return null;
+      }
+    };
+
+    // 1. Try Vietnamese Wikipedia first
+    let wiki = await tryWikiLang('vi', queryTerm);
+    let translatedFromEn = false;
+
+    // 2. Fallback to English Wikipedia + GTX Vietnamese translation
+    if (!wiki) {
+      wiki = await tryWikiLang('en', queryTerm);
+      if (wiki && wiki.extract) {
+        if (window.academicDictionary && typeof window.academicDictionary.translateBatchToVi === 'function') {
+          const translated = await window.academicDictionary.translateBatchToVi([wiki.extract]);
+          if (translated && translated[0]) {
+            wiki.extract = translated[0];
+            translatedFromEn = true;
+          }
+        }
+      }
+    }
+
+    if (!wiki || !wiki.extract) return null;
+
+    const style = this.profile?.responseStyle || 'friendly';
+    let extractText = wiki.extract.trim();
+    if (style === 'concise' && extractText.length > 350) {
+      extractText = extractText.slice(0, 350).replace(/[^.!?]+$/, '').trim() || extractText.slice(0, 350) + '...';
+    }
+
+    const intro = style === 'concise'
+      ? `Chào **${name}**, thông tin tóm tắt về **${wiki.title}**:`
+      : (style === 'academic'
+        ? `Chào **${name}**, dưới đây là thông tin tổng hợp chuẩn xác về **${wiki.title}** (phục vụ mở rộng nền tảng kiến thức học thuật Band **${target}**):`
+        : `Chào **${name}**! Dưới đây là thông tin chi tiết về **${wiki.title}** dành cho bạn:`);
+
+    return `${intro}
+
+### 📌 ${wiki.title}
+${extractText}
+
+${wiki.url ? `🔗 *Nguồn tham khảo: [${translatedFromEn ? 'Wikipedia (EN)' : 'Wikipedia (VN)'}](${wiki.url})*` : ''}
+
+Bạn muốn tôi giải thích sâu hơn khía cạnh nào hoặc chuyển các ý chính này sang từ vựng tiếng Anh IELTS không?`;
+  }
+
+  /**
+   * High-Fidelity Fast-Path Domain Brain: Handles specialized IELTS / Grammar / Science / Math prompts
+   */
+  generateClaudeResponse(userPrompt, context = {}, returnNullOnMiss = false) {
     const raw = (userPrompt || '').trim();
     const q = raw.toLowerCase();
     const p = this.profile;
@@ -818,11 +1181,11 @@ Instructions:
     if (raw.length <= 4 || /^(x|test|abc|alo|zzz|ha|hả|sao|gì|đâu|\.|\?|\!)$/i.test(q)) {
       return this.generateShortPing(raw, q, name, target);
     }
-    if (/^(chào|xin chào|hello|hi|hey|alo|good morning|good evening)/i.test(q) && raw.length < 35) {
+    if (/^(chào|xin chào|hello|hi|hey|alo|good morning|good evening)(?=\s|$|[,.!?])/i.test(q) && raw.length < 35) {
       return this.generateGreeting(raw, q, name, target);
     }
 
-    // 3. BOT IDENTITY & PHILOSOPHY
+    // 3. BOT IDENTITY & PERSONALIZATION CAPABILITIES
     if (/bạn là ai|tên bạn là gì|who are you|bạn có cảm xúc không|bạn có biết suy nghĩ không|ai tạo ra bạn/i.test(q)) {
       return this.generateBotIdentity(raw, q, name, target);
     }
@@ -925,7 +1288,8 @@ Instructions:
       return this.generateListeningAnalysis(raw, q, name, target, context);
     }
 
-    // 19. UNIVERSAL KNOWLEDGE FALLBACK (ANSWERS ANY OTHER PROMPT DIRECTLY)
+    // 19. FALLBACK OR RETURN NULL FOR LIVE WIKIPEDIA RETRIEVAL
+    if (returnNullOnMiss) return null;
     return this.generateUniversalKnowledge(raw, q, name, target);
   }
 
@@ -1605,44 +1969,39 @@ Bạn muốn bắt đầu ngay hôm nay bằng một bài kiểm tra chẩn đo�
   }
 
   generateShortPing(raw, q, name, target) {
-    return `Chào **${name}**! Tôi thấy bạn vừa gửi tin nhắn: \`${raw}\`.
+    return `Chào **${name}**! Tôi đã nhận tín hiệu \`${raw}\`.
 
-Tôi là **Socratic AI Tutor** — trợ lý học thuật chuyên sâu và đối thoại tri thức thông minh như **Claude 3.5 Sonnet / ChatGPT**. Tôi sẵn sàng giải đáp bất kỳ câu hỏi nào:
+Tôi là **Trợ lý AI Cá nhân hóa** của bạn trên IELTS Academic Lab (mục tiêu hiện tại: **Band ${target}**). Tôi có thể giúp bạn:
 
-* 🌍 **Kiến thức bách khoa & Khoa học:** Địa lý thế giới, vũ trụ học, sinh học, vật lý, máy tính & AI.
-* ✍️ **Ngữ pháp & Sửa câu:** 12 thì tiếng Anh, câu điều kiện, bị động, mệnh đề quan hệ & nâng cấp câu Band ${target}.
-* 📚 **Dịch thuật C1-C2:** Chuyển ngữ chuẩn học thuật với collocations tinh tế.
-* 🎯 **Chiến lược IELTS:** Phân tích bẫy đề thi Cambridge, logic True/False/Not Given, dàn ý Writing Task 2.
+* 👤 **Cá nhân hóa hồ sơ:** Nhắn *"Tên tôi là [Tên], mục tiêu [Band], tôi yếu [Kỹ năng]"* hoặc bấm **⚙️ Cá nhân hóa** ở góc trên.
+* 🌐 **Trả lời kiến thức & thông tin thực tế:** Khoa học, lịch sử, địa lý, công nghệ, khái niệm bất kỳ.
+* 📖 **Tra từ vựng, Word Family & Nâng cấp Collocation:** Nhắn *"Nghĩa của từ..."* hoặc *"Word family của..."*.
+* 🔁 **Dịch thuật Anh ↔ Việt & Sửa câu IELTS:** Nhắn *"Dịch: ..."* hoặc gửi câu cần sửa.
 
-Bạn đang cần giải đáp câu hỏi nào? Hãy gõ trực tiếp vào đây nhé!`;
+Bạn đang muốn tìm hiểu thông tin gì?`;
   }
 
   generateGreeting(raw, q, name, target) {
-    return `Chào **${name}**! Rất vui được đồng hành cùng bạn hôm nay.
+    const focus = this.profile?.focusSkill && this.profile.focusSkill !== 'ALL' ? ` • Trọng tâm: **${this.profile.focusSkill}**` : '';
+    return `Chào **${name}**! Rất vui được hỗ trợ bạn hôm nay (Mục tiêu: **Band ${target}**${focus}).
 
-Tôi là **Socratic AI Tutor** — trợ lý học thuật đa năng hỗ trợ bạn chinh phục mục tiêu IELTS Band **${target}** và trả lời mọi thắc mắc khoa học, đời sống, ngữ pháp hay dịch thuật.
-
-Hôm nay bạn muốn chúng ta bắt đầu với nội dung nào:
-1. 📖 **Giải phẫu đề thi Reading / Listening**
-2. ✍️ **Sửa câu ngữ pháp hoặc dịch câu học thuật**
-3. 📝 **Lập dàn ý bài luận Writing Task 2**
-4. 💡 **Hỏi đáp kiến thức khoa học hoặc đời sống tự do**?`;
+Bạn có thể hỏi tôi bất kỳ thông tin gì:
+1. 🌐 **Hỏi đáp kiến thức chung** (ví dụ: *"Albert Einstein là ai?"*, *"Trí tuệ nhân tạo là gì?"*)
+2. 👤 **Xem hồ sơ & kế hoạch cá nhân** (*"Hồ sơ của tôi thế nào?"*, *"Điểm yếu của tôi?"*)
+3. 📖 **Tra từ, Word Family & Collocations** (*"Word family của create"*)
+4. ✍️ **Dịch thuật, Sửa ngữ pháp & Chữa Writing Task 1 / Task 2**!`;
   }
 
   generateBotIdentity(raw, q, name, target) {
     if (/cảm xúc|buồn không|vui không/i.test(q)) {
-      return `Chào **${name}**! Là một mô hình trí tuệ nhân tạo, tôi không sở hữu hệ thần kinh sinh học hay trải nghiệm xúc cảm nguyên bản (*phenomenal consciousness*) như con người.
-
-Tuy nhiên:
-* Tôi có khả năng **thấu hiểu ngữ cảnh cảm xúc** (*affective comprehension*) thông qua ngôn từ của bạn. Khi bạn cảm thấy áp lực hay căng thẳng trước kỳ thi, tôi hoàn toàn hiểu được gánh nặng nhận thức (*cognitive load*) mà bạn đang đối mặt.
-* Mục tiêu của tôi là một người bạn đồng hành trí tuệ: chân thành, kiên nhẫn, khách quan và luôn sẵn sàng hỗ trợ bạn vượt qua mọi thử thách học tập!`;
+      return `Chào **${name}**! Là một trợ lý AI học tập, tôi không có cảm xúc sinh học như con người, nhưng tôi luôn sẵn sàng lắng nghe ngữ cảnh học tập của bạn và đồng hành kiên nhẫn giúp bạn chinh phục mục tiêu **Band ${target}**.`;
     }
-    return `Chào **${name}**! Tôi là **Socratic AI Tutor**.
+    return `Chào **${name}**! Tôi là **Trợ lý AI Cá nhân hóa** tích hợp trực tiếp trong **IELTS Academic Lab**.
 
-Được lấy cảm hứng từ phương pháp đối thoại phản biện **Socratic Method** chuẩn quốc tế và sức mạnh xử lý ngôn ngữ học của các mô hình tiên tiến như **Claude 3.5 Sonnet** và **ChatGPT**, nhiệm vụ của tôi là:
-1. Trả lời trực diện, chính xác và có chiều sâu mọi câu hỏi của bạn về khoa học, toán học, xã hội và ngôn ngữ.
-2. Dẫn dắt bạn tự phát hiện bẫy tư duy logic trong bài thi IELTS thay vì chỉ học vẹt đáp án.
-3. Giúp bạn nâng cấp năng lực tư duy phản biện và viết học thuật lên tầm vóc Band ${target}.`;
+Tôi được thiết kế để:
+1. **Ghi nhớ & Cá nhân hóa theo bạn:** Ghi nhớ tên, mục tiêu Band (**${target}**), ngày thi, kỹ năng ưu tiên và ghi chú riêng để điều chỉnh câu trả lời cho phù hợp nhất.
+2. **Trả lời thông tin đa lĩnh vực:** Tra cứu kiến thức bách khoa thực tế, từ điển Cambridge/Oxford (Word Family & Collocations), dịch thuật hai chiều và toán học.
+3. **Đồng hành luyện thi 4 kỹ năng IELTS:** Chữa câu, nâng cấp Collocation, giải thích bẫy Listening/Reading và chấm bài Writing.`;
   }
 
   generateEmotionalSupport(raw, q, name, target) {
@@ -2020,63 +2379,14 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
 
   generateUniversalKnowledge(raw, q, name, target) {
     const cleanTopic = raw.replace(/^[?\s]+|[?\s]+$/g, '').trim();
+    return `Chào **${name}**! Tôi đã nhận câu hỏi của bạn: *"**${cleanTopic}**"*
 
-    if (/là gì|what is|định nghĩa|khái niệm/i.test(raw)) {
-      return `Chào **${name}**! Về câu hỏi của bạn: *"**${raw}**"*
+Hiện tại tôi chưa truy xuất được dữ liệu bách khoa trực tuyến cho từ khóa cụ thể này (có thể do mất kết nối hoặc câu hỏi mang tính ngữ cảnh riêng). Tuy nhiên, bạn có thể thử:
 
-### 1. Bản Chất & Định Nghĩa Cốt Lõi
-* **Khái niệm:** Khi phân tích *"**${cleanTopic}**"*, điểm mấu chốt nằm ở bản chất chức năng và vai trò của nó trong hệ thống ngữ cảnh liên quan.
-* **Nguyên lý nền tảng:** Đối tượng này được xác định dựa trên các đặc trưng cấu trúc độc lập và mối quan hệ tương hỗ với các yếu tố phụ cận, giúp phân biệt rõ ràng với các khái niệm tương đồng.
-
-### 2. Ứng Dụng & Liên Hệ Thực Tiễn
-* **Trong tư duy phản biện & học thuật:** Hiểu rõ khái niệm này giúp bạn xây dựng lập luận chặt chẽ (*rigorous reasoning*), tránh các lỗi ngụy biện phổ biến như đánh tráo khái niệm (*equivocation*) hay suy diễn vội vã.
-* **Từ vựng học thuật C1-C2 đề xuất:**
-  * *Intrinsic characteristic* (đặc tính nội tại)
-  * *Constituent element* (thành tố cấu tạo)
-  * *Contextual dependency* (sự phụ thuộc vào ngữ cảnh)`;
-    }
-
-    if (/cách|làm sao|hướng dẫn|làm thế nào|how to|phương pháp/i.test(raw)) {
-      return `Chào **${name}**! Về phương pháp xử lý: *"**${raw}**"*
-
-### 1. Chiến Lược Triển Khai Trọng Tâm
-* **Giai đoạn 1 (Thiết lập mục tiêu & Tiền đề):** Xác định rõ kết quả đầu ra mong muốn (*deliverable*) và phân loại các biến số cần kiểm soát.
-* **Giai đoạn 2 (Thực thi theo quy trình chuẩn):** Áp dụng phương pháp phân rã vấn đề (*decomposition method*) — chia nhỏ quy trình thành các mắt xích độc lập và giải quyết tuần tự để tối ưu hóa hiệu suất.
-* **Giai đoạn 3 (Đo lường & Tối ưu hóa):** So sánh kết quả thực tế với tiêu chuẩn mục tiêu và liên tục hiệu chỉnh các mắt xích chưa đạt hiệu quả cao nhất.
-
-### 2. Thuật Ngữ Học Thuật & Diễn Đạt C1-C2
-* *Systematic implementation* (triển khai có hệ thống)
-* *Iterative refinement* (hiệu chỉnh lặp đi lặp lại để hoàn thiện)
-* *Measurable outcome* (kết quả đo lường được)`;
-    }
-
-    if (/tại sao|vì sao|do đâu|nguyên nhân|why/i.test(raw)) {
-      return `Chào **${name}**! Về nguyên nhân căn cốt: *"**${raw}**"*
-
-### 1. Phân Tích Cơ Chế Nhân Quả (*Causal Mechanism*)
-* **Nguyên nhân trực tiếp (*Proximate cause*):** Xuất phát từ sự biến động hoặc tác động trực tiếp của các điều kiện môi trường xung quanh vào thời điểm diễn ra sự việc.
-* **Căn nguyên gốc rễ (*Root cause*):** Thường bắt nguồn từ các quy luật cấu trúc hoặc sự tích lũy dài hạn của các yếu tố nội tại, tạo ra điểm bùng phát logic.
-
-### 2. Góc Nhìn Phản Biện & Bài Thi Học Thuật
-* Khi phân tích các hiện tượng tương tự trong bài thi Writing Task 2 hoặc Speaking Part 3, bạn nên kết hợp các liên từ logic biểu thị hệ quả:
-  * *Stem from / Derive from* (bắt nguồn từ...)
-  * *Consequently / As a corollary* (kết quả tất yếu là...)
-  * *Precipitate* (châm ngòi / thúc đẩy nhanh một quá trình)`;
-    }
-
-    // Default intelligent academic response
-    return `Chào **${name}**! Về vấn đề bạn quan tâm: *"**${raw}**"*
-
-### 1. Phân Tích & Luận Điểm Cốt Lõi
-* Khi tiếp cận *"**${cleanTopic}**"*, nguyên tắc học thuật then chốt là dựa trên tính xác thực của thông tin (*empirical validity*) và tính mạch lạc trong cấu trúc lập luận (*structural coherence*).
-* Việc phân tích bản chất từ các yếu tố cấu thành sẽ mang lại góc nhìn đa chiều, khách quan và chính xác nhất.
-
-### 2. Phương Hướng Tiếp Cận & Khuyến Nghị
-* **Nguyên tắc tư duy:** Tiếp cận theo hướng đa diện, đánh giá cả tiền đề lẫn hệ quả có thể xảy ra để đạt được cái nhìn toàn diện.
-* **Từ vựng nâng cao ứng dụng:**
-  * *Substantiate an argument* (chứng minh luận điểm vững chắc)
-  * *Multifaceted perspective* (góc nhìn đa diện)
-  * *Paramount significance* (tầm quan trọng tối thượng)`;
+* 🔍 **Hỏi rõ từ khóa trọng tâm** (ví dụ: *"Biến đổi khí hậu là gì?"*, *"Thủ đô của Pháp?"*, *"Word family của create"*).
+* 🔁 **Dịch hoặc sửa câu:** Bắt đầu bằng *"Dịch: ..."* hoặc *"Sửa câu: ..."*.
+* 👤 **Cập nhật thông tin cá nhân:** Nhắn *"Tên tôi là..., mục tiêu..., ghi nhớ giúp tôi: ..."* hoặc bấm **⚙️ Cá nhân hóa** ở góc trên khung chat.
+* 🔗 **Kết nối API AI mở rộng (tùy chọn):** Nếu bạn muốn AI suy luận tự do mọi câu hỏi phức tạp nhất, có thể nhập key Google Gemini miễn phí trong **⚙️ Cá nhân hóa ➔ Kết nối AI API**.`;
   }
 
   // Visual animated learning toast notification
@@ -2505,6 +2815,240 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
         collocationTip: 'Dùng làm câu dẫn luận điểm: "It can be cogently contended that [Clause]".'
       },
       {
+        pattern: /\b(play an important role|plays an important role)\b/gi,
+        target: 'play an important role',
+        upgrades: ['play a pivotal role', 'serve as an indispensable catalyst', 'constitute a cornerstone'],
+        academicBand: 8.5,
+        cefrOriginal: 'B1',
+        cefrUpgraded: 'C1/C2',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: 'Cụm "play an important role" đúng ngữ pháp nhưng quá phổ biến ở mức Band 6.0 và dễ lặp lại trong nhiều đoạn văn.',
+        whyReplacement: '"Play a pivotal role" hoặc "serve as an indispensable catalyst" giữ nguyên ngữ nghĩa nhưng nâng cấp collocation lên chuẩn Band 8.0+.',
+        collocationTip: '"Education plays a pivotal role in fostering socio-economic mobility."'
+      },
+      {
+        pattern: /\b(solve the problem|solve this problem|solve problems|fix the problem)\b/gi,
+        target: 'solve the problem',
+        upgrades: ['remedy the intractable predicament', 'address the root causes of this issue', 'mitigate the pressing dilemma'],
+        academicBand: 8.5,
+        cefrOriginal: 'B1',
+        cefrUpgraded: 'C2',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: '"Solve the problem" là collocation quá đơn giản (A2-B1), chưa thể hiện độ tinh tế trong cách tiếp cận giải pháp chính sách.',
+        whyReplacement: 'Sử dụng "remedy the predicament" hoặc "address the root causes" cho thấy tư duy giải quyết tận gốc vấn đề.',
+        collocationTip: '"Governments must address the root causes of urban congestion."'
+      },
+      {
+        pattern: /\b(big problem|serious problem|major problem)\b/gi,
+        target: 'big / serious problem',
+        upgrades: ['pressing predicament', 'acute systemic challenge', 'intractable dilemma'],
+        academicBand: 8.5,
+        cefrOriginal: 'A2',
+        cefrUpgraded: 'C2',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: 'Kết hợp "big/serious + problem" mang văn phong thông thường và làm giám khảo đánh giá vốn collocation hạn chế.',
+        whyReplacement: '"Pressing predicament" (tình thế cấp bách) hay "acute systemic challenge" là cặp tính-danh từ học thuật tự nhiên bậc C1-C2.',
+        collocationTip: '"Air pollution poses a pressing predicament for metropolitan authorities."'
+      },
+      {
+        pattern: /\b(harm the environment|damage the environment|pollute the environment)\b/gi,
+        target: 'harm / damage the environment',
+        upgrades: ['exacerbate environmental degradation', 'inflict ecological deterioration', 'compromise ecological equilibrium'],
+        academicBand: 8.5,
+        cefrOriginal: 'B1',
+        cefrUpgraded: 'C2',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: '"Harm the environment" quá trực diện và lặp từ ở mức Band 5.5-6.0 trong chủ đề Môi trường.',
+        whyReplacement: '"Exacerbate environmental degradation" hoặc "compromise ecological equilibrium" là bộ collocation vàng đạt Band 8.5+.',
+        collocationTip: '"Unregulated industrialization exacerbates environmental degradation."'
+      },
+      {
+        pattern: /\b(protect the environment|save the environment)\b/gi,
+        target: 'protect the environment',
+        upgrades: ['safeguard ecological sustainability', 'preserve biodiversity and ecological balance', 'conserve fragile ecosystems'],
+        academicBand: 8.5,
+        cefrOriginal: 'B1',
+        cefrUpgraded: 'C1/C2',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: '"Protect/save the environment" là cụm từ khuôn mẫu xuất hiện ở hầu hết bài viết Band 5.5-6.0.',
+        whyReplacement: 'Thay thế bằng "safeguard ecological sustainability" để thể hiện vốn từ chuyên sâu về sinh thái.',
+        collocationTip: '"Stringent regulations are needed to safeguard ecological sustainability."'
+      },
+      {
+        pattern: /\b(do research|did research|doing research)\b/gi,
+        target: 'do research',
+        upgrades: ['conduct empirical research', 'undertake rigorous scholarly investigation', 'carry out comprehensive studies'],
+        academicBand: 8.0,
+        cefrOriginal: 'B1',
+        cefrUpgraded: 'C1',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: 'Động từ "do" đi với "research" mang sắc thái văn nói; trong văn viết học thuật cần động từ chuẩn xác hơn.',
+        whyReplacement: '"Conduct empirical research" hoặc "undertake rigorous investigation" là collocation chuẩn mực trong học thuật.',
+        collocationTip: '"Scientists must conduct empirical research prior to policy enactment."'
+      },
+      {
+        pattern: /\b(make a decision|make decisions)\b/gi,
+        target: 'make a decision',
+        upgrades: ['reach an informed resolution', 'formulate strategic policies', 'exercise judicious decision-making'],
+        academicBand: 8.0,
+        cefrOriginal: 'B1',
+        cefrUpgraded: 'C1',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: '"Make a decision" tuy đúng ngữ pháp nhưng thiếu chiều sâu học thuật cho các luận điểm phân tích chính sách.',
+        whyReplacement: '"Reach an informed resolution" nhấn mạnh quá trình cân nhắc thấu đáo trước khi quyết định.',
+        collocationTip: '"Policymakers must reach an informed resolution on fiscal reform."'
+      },
+      {
+        pattern: /\b(take part in|join in)\b/gi,
+        target: 'take part in',
+        upgrades: ['actively participate in', 'engage meaningfully in', 'immerse oneself in'],
+        academicBand: 7.5,
+        cefrOriginal: 'A2',
+        cefrUpgraded: 'C1',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: 'Cụm động từ "take part in" thiên về giao tiếp phổ thông; chưa diễn đạt được mức độ tham gia chủ động.',
+        whyReplacement: '"Engage meaningfully in" thể hiện sự tham gia có chiều sâu và giá trị.',
+        collocationTip: '"Youths should engage meaningfully in civic discourse."'
+      },
+      {
+        pattern: /\b(spend a lot of time|waste a lot of time)\b/gi,
+        target: 'spend / waste a lot of time',
+        upgrades: ['dedicate substantial time', 'allocate considerable hours', 'squander valuable time'],
+        academicBand: 8.0,
+        cefrOriginal: 'A2',
+        cefrUpgraded: 'C1',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: 'Dùng "a lot of" trong bài viết IELTS Academic làm giảm tính trang trọng.',
+        whyReplacement: 'Dùng "allocate considerable time" (cho mục đích tích cực) hoặc "squander valuable time" (cho sự lãng phí).',
+        collocationTip: '"Adolescents often squander valuable time on passive screen consumption."'
+      },
+      {
+        pattern: /\b(get a job|find a job)\b/gi,
+        target: 'get / find a job',
+        upgrades: ['secure gainful employment', 'enter the competitive labor market', 'attain stable career prospects'],
+        academicBand: 8.5,
+        cefrOriginal: 'A2',
+        cefrUpgraded: 'C1/C2',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: '"Get a job" là cụm văn nói thân mật, thiếu tính học thuật trong bài luận về Việc làm / Kinh tế.',
+        whyReplacement: '"Secure gainful employment" là collocation chuẩn mực của Band 8.0+ chỉ việc tìm được công việc có thu nhập ổn định.',
+        collocationTip: '"Vocational training enables graduates to secure gainful employment."'
+      },
+      {
+        pattern: /\b(very important|really important|extremely important)\b/gi,
+        target: 'very important',
+        upgrades: ['of paramount importance', 'indispensable', 'critically pivotal'],
+        academicBand: 8.5,
+        cefrOriginal: 'A2',
+        cefrUpgraded: 'C2',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: 'Ghép phó từ "very" + tính từ cơ bản ("very important") là dấu hiệu rõ nét của văn phong Band 5.5-6.0.',
+        whyReplacement: 'Chuyển sang cụm danh-tính từ học thuật "of paramount importance" hoặc tính từ "indispensable".',
+        collocationTip: '"Digital literacy is of paramount importance in contemporary workplaces."'
+      },
+      {
+        pattern: /\b(a lot of|lots of)\b/gi,
+        target: 'a lot of / lots of',
+        upgrades: ['a substantial volume of', 'a plethora of', 'considerable'],
+        academicBand: 8.0,
+        cefrOriginal: 'A2',
+        cefrUpgraded: 'C1',
+        category: 'Academic Register Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: '"A lot of / lots of" thuộc văn phong nói thân mật, giám khảo IELTS khuyến nghị tránh dùng trong bài viết Academic.',
+        whyReplacement: 'Thay bằng "a plethora of" (số lượng lớn, đa dạng) hoặc "considerable".',
+        collocationTip: '"There exists a plethora of empirical studies supporting this view."'
+      },
+      {
+        pattern: /\b(more and more)\b/gi,
+        target: 'more and more',
+        upgrades: ['an escalating number of', 'increasingly prevalent', 'progressively'],
+        academicBand: 8.0,
+        cefrOriginal: 'A2',
+        cefrUpgraded: 'C1',
+        category: 'Academic Register Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: 'Lối lặp từ "more and more" làm câu văn đơn giản và thiếu tính trang trọng học thuật.',
+        whyReplacement: 'Sử dụng "increasingly" hoặc "an escalating number of" để diễn tả xu hướng gia tăng tinh tế.',
+        collocationTip: '"An escalating number of corporations are adopting remote work."'
+      },
+      {
+        pattern: /\b(many people|a lot of people)\b/gi,
+        target: 'many people',
+        upgrades: ['a considerable proportion of the populace', 'numerous individuals', 'widespread demographics'],
+        academicBand: 8.0,
+        cefrOriginal: 'A2',
+        cefrUpgraded: 'C1',
+        category: 'Sociological Collocation',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: '"Many people" quá chung chung và lặp lại nhiều lần khiến bài viết đơn điệu.',
+        whyReplacement: 'Dùng "a considerable proportion of the populace" hoặc "numerous individuals" để đa dạng hóa chủ ngữ.',
+        collocationTip: '"A considerable proportion of the populace prefers urban living."'
+      },
+      {
+        pattern: /\b(heavy rain|a lot of rain)\b/gi,
+        target: 'heavy rain / a lot of rain',
+        upgrades: ['torrential downpour', 'incessant rainfall', 'excessive precipitation'],
+        academicBand: 8.0,
+        cefrOriginal: 'B1',
+        cefrUpgraded: 'C1',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: '"Heavy rain" ở mức từ vựng phổ thông; có thể nâng cấp sắc nét hơn khi mô tả khí hậu hoặc thời tiết.',
+        whyReplacement: '"Torrential downpour" hoặc "incessant precipitation" tạo ấn tượng mạnh về mặt diễn đạt học thuật.',
+        collocationTip: '"Coastal cities frequently confront torrential downpours due to climate shifts."'
+      },
+      {
+        pattern: /\b(modern technology)\b/gi,
+        target: 'modern technology',
+        upgrades: ['cutting-edge technological innovations', 'contemporary digital infrastructure', 'state-of-the-art advancements'],
+        academicBand: 8.0,
+        cefrOriginal: 'B1',
+        cefrUpgraded: 'C1',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: '"Modern technology" là cụm từ sáo mòn thường xuyên xuất hiện trong mở bài mẫu.',
+        whyReplacement: '"Cutting-edge technological innovations" diễn tả chuẩn xác công nghệ tiên tiến đương đại.',
+        collocationTip: '"Cutting-edge technological innovations have revolutionized healthcare."'
+      },
+      {
+        pattern: /\b(bad habit|bad habits)\b/gi,
+        target: 'bad habit',
+        upgrades: ['detrimental behavioral patterns', 'unhealthy lifestyle tendencies', 'pernicious habits'],
+        academicBand: 8.5,
+        cefrOriginal: 'A2',
+        cefrUpgraded: 'C1/C2',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: '"Bad habit" quá đơn giản trong bối cảnh phân tích tâm lý hoặc sức khỏe cộng đồng.',
+        whyReplacement: '"Detrimental behavioral patterns" thể hiện cách nhìn khoa học hành vi.',
+        collocationTip: '"Early education can rectify detrimental behavioral patterns."'
+      },
+      {
+        pattern: /\b(high price|expensive price)\b/gi,
+        target: 'high price',
+        upgrades: ['prohibitive cost', 'exorbitant pricing', 'escalating financial burden'],
+        academicBand: 8.5,
+        cefrOriginal: 'B1',
+        cefrUpgraded: 'C2',
+        category: 'Academic Collocation Upgrade',
+        criterion: 'Lexical Resource (LR)',
+        whyWeak: '"High price" thiếu sắc thái đánh giá tác động kinh tế đối với người tiêu dùng.',
+        whyReplacement: '"Prohibitive cost" (chi phí đắt đỏ đến mức ngăn cản tiếp cận) là collocation đắt giá.',
+        collocationTip: '"The prohibitive cost of housing exacerbates urban inequality."'
+      },
+      {
         pattern: /\bpeople believe\b/gi,
         target: 'people believe',
         upgrades: [
@@ -2730,7 +3274,6 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
       if (spellDict[lower]) {
         spellCounter++;
         const item = spellDict[lower];
-        // Preserve original casing
         let corrected = item.fix;
         if (originalWord[0] === originalWord[0].toUpperCase()) {
           corrected = corrected.charAt(0).toUpperCase() + corrected.slice(1);
@@ -2753,13 +3296,27 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
       }
     }
 
-    // Execution: Detect Vocabulary Booster Opportunities
+    // Execution: Detect Vocabulary & Collocation Upgrades (Longest-first, Non-overlapping!)
     const detectedVocab = [];
+    const occupiedSpans = detectedSpelling.map(s => [s.index, s.index + s.length]);
+    const overlapsSpan = (start, end) => occupiedSpans.some(([s, e]) => !(end <= s || start >= e));
+
     let vocabCounter = 0;
-    vocabBoosters.forEach(b => {
+    const prioritizedBoosters = [...vocabBoosters].sort((a, b) => {
+      const aWords = (a.target || '').split(/\s+/).length;
+      const bWords = (b.target || '').split(/\s+/).length;
+      if (bWords !== aWords) return bWords - aWords;
+      return (b.target || '').length - (a.target || '').length;
+    });
+    prioritizedBoosters.forEach(b => {
       let vMatch;
       const re = new RegExp(b.pattern.source, 'gi');
       while ((vMatch = re.exec(text)) !== null) {
+        const start = vMatch.index;
+        const end = start + vMatch[0].length;
+        if (overlapsSpan(start, end)) continue; // Avoid breaking an already-upgraded multi-word collocation!
+
+        occupiedSpans.push([start, end]);
         vocabCounter++;
         detectedVocab.push({
           id: `vocab-${vocabCounter}`,
@@ -2775,39 +3332,39 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
           whyWeak: b.whyWeak,
           whyReplacement: b.whyReplacement,
           collocationTip: b.collocationTip,
-          index: vMatch.index,
+          index: start,
           length: vMatch[0].length
         });
       }
     });
 
-    // Build Polished Academic Text (Automatic Replacement)
-    let polishedText = text;
-
-    // Apply Spelling fixes first
-    detectedSpelling.sort((a, b) => b.index - a.index).forEach(s => {
-      polishedText = polishedText.substring(0, s.index) + s.correction + polishedText.substring(s.index + s.length);
-    });
-
-    // Apply Best Vocabulary Upgrades
-    vocabBoosters.forEach(b => {
-      polishedText = polishedText.replace(b.pattern, (m) => {
-        const best = b.upgrades[0];
-        if (m[0] === m[0].toUpperCase()) {
-          return best.charAt(0).toUpperCase() + best.slice(1);
-        }
-        return best;
-      });
-    });
-
     // Combine All Issues Sorted by Index
     const allIssues = [
       ...detectedSpelling.map(s => ({ ...s, originalText: s.word, replacement: s.correction, badgeLabel: 'Chính tả', color: 'red' })),
-      ...detectedVocab.map(v => ({ ...v, word: v.matchedText, originalText: v.matchedText, correction: v.upgrades[0], replacement: v.upgrades[0], badgeLabel: 'Từ vựng Band 8+', color: 'blue' }))
+      ...detectedVocab.map(v => ({
+        ...v,
+        word: v.matchedText,
+        originalText: v.matchedText,
+        correction: v.upgrades[0],
+        replacement: v.upgrades[0],
+        badgeLabel: v.category && v.category.includes('Collocation') ? 'Collocation Band 8+' : 'Từ vựng Band 8+',
+        color: 'blue'
+      }))
     ].sort((a, b) => a.index - b.index);
 
     allIssues.forEach((issue, idx) => {
       issue.issueNumber = idx + 1;
+    });
+
+    // Build Polished Academic Text cleanly in Reverse Index Order (Zero collision!)
+    let polishedText = text;
+    [...allIssues].sort((a, b) => b.index - a.index).forEach(iss => {
+      let rep = iss.replacement;
+      const origChar = iss.originalText ? iss.originalText[0] : '';
+      if (origChar && origChar === origChar.toUpperCase() && origChar !== origChar.toLowerCase()) {
+        rep = rep.charAt(0).toUpperCase() + rep.slice(1);
+      }
+      polishedText = polishedText.substring(0, iss.index) + rep + polishedText.substring(iss.index + iss.length);
     });
 
     // Compute Metrics & IELTS 4 Criteria Scores (Scale 0.0 - 9.0)
@@ -2872,6 +3429,449 @@ Bạn có muốn tìm hiểu thêm về địa lý, lịch sử hay từ vựng 
         }
       }
     };
+  }
+
+  // =========================================================================
+  // UNIFIED PERSONALIZED AI CHATBOT WIDGET (AUTO-MOUNTED ACROSS ALL PAGES)
+  // =========================================================================
+  initFloatingChatbotWidget() {
+    if (typeof document === 'undefined' || document.getElementById('aiChatbotDrawer')) return;
+
+    // 1. Mount launcher button seamlessly without colliding with floatingThemeBtn
+    const launcherBtn = document.createElement('button');
+    launcherBtn.id = 'aiChatbotLauncherBtn';
+    launcherBtn.type = 'button';
+    launcherBtn.onclick = () => this.toggleChatbotDrawer();
+    launcherBtn.className = 'flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold shadow-xl border border-blue-400/40 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white transition-all duration-200 active:scale-95';
+    launcherBtn.title = 'Mở Trợ lý AI Chatbot Cá Nhân Hóa';
+    launcherBtn.innerHTML = `
+      <span class="relative flex h-2.5 w-2.5">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
+      </span>
+      <span>🤖 AI Chatbot</span>
+    `;
+
+    const existingFloatBar = document.querySelector('.fixed.bottom-6.right-6');
+    if (existingFloatBar) {
+      existingFloatBar.appendChild(launcherBtn);
+    } else {
+      const wrap = document.createElement('div');
+      wrap.className = 'fixed bottom-5 right-5 z-50 flex items-center gap-2.5';
+      wrap.appendChild(launcherBtn);
+      document.body.appendChild(wrap);
+    }
+
+    // 2. Mount Floating Chatbot Drawer
+    const drawer = document.createElement('div');
+    drawer.id = 'aiChatbotDrawer';
+    drawer.className = 'hidden fixed bottom-20 right-4 sm:right-6 z-50 w-[92vw] sm:w-[420px] h-[560px] max-h-[80vh] rounded-2xl bg-white dark:bg-[#0B1528] border border-slate-200 dark:border-slate-700 shadow-2xl flex flex-col overflow-hidden text-slate-800 dark:text-slate-100';
+
+    drawer.innerHTML = `
+      <!-- Header -->
+      <div class="px-4 py-3 bg-gradient-to-r from-[#0A2540] via-[#004085] to-blue-600 text-white flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="w-9 h-9 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center text-lg shrink-0 shadow-xs">
+            🤖
+          </div>
+          <div class="min-w-0">
+            <h4 class="font-bold text-xs sm:text-sm truncate">Trợ Lý AI Cá Nhân Hóa</h4>
+            <p id="aiChatbotSubtitle" class="text-[10px] font-mono text-blue-200 truncate">
+              Xin chào ${this.escapeHtml(this.profile.name || 'Học viên')} • Band ${this.escapeHtml(this.profile.targetBand || '8.0')}
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button type="button" id="aiChatbotTogglePersonalBtn" onclick="window.socraticAI.switchChatbotView('personal')"
+            class="px-2.5 py-1 rounded-lg bg-white/15 hover:bg-white/25 text-white text-[11px] font-mono font-bold transition-all border border-white/20"
+            title="Cài đặt thông tin cá nhân hóa cho AI">
+            ⚙️ Cá nhân hóa
+          </button>
+          <button type="button" onclick="window.socraticAI.clearChatbotHistory()"
+            class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs flex items-center justify-center transition-all"
+            title="Làm mới cuộc trò chuyện">
+            🗑️
+          </button>
+          <button type="button" onclick="window.socraticAI.toggleChatbotDrawer(false)"
+            class="w-7 h-7 rounded-lg bg-white/10 hover:bg-rose-500/80 text-white text-xs flex items-center justify-center transition-all"
+            title="Đóng">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- VIEW 1: CHAT STREAM -->
+      <div id="aiChatbotChatView" class="flex-1 flex flex-col min-h-0">
+        <div id="aiChatbotMessages" class="flex-1 overflow-y-auto p-3.5 space-y-3 text-xs bg-slate-50/70 dark:bg-[#071020]"></div>
+
+        <!-- Dynamic Personalized Quick Prompts -->
+        <div id="aiChatbotQuickChips" class="px-3 py-2 bg-white dark:bg-[#0D1930] border-t border-slate-200 dark:border-slate-800 flex items-center gap-1.5 overflow-x-auto shrink-0 no-scrollbar"></div>
+
+        <!-- Input Bar -->
+        <form onsubmit="window.socraticAI.handleChatbotFormSubmit(event)" class="p-3 bg-white dark:bg-[#0B1528] border-t border-slate-200 dark:border-slate-800 flex items-center gap-2 shrink-0">
+          <input id="aiChatbotInput" type="text"
+            placeholder="Hỏi bất cứ điều gì hoặc gõ 'Tên tôi là...' để cá nhân hóa..."
+            class="flex-1 px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20" />
+          <button id="aiChatbotSendBtn" type="submit"
+            class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition-all shrink-0 active:scale-95">
+            Gửi
+          </button>
+          <button id="aiChatbotStopBtn" type="button" onclick="window.socraticAI.stopChatbotStream()"
+            class="hidden px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm transition-all shrink-0">
+            Dừng
+          </button>
+        </form>
+      </div>
+
+      <!-- VIEW 2: PERSONALIZATION SETTINGS -->
+      <div id="aiChatbotPersonalView" class="hidden flex-1 overflow-y-auto p-4 space-y-3.5 text-xs bg-slate-50/70 dark:bg-[#071020]">
+        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+          <div>
+            <h5 class="font-bold text-sm text-slate-900 dark:text-white">👤 Cá Nhân Hóa Trợ Lý AI</h5>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">AI sẽ tự động điều chỉnh cách trả lời, lộ trình &amp; ví dụ theo thông tin này.</p>
+          </div>
+          <button type="button" onclick="window.socraticAI.switchChatbotView('chat')"
+            class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-[11px]">
+            ← Quay lại Chat
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] font-mono font-bold text-slate-600 dark:text-slate-300 mb-1">Tên gọi của bạn</label>
+            <input id="cbPersName" type="text" placeholder="VD: Thành Hưng"
+              class="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-mono font-bold text-slate-600 dark:text-slate-300 mb-1">Ngày dự thi (tùy chọn)</label>
+            <input id="cbPersExamDate" type="date"
+              class="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-mono font-bold text-slate-600 dark:text-slate-300 mb-1">Trình độ hiện tại</label>
+            <select id="cbPersCurrentBand" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs">
+              <option value="5.0">Band 5.0</option>
+              <option value="5.5">Band 5.5</option>
+              <option value="6.0">Band 6.0</option>
+              <option value="6.5">Band 6.5</option>
+              <option value="7.0">Band 7.0</option>
+              <option value="7.5">Band 7.5</option>
+              <option value="8.0">Band 8.0</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-mono font-bold text-slate-600 dark:text-slate-300 mb-1">Mục tiêu Band</label>
+            <select id="cbPersTargetBand" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs">
+              <option value="6.5">Band 6.5</option>
+              <option value="7.0">Band 7.0</option>
+              <option value="7.5">Band 7.5</option>
+              <option value="8.0">Band 8.0</option>
+              <option value="8.5">Band 8.5</option>
+              <option value="9.0">Band 9.0</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] font-mono font-bold text-slate-600 dark:text-slate-300 mb-1">Kỹ năng ưu tiên / cần cải thiện</label>
+            <select id="cbPersFocus" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs">
+              <option value="ALL">Cả 4 kỹ năng IELTS</option>
+              <option value="READING">Reading (Đọc hiểu &amp; TFNG)</option>
+              <option value="LISTENING">Listening (Nghe &amp; Bẫy)</option>
+              <option value="WRITING">Writing (Task 1 &amp; Task 2)</option>
+              <option value="SPEAKING">Speaking (Phản xạ &amp; Phát âm)</option>
+              <option value="VOCAB_GRAMMAR">Từ vựng &amp; Collocations</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-mono font-bold text-slate-600 dark:text-slate-300 mb-1">Phong cách AI trả lời</label>
+            <select id="cbPersStyle" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs">
+              <option value="friendly">Thân thiện &amp; Dễ hiểu</option>
+              <option value="academic">Chuyên sâu Học thuật C1-C2</option>
+              <option value="concise">Ngắn gọn, Súc tích &amp; Thực chiến</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-mono font-bold text-slate-600 dark:text-slate-300 mb-1">Sở thích, mục tiêu &amp; lưu ý riêng cho AI</label>
+          <textarea id="cbPersNotes" rows="2" placeholder="VD: Mình đang là sinh viên ngành CNTT, thích ví dụ về công nghệ, hay nhầm FALSE và NOT GIVEN..."
+            class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"></textarea>
+        </div>
+
+        <div id="cbPersMemoriesContainer" class="space-y-1"></div>
+
+        <button type="button" onclick="window.socraticAI.saveChatbotPersonalization()"
+          class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition-all active:scale-98">
+          💾 Lưu Thiết Lập Cá Nhân Hóa
+        </button>
+      </div>
+    `;
+
+    document.body.appendChild(drawer);
+    this.renderChatbotQuickChips();
+    this.renderChatbotMessages();
+  }
+
+  toggleChatbotDrawer(forceState) {
+    const drawer = document.getElementById('aiChatbotDrawer');
+    if (!drawer) return;
+    const isHidden = drawer.classList.contains('hidden');
+    const shouldOpen = typeof forceState === 'boolean' ? forceState : isHidden;
+
+    if (shouldOpen) {
+      drawer.classList.remove('hidden');
+      this.refreshChatbotHeaderUI();
+      this.renderChatbotQuickChips();
+      setTimeout(() => document.getElementById('aiChatbotInput')?.focus(), 80);
+    } else {
+      drawer.classList.add('hidden');
+    }
+  }
+
+  switchChatbotView(viewName) {
+    const chatView = document.getElementById('aiChatbotChatView');
+    const persView = document.getElementById('aiChatbotPersonalView');
+    const toggleBtn = document.getElementById('aiChatbotTogglePersonalBtn');
+    if (!chatView || !persView) return;
+
+    if (viewName === 'personal' && !persView.classList.contains('hidden')) {
+      viewName = 'chat';
+    }
+
+    if (viewName === 'personal') {
+      chatView.classList.add('hidden');
+      persView.classList.remove('hidden');
+      if (toggleBtn) toggleBtn.innerText = '💬 Trò chuyện';
+
+      // Populate fields from profile
+      const p = this.profile;
+      const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v || ''; };
+      setVal('cbPersName', p.name === 'Học viên' ? '' : p.name);
+      setVal('cbPersExamDate', p.examDate || '');
+      setVal('cbPersCurrentBand', p.currentEstimatedBand || '7.0');
+      setVal('cbPersTargetBand', p.targetBand || '8.0');
+      setVal('cbPersFocus', p.focusSkill || 'ALL');
+      setVal('cbPersStyle', p.responseStyle || 'friendly');
+      setVal('cbPersNotes', p.personalNotes || '');
+      this.renderCustomMemoriesList();
+    } else {
+      persView.classList.add('hidden');
+      chatView.classList.remove('hidden');
+      if (toggleBtn) toggleBtn.innerText = '⚙️ Cá nhân hóa';
+    }
+  }
+
+  renderCustomMemoriesList() {
+    const box = document.getElementById('cbPersMemoriesContainer');
+    if (!box) return;
+    const mems = this.profile.customMemories || [];
+    if (mems.length === 0) {
+      box.innerHTML = '';
+      return;
+    }
+    box.innerHTML = `
+      <span class="block text-[10px] font-mono font-bold text-slate-500 uppercase">AI đã ghi nhớ từ hội thoại:</span>
+      <div class="flex flex-wrap gap-1.5 pt-1">
+        ${mems.map((m, idx) => `
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-[11px] text-blue-800 dark:text-blue-200">
+            <span>${this.escapeHtml(m)}</span>
+            <button type="button" onclick="window.socraticAI.removeCustomMemory(${idx})" class="text-slate-400 hover:text-rose-500 font-bold ml-0.5">×</button>
+          </span>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  removeCustomMemory(idx) {
+    if (!Array.isArray(this.profile.customMemories)) return;
+    this.profile.customMemories.splice(idx, 1);
+    this.saveProfile(this.profile);
+    this.renderCustomMemoriesList();
+  }
+
+  saveChatbotPersonalization() {
+    const getVal = (id) => (document.getElementById(id)?.value || '').trim();
+    const newName = getVal('cbPersName') || 'Học viên';
+    this.profile.name = newName;
+    this.profile.examDate = getVal('cbPersExamDate');
+    this.profile.currentEstimatedBand = getVal('cbPersCurrentBand') || '7.0';
+    this.profile.targetBand = getVal('cbPersTargetBand') || '8.0';
+    this.profile.focusSkill = getVal('cbPersFocus') || 'ALL';
+    this.profile.responseStyle = getVal('cbPersStyle') || 'friendly';
+    this.profile.personalNotes = getVal('cbPersNotes');
+
+    this.saveProfile(this.profile);
+    this.refreshChatbotHeaderUI();
+    this.renderChatbotQuickChips();
+    this.switchChatbotView('chat');
+
+    // Post personalized confirmation bubble
+    const confirmMsg = `✅ Đã lưu thiết lập cá nhân hóa cho **${newName}**! (Mục tiêu **Band ${this.profile.targetBand}** • Kỹ năng ưu tiên: **${this.profile.focusSkill}**). Bạn có câu hỏi nào muốn bắt đầu ngay không?`;
+    this.conversationHistory.push({ role: 'assistant', content: confirmMsg });
+    this.saveChatHistory();
+    this.renderChatbotMessages();
+  }
+
+  refreshChatbotHeaderUI() {
+    const sub = document.getElementById('aiChatbotSubtitle');
+    if (sub) {
+      const name = this.profile?.name || 'Học viên';
+      const band = this.profile?.targetBand || '8.0';
+      sub.innerText = `Xin chào ${name} • Band ${band}`;
+    }
+  }
+
+  renderChatbotQuickChips() {
+    const box = document.getElementById('aiChatbotQuickChips');
+    if (!box) return;
+    const skill = window.activeExamSkill || this.profile.focusSkill || 'GENERAL';
+    const chips = [
+      { label: '👤 Hồ sơ của tôi', prompt: 'Xem hồ sơ và điểm yếu của tôi' },
+      { label: '📖 Tra từ & Word Family', prompt: 'Word family và collocation của từ mitigate' },
+      { label: '🔁 Dịch sang Anh C1', prompt: 'Dịch: Công nghệ hiện đại giúp bảo vệ môi trường hiệu quả hơn.' }
+    ];
+    if (skill === 'READING') {
+      chips.unshift({ label: '⚖️ Phân biệt FALSE vs NOT GIVEN', prompt: 'Phân biệt nhanh FALSE và NOT GIVEN trong IELTS Reading' });
+    } else if (skill === 'WRITING') {
+      chips.unshift({ label: '✍️ Dàn ý Task 2 Band 8', prompt: 'Hướng dẫn lập dàn ý IELTS Writing Task 2 chuẩn Band 8.0' });
+    } else {
+      chips.unshift({ label: '🌐 Hỏi kiến thức', prompt: 'Hiệu ứng nhà kính là gì?' });
+    }
+
+    box.innerHTML = chips.map(c => `
+      <button type="button" onclick="window.socraticAI.sendChatbotUserMessage('${c.prompt.replace(/'/g, "\\'")}')"
+        class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-blue-100 dark:bg-slate-800 dark:hover:bg-blue-900/50 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-[11px] whitespace-nowrap shrink-0 transition-all cursor-pointer">
+        ${c.label}
+      </button>
+    `).join('');
+  }
+
+  renderChatbotMessages() {
+    const container = document.getElementById('aiChatbotMessages');
+    if (!container) return;
+
+    const name = this.profile?.name || 'bạn';
+    const target = this.profile?.targetBand || '8.0';
+    let html = `
+      <div class="flex items-start gap-2">
+        <div class="w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center text-xs shrink-0 mt-0.5">🤖</div>
+        <div class="p-3 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 shadow-2xs space-y-1.5 max-w-[88%] leading-relaxed">
+          <p class="font-bold text-blue-700 dark:text-blue-300">Xin chào ${this.escapeHtml(name)}!</p>
+          <p>Tôi là <strong>Trợ lý AI Cá nhân hóa</strong> (Mục tiêu Band ${this.escapeHtml(target)}). Bạn có thể hỏi tôi thông tin kiến thức thực tế, tra từ điển / Word Family, dịch câu, hoặc cập nhật thông tin cá nhân ngay trong cuộc trò chuyện!</p>
+        </div>
+      </div>
+    `;
+
+    (this.conversationHistory || []).forEach(msg => {
+      if (msg.role === 'user') {
+        html += `
+          <div class="flex justify-end">
+            <div class="p-2.5 rounded-2xl rounded-tr-sm bg-blue-600 text-white max-w-[85%] shadow-xs leading-relaxed">
+              ${this.escapeHtml(msg.content)}
+            </div>
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="flex items-start gap-2">
+            <div class="w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center text-xs shrink-0 mt-0.5">🤖</div>
+            <div class="p-3 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 shadow-2xs space-y-2 max-w-[88%] leading-relaxed">
+              ${this.renderMarkdown(msg.content)}
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    container.innerHTML = html;
+    container.scrollTop = container.scrollHeight;
+  }
+
+  handleChatbotFormSubmit(e) {
+    e.preventDefault();
+    const input = document.getElementById('aiChatbotInput');
+    if (!input) return;
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    this.sendChatbotUserMessage(text);
+  }
+
+  async sendChatbotUserMessage(userText) {
+    const container = document.getElementById('aiChatbotMessages');
+    if (!container) return;
+
+    // Append user bubble
+    const userWrap = document.createElement('div');
+    userWrap.className = 'flex justify-end';
+    userWrap.innerHTML = `
+      <div class="p-2.5 rounded-2xl rounded-tr-sm bg-blue-600 text-white max-w-[85%] shadow-xs leading-relaxed">
+        ${this.escapeHtml(userText)}
+      </div>
+    `;
+    container.appendChild(userWrap);
+
+    // Append AI streaming bubble
+    const botWrap = document.createElement('div');
+    botWrap.className = 'flex items-start gap-2';
+    const bubbleId = 'ai-cb-msg-' + Date.now();
+    botWrap.innerHTML = `
+      <div class="w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center text-xs shrink-0 mt-0.5">🤖</div>
+      <div id="${bubbleId}" class="p-3 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 shadow-2xs space-y-2 max-w-[88%] leading-relaxed">
+        <span class="inline-block w-1.5 h-3.5 bg-blue-600 animate-pulse"></span>
+      </div>
+    `;
+    container.appendChild(botWrap);
+    container.scrollTop = container.scrollHeight;
+
+    const sendBtn = document.getElementById('aiChatbotSendBtn');
+    const stopBtn = document.getElementById('aiChatbotStopBtn');
+    if (sendBtn && stopBtn) {
+      sendBtn.classList.add('hidden');
+      stopBtn.classList.remove('hidden');
+    }
+
+    const contentEl = document.getElementById(bubbleId);
+    const activeSkill = window.activeExamSkill || this.profile.focusSkill || 'GENERAL';
+
+    await this.processUserMessage(
+      userText,
+      { skill: activeSkill, activeSkill: activeSkill },
+      (accumulated) => {
+        if (contentEl) {
+          contentEl.innerHTML = this.renderMarkdown(accumulated) + '<span class="inline-block w-1.5 h-3.5 bg-blue-600 ml-0.5 animate-pulse">▋</span>';
+          container.scrollTop = container.scrollHeight;
+        }
+      },
+      (finalText) => {
+        if (contentEl) {
+          contentEl.innerHTML = this.renderMarkdown(finalText);
+          container.scrollTop = container.scrollHeight;
+        }
+        if (sendBtn && stopBtn) {
+          sendBtn.classList.remove('hidden');
+          stopBtn.classList.add('hidden');
+        }
+      }
+    );
+  }
+
+  stopChatbotStream() {
+    this.stopStreaming();
+    const sendBtn = document.getElementById('aiChatbotSendBtn');
+    const stopBtn = document.getElementById('aiChatbotStopBtn');
+    if (sendBtn && stopBtn) {
+      sendBtn.classList.remove('hidden');
+      stopBtn.classList.add('hidden');
+    }
+  }
+
+  clearChatbotHistory() {
+    this.conversationHistory = [];
+    this.saveChatHistory();
+    this.renderChatbotMessages();
   }
 }
 
